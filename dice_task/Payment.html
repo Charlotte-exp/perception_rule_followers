@@ -1,0 +1,33 @@
+{{ block title }}
+
+Payment
+
+{{ endblock }}
+
+{% block content %}
+
+<div style="font-size: 14px">
+
+<div class="panel panel-default" style="margin-bottom:10px">
+    <div class="panel-body">
+        <strong>Thank you for participating!</strong> <br>
+        Once all participants are done with the study, you will receive your bonus through Prolific.
+        The final amount is a combination of the bonus just randomly selected from your decision,
+        and one randomly selected from the next participant's decisions.
+        This can take a couple of weeks.
+        <p> </p>
+        <hr size="6" width="50%" align="center" color="black">
+    </div>
+    <p></p>
+        <p>
+            Click on the <b>next button</b> to be redirected to Prolific.
+            The participation payment will be paid immediately.
+        </p>
+        <div style="display: flex; justify-content: flex-end">
+        {% next_button %}
+        </div>
+</div>
+
+</div>
+
+{% endblock %}
