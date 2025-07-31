@@ -1,8 +1,32 @@
 {{ block title }}
 
-Trust game - 2nd task
+    Point decision
 
 {{ endblock }}
+
+{{ block style }}
+
+<style>
+
+    body {
+        margin: 0;
+    }
+
+    .question-container {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+        padding: 1rem 0;
+    }
+
+    .mb-3 _formfield {
+
+    }
+
+</style>
+
+{{ endblock }}
+
 {{ block content }}
 
 <div class="card bg-light instructions">
@@ -24,9 +48,54 @@ Trust game - 2nd task
     </div>
 </div>
 
+<div  class="card-body">
+    <div class="question-container">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th class="text-center">Points sent to you</th>
+                    <th class="text-center">New points tripled by us</th>
+                    <th class="text-center">How many points do you wish<br> to send back?</th>
+                </tr>
+            </thead>
+            <tbody>
+<!--                <tr>-->
+<!--                    <td class="text-center">{{ C.zero_points }}</td>-->
+<!--                    <td class="text-center">{{ zero_points_tripled }}</td>-->
+<!--                    <td class="text-center">-->
+<!--                        <input type="number" name="send_back_0" class="form-control mx-auto" style="max-width: 100px;" />-->
+<!--                    </td>-->
+<!--                </tr>-->
+                <tr>
+                    <td class="text-center">{{ C.one_points }}</td>
+                    <td class="text-center">{{ one_points_tripled }}</td>
+                    <td class="text-center">
+                        <input type="number" name="send_back_1" class="form-control mx-auto" style="max-width: 100px;" />
+                    </td>
+                </tr>
+                <tr>
+                    <td class="text-center">{{ C.two_points }}</td>
+                    <td class="text-center">{{ two_points_tripled }}</td>
+                    <td class="text-center">
+                        <input type="number" name="send_back_2" class="form-control mx-auto" style="max-width: 100px;" />
+                    </td>
+                </tr>
+                <tr>
+                    <td class="text-center">{{ C.three_points }}</td>
+                    <td class="text-center">{{ three_points_tripled }}</td>
+                    <td class="text-center">
+                        {{ formfield "send_back_3" label="" }}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
 
-    {{ formfields }}
-    <p>{{ next_button }}</p>
+    <div style="display: flex; justify-content: flex-end">
+        {{ next_button }}
+    </div>
+
 
 
 {{ endblock }}
