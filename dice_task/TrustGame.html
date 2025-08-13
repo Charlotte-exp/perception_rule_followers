@@ -29,6 +29,62 @@
 
 {{ block content }}
 
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            function validateField(input) {
+                const min = parseInt(input.dataset.min);
+                const max = parseInt(input.dataset.max);
+                const value = parseInt(input.value);
+                const errorDiv = document.getElementById('error_' + input.id);
+
+                if (isNaN(value)) {
+                    errorDiv.textContent = `Please enter a number between ${min} and ${max}.`;
+                    input.classList.add('is-invalid');
+                    return false;
+                } else if (value < min || value > max) {
+                    errorDiv.textContent = `Value must be between ${min} and ${max}.`;
+                    input.classList.add('is-invalid');
+                    return false;
+                } else {
+                    errorDiv.textContent = '';
+                    input.classList.remove('is-invalid');
+                    return true;
+                }
+            }
+
+            document.querySelectorAll('input[type="number"]').forEach(input => {
+                input.addEventListener('input', () => validateField(input));
+            });
+
+            document.getElementById('next-button').addEventListener('click', function (event) {
+                let allValid = true;
+                document.querySelectorAll('input[type="number"]').forEach(input => {
+                    if (!validateField(input)) {
+                        allValid = false;
+                    }
+                });
+                if (!allValid) {
+                    event.preventDefault();
+                }
+            });
+        });
+    </script>
+
+</head>
+
+<body>
+
+
+{{ formfield_errors 'send_back_2' }}
+{{ formfield_errors 'send_back_3' }}
+
 <div class="card bg-light instructions">
     <div  class="card-body">
         <p>
@@ -55,36 +111,41 @@
                 <tr>
                     <th class="text-center">Points sent to you</th>
                     <th class="text-center">New points tripled by us</th>
-                    <th class="text-center">How many points do you wish<br> to send back?</th>
+                    <th class="text-center">How many points do you wish to send back?</th>
                 </tr>
             </thead>
             <tbody>
-<!--                <tr>-->
-<!--                    <td class="text-center">{{ C.zero_points }}</td>-->
-<!--                    <td class="text-center">{{ zero_points_tripled }}</td>-->
-<!--                    <td class="text-center">-->
-<!--                        <input type="number" name="send_back_0" class="form-control mx-auto" style="max-width: 100px;" />-->
-<!--                    </td>-->
-<!--                </tr>-->
                 <tr>
-                    <td class="text-center">{{ C.one_points }}</td>
-                    <td class="text-center">{{ one_points_tripled }}</td>
+                    <td class="text-center">1</td>
+                    <td class="text-center">3</td>
                     <td class="text-center">
-                        <input type="number" name="send_back_1" class="form-control mx-auto" style="max-width: 100px;" />
+                        <input type="number" id="send_back_1" name="send_back_1"
+                            data-min="{{ bounds.send_back_1.min }}"
+                            data-max="{{ bounds.send_back_1.max }}"
+                            class="form-control mx-auto" style="max-width: 100px;">
+                        <div class="text-danger small mt-1" id="error_send_back_1"></div>
                     </td>
                 </tr>
                 <tr>
-                    <td class="text-center">{{ C.two_points }}</td>
-                    <td class="text-center">{{ two_points_tripled }}</td>
+                    <td class="text-center">2</td>
+                    <td class="text-center">6</td>
                     <td class="text-center">
-                        <input type="number" name="send_back_2" class="form-control mx-auto" style="max-width: 100px;" />
+                        <input type="number" id="send_back_2" name="send_back_2"
+                            data-min="{{ bounds.send_back_2.min }}"
+                            data-max="{{ bounds.send_back_2.max }}"
+                            class="form-control mx-auto" style="max-width: 100px;">
+                        <div class="text-danger small mt-1" id="error_send_back_2"></div>
                     </td>
                 </tr>
                 <tr>
-                    <td class="text-center">{{ C.three_points }}</td>
-                    <td class="text-center">{{ three_points_tripled }}</td>
+                    <td class="text-center">3</td>
+                    <td class="text-center">9</td>
                     <td class="text-center">
-                        {{ formfield "send_back_3" label="" }}
+                        <input type="number" id="send_back_3" name="send_back_3"
+                            data-min="{{ bounds.send_back_3.min }}"
+                            data-max="{{ bounds.send_back_3.max }}"
+                            class="form-control mx-auto" style="max-width: 100px;">
+                        <div class="text-danger small mt-1" id="error_send_back_3"></div>
                     </td>
                 </tr>
             </tbody>
@@ -93,9 +154,11 @@
 </div>
 
     <div style="display: flex; justify-content: flex-end">
-        {{ next_button }}
+        <button type="submit" class="btn btn-primary" id="next-button">Next</button>
     </div>
 
 
+</body>
+</html>
 
 {{ endblock }}
