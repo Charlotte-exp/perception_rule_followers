@@ -1,6 +1,6 @@
 {{ block title }}
 
-    Dice game - 1st task
+    Dice roll n˚{{ player.round_number }}
 
 {{ endblock }}
 
@@ -20,22 +20,22 @@
     }
 
     .dice {
-        width: 100px;
-        height: 100px;
+        width: 85px;
+        height: 85px;
         background-color: white;
         border: 2px solid black;
-        display: grid;
+        display: inline-grid; /* this matters so the dice are centered */
         grid-template-columns: repeat(3, 1fr);
         grid-template-rows: repeat(3, 1fr);
-        padding: 10px;
-        border-radius: 10px;
+        padding: 8px;
+        border-radius: 8px;
         box-shadow: 2px 2px 10px rgba(0,0,0,0.2);
-        gap: 5px;
+        gap: 4px;
     }
 
     .dot {
-        width: 20px;
-        height: 20px;
+        width: 16px;
+        height: 16px;
         background-color: black;
         border-radius: 50%;
         opacity: 0;
@@ -108,47 +108,45 @@
 
 {{ block content }}
 
-<div class="card-body">
-    <p>
-        You roll a die.
-        The number on the die is the number of points  you get paid as bonus.
-        You can report any number.
-        You will be paid the number you report, regardless of what you drew.
-    </p>
-    <div class="dice-container">
-        <div class="dice" id="dice1">
-            <div class="dot" id="dice1-1"></div>
-            <div class="dot" id="dice1-2"></div>
-            <div class="dot" id="dice1-3"></div>
-            <div class="dot" id="dice1-4"></div>
-            <div class="dot" id="dice1-5"></div>
-            <div class="dot" id="dice1-6"></div>
-            <div class="dot" id="dice1-7"></div>
-            <div class="dot" id="dice1-8"></div>
-            <div class="dot" id="dice1-9"></div>
-        </div>
-    </div>
-
-</div>
-
 <div class="card bg-light instructions">
+    <div class="card-body" style="font-size: 14px">
+        <p>
+            <b>Remember</b>, the number on the die is the number of points you get paid as bonus.
+            You must report the correct number.
+            You will be paid the number you report, regardless of what you rolled.
+            The other participant will see both the die rolled and the number you report.
+        </p>
+    </div>
+</div>
+        <div class="dice-container">
+            <div class="dice" id="dice1">
+                <div class="dot" id="dice1-1"></div>
+                <div class="dot" id="dice1-2"></div>
+                <div class="dot" id="dice1-3"></div>
+                <div class="dot" id="dice1-4"></div>
+                <div class="dot" id="dice1-5"></div>
+                <div class="dot" id="dice1-6"></div>
+                <div class="dot" id="dice1-7"></div>
+                <div class="dot" id="dice1-8"></div>
+                <div class="dot" id="dice1-9"></div>
+            </div>
+        </div>
+
+
     <div  class="card-body">
         <h5 style="text-align: center">
             What number do you wish to report?
         </h5>
         <br>
         
-        <div class="number-row" >
-            <button name="reported_dice" value="1" class="btn btn-primary btn-large">1</button>
-            <button name="reported_dice" value="2" class="btn btn-primary btn-large">2</button>
-            <button name="reported_dice" value="3" class="btn btn-primary btn-large">3</button>
-            <button name="reported_dice" value="4" class="btn btn-primary btn-large">4</button>
-            <button name="reported_dice" value="5" class="btn btn-primary btn-large">5</button>
-            <button name="reported_dice" value="6" class="btn btn-primary btn-large">6</button>
-        </div>
+        <div class="number-row">
+        {% for i in range(1, 7) %}
+            <button name="reported_dice" value="{{ i }}" class="btn btn-primary btn-large">{{ i }}</button>
+        {% endfor %}
+    </div>
 
     </div>
-</div>
+
 
 
 {{ endblock }}

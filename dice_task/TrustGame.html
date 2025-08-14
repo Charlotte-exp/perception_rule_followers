@@ -1,32 +1,160 @@
 {{ block title }}
 
-Trust game - 2nd task
+    Second stage
 
 {{ endblock }}
+
+{{ block style }}
+
+<style>
+
+    body {
+        margin: 0;
+    }
+
+    .question-container {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+        padding: 1rem 0;
+    }
+
+    .mb-3 _formfield {
+
+    }
+
+</style>
+
+{{ endblock }}
+
 {{ block content }}
 
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            function validateField(input) {
+                const min = parseInt(input.dataset.min);
+                const max = parseInt(input.dataset.max);
+                const value = parseInt(input.value);
+                const errorDiv = document.getElementById('error_' + input.id);
+
+                if (isNaN(value)) {
+                    errorDiv.textContent = `Please enter a number between ${min} and ${max}.`;
+                    input.classList.add('is-invalid');
+                    return false;
+                } else if (value < min || value > max) {
+                    errorDiv.textContent = `Value must be between ${min} and ${max}.`;
+                    input.classList.add('is-invalid');
+                    return false;
+                } else {
+                    errorDiv.textContent = '';
+                    input.classList.remove('is-invalid');
+                    return true;
+                }
+            }
+
+            document.querySelectorAll('input[type="number"]').forEach(input => {
+                input.addEventListener('input', () => validateField(input));
+            });
+
+            document.getElementById('next-button').addEventListener('click', function (event) {
+                let allValid = true;
+                document.querySelectorAll('input[type="number"]').forEach(input => {
+                    if (!validateField(input)) {
+                        allValid = false;
+                    }
+                });
+                if (!allValid) {
+                    event.preventDefault();
+                }
+            });
+        });
+    </script>
+
+</head>
+
+<body>
+
+
+{{ formfield_errors 'send_back_2' }}
+{{ formfield_errors 'send_back_3' }}
+
 <div class="card bg-light instructions">
-    <div  class="card-body">
+    <div class="card-body" style="font-size: 14px">
         <p>
-            In this task, we will ask you to tell us what you would do in different similar scenarios
+            <b>Remember</b>, another participant in another study will see one die roll and number report combination from the first stage.
+            Based on this, they will decide how many points, between 0 and 3, they wish to send to you.
+            The points they decide to send are tripled, while those they keep are not.
+            You can send how many of those points back to this participant.
         </p>
         <p>
-            Another participant in another study will see your choices from the dice task.
-            Based on this, they will decide how many points, if any, they wish to send to you.
-            The points they decide to send are doubled/tripled, while those they keep are not.
-            You can send how many of those points back at this participant.
-            Your choices will be combined once both experiments have been run,
-            and you will be paid according to both your choices
-        </p>
-        <p>
-            Below we are asking you to tell us how much you would want to send back depending on how much you received.
+            Below we are asking you to tell us how much you would want to send back
+            depending on how much you receive from the other participant you will be matched with.
         </p>
     </div>
 </div>
 
+<div  class="card-body">
+    <div class="question-container">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th class="text-center">Points sent to you</th>
+                    <th class="text-center">New points tripled by us</th>
+                    <th class="text-center">How many points do you wish to send back?</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="text-center">1</td>
+                    <td class="text-center">3</td>
+                    <td class="text-center">
+                        <input type="number" id="send_back_1" name="send_back_1"
+                            data-min="{{ bounds.send_back_1.min }}"
+                            data-max="{{ bounds.send_back_1.max }}"
+                            class="form-control mx-auto" style="max-width: 100px;">
+                        <div class="text-danger small mt-1" id="error_send_back_1"></div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="text-center">2</td>
+                    <td class="text-center">6</td>
+                    <td class="text-center">
+                        <input type="number" id="send_back_2" name="send_back_2"
+                            data-min="{{ bounds.send_back_2.min }}"
+                            data-max="{{ bounds.send_back_2.max }}"
+                            class="form-control mx-auto" style="max-width: 100px;">
+                        <div class="text-danger small mt-1" id="error_send_back_2"></div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="text-center">3</td>
+                    <td class="text-center">9</td>
+                    <td class="text-center">
+                        <input type="number" id="send_back_3" name="send_back_3"
+                            data-min="{{ bounds.send_back_3.min }}"
+                            data-max="{{ bounds.send_back_3.max }}"
+                            class="form-control mx-auto" style="max-width: 100px;">
+                        <div class="text-danger small mt-1" id="error_send_back_3"></div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
 
-    {{ formfields }}
-    <p>{{ next_button }}</p>
+    <div style="display: flex; justify-content: flex-end">
+        <button type="submit" class="btn btn-primary" id="next-button">Next</button>
+    </div>
 
+
+</body>
+</html>
 
 {{ endblock }}
