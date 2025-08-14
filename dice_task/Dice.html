@@ -1,6 +1,6 @@
 {{ block title }}
 
-    Dice roll
+    Dice roll n˚{{ player.round_number }}
 
 {{ endblock }}
 
@@ -108,30 +108,31 @@
 
 {{ block content }}
 
-<div class="card-body">
-    <p>
-        You roll a die.
-        The number on the die is the number of points  you get paid as bonus.
-        You can report any number.
-        You will be paid the number you report, regardless of what you drew.
-    </p>
-    <div class="dice-container">
-        <div class="dice" id="dice1">
-            <div class="dot" id="dice1-1"></div>
-            <div class="dot" id="dice1-2"></div>
-            <div class="dot" id="dice1-3"></div>
-            <div class="dot" id="dice1-4"></div>
-            <div class="dot" id="dice1-5"></div>
-            <div class="dot" id="dice1-6"></div>
-            <div class="dot" id="dice1-7"></div>
-            <div class="dot" id="dice1-8"></div>
-            <div class="dot" id="dice1-9"></div>
-        </div>
-    </div>
-
-</div>
-
 <div class="card bg-light instructions">
+    <div class="card-body" style="font-size: 14px">
+        <p>
+            <b>Remember</b>, the number on the die is the number of points you get paid as bonus.
+            You must report the correct number.
+            You will be paid the number you report, regardless of what you rolled.
+            The other participant will see both the die rolled and the number you report.
+        </p>
+    </div>
+</div>
+        <div class="dice-container">
+            <div class="dice" id="dice1">
+                <div class="dot" id="dice1-1"></div>
+                <div class="dot" id="dice1-2"></div>
+                <div class="dot" id="dice1-3"></div>
+                <div class="dot" id="dice1-4"></div>
+                <div class="dot" id="dice1-5"></div>
+                <div class="dot" id="dice1-6"></div>
+                <div class="dot" id="dice1-7"></div>
+                <div class="dot" id="dice1-8"></div>
+                <div class="dot" id="dice1-9"></div>
+            </div>
+        </div>
+
+
     <div  class="card-body">
         <h5 style="text-align: center">
             What number do you wish to report?
@@ -145,7 +146,7 @@
     </div>
 
     </div>
-</div>
+
 
 
 {{ endblock }}

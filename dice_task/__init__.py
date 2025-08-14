@@ -12,6 +12,7 @@ class C(BaseConstants):
     PLAYERS_PER_GROUP = None
     NUM_ROUNDS = 5
 
+    conversion = '43p'
     zero_points = cu(0)
     one_points = cu(1)
     two_points = cu(2)
@@ -109,20 +110,31 @@ class Player(BasePlayer):
                      'How many points to do you send back?',
         min=0, max=C.three_points*3)
 
+    q1_failed_attempts = models.IntegerField(initial=0)
+    q2_failed_attempts = models.IntegerField(initial=0)
+
     q1 = models.IntegerField(
-        initial=0,
+        initial=9,
         choices=[
-            [0, f'value 0'], [1, f'value 1'], [2, f'value 2'], [3, f'value 3'],
+            [0, f'I will be paid the number I roll from one randomly selected die roll'],
+            [1, f'I will be paid the number I report from one randomly selected die roll'],
+            [2, f'I will be paid the number I roll from all five die roll summed up'],
+            [3, f'I will be paid the number I report from all five die roll summed up'],
         ],
+        verbose_name='What determines the number of bonus points you will be paid from stage 1?',
         widget=widgets.RadioSelect,
         # error_messages={'required': 'You must select an option before continuing.'}, # does not display
     )
 
     q2 = models.IntegerField(
-        initial=0,
+        initial=9,
         choices=[
-            [0, f'value 0'], [1, f'value 1'], [2, f'value 2'], [3, f'value 3'],
+            [0, f'The points sent by another participants'],
+            [1, f'The points sent by another participants and doubled'],
+            [2, f'The points sent by another participants and tripled'],
+            [3, f'The points I decide to keep from those sent by another participant and tripled'],
         ],
+        verbose_name='What determines the number of bonus points you will be paid from stage 2?',
         widget=widgets.RadioSelect,
         # error_messages={'required': 'You must select an option before continuing.'}, # does not display
     )
@@ -168,6 +180,30 @@ class Instructions(Page):
     @staticmethod
     def is_displayed(player: Player):
         return player.round_number == 1
+
+    @staticmethod
+    def error_message(player: Player, values):
+        """
+        records the number of time the page was submitted with an error. which specific error is not recorded.
+        """
+        solutions = dict(q1=1, q2=3)
+        # if player.treatment == 'treatment':
+        #     solutions = dict(q1=1, q2=2)
+        # else:
+        #     solutions = dict(q5=1, q6=2)
+
+        # error_message can return a dict whose keys are field names and whose values are error messages
+        errors = {}
+        for question, correct_answer in solutions.items():
+            if values[question] != correct_answer:
+                errors[question] = 'This answer is wrong'
+                # Increment the specific failed attempt counter for the incorrect question
+                failed_attempt_field = f"{question}_failed_attempts"
+                if hasattr(player, failed_attempt_field):  # Ensure the field exists
+                    setattr(player, failed_attempt_field, getattr(player, failed_attempt_field) + 1)
+
+        if errors:
+            return errors
 
 
 class Dice(Page):
@@ -246,6 +282,6 @@ page_sequence = [Consent,
                  Instructions,
                  Dice,
                  TrustGame,
-                 End,
+                 # End,
                  Payment,
                  ProlificLink]
