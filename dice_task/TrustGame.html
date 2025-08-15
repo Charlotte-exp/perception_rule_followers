@@ -12,15 +12,159 @@
         margin: 0;
     }
 
+    .button-container {
+        display: flex;
+        justify-content: flex-end;
+    }
+
+    .submit-button {
+        color: #fff;
+        background-color: #007bff;
+        border: 1px solid #007bff;
+        font-size: 1rem;
+        border-radius: 0.25rem;
+        padding: 4px 12px;
+        cursor: pointer;
+        font-family: Arial, Helvetica, sans-serif;
+        transition: background-color 0.2s ease, border-color 0.2s ease;
+    }
+
+    .submit-button:hover {
+        background-color: #0056b3;
+        border-color: #0056b3;
+    }
+
+    .submit-button:active {
+        background-color: #004a99;
+        border-color: #004a99;
+    }
+
     .question-container {
         display: flex;
         justify-content: center;
         width: 100%;
-        padding: 1rem 0;
+        padding: 0.5rem 0;
     }
 
-    .mb-3 _formfield {
+    .slider {
+        width: 100%;
+        margin: 20px 0;
+    }
 
+    .slider-container {
+        width: 100%;
+        max-width: 600px;
+        margin: auto;
+        border:0px solid black;
+    }
+
+    .slider-labels {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 0px; /* optional: pulls labels closer to slider */
+        padding: 0;
+        text-align: center;
+    }
+
+    .slider-labels span {
+        font-size: 14px;
+        white-space: nowrap;
+    }
+
+    /* Webkit-based browsers (Chrome, Safari) */
+    input[type=range]::-webkit-slider-runnable-track {
+        width: 100%;
+        height: 8.4px;
+        cursor: pointer;
+        background: white;
+        border-radius: 1px;
+        border: 1px solid lightgrey;
+    }
+
+    /* Firefox */
+    input[type=range]::-moz-range-track {
+        width: 100%;
+        height: 8.4px;
+        cursor: pointer;
+        background: white;
+        border-radius: 1px;
+        border: 1px solid lightgrey;
+    }
+
+    /* Internet Explorer and Edge */
+    input[type=range]::-ms-track {
+        width: 100%;
+        height: 8.4px;
+        cursor: pointer;
+        background: white;
+        border-radius: 1px;
+        border: 1px solid lightgrey;
+        /* Remove default styling for MS track */
+        border-color: transparent;
+        color: transparent;
+        background-color: transparent;
+    }
+
+    /* Style the range input element itself to reset default styling across browsers */
+    input[type=range] {
+        -webkit-appearance: none; /* For Webkit browsers */
+        appearance: none; /* For Firefox and other browsers */
+        width: 100%;
+        height: 8px; /* Adjust the input height */
+        background: transparent; /* Make sure the input background is transparent */
+        border: none; /* Remove default border */
+        margin-top: 5px;
+    }
+
+    /* Hide the thumb initially for Safari/Chrome */
+    .hidden-thumb::-webkit-slider-thumb {
+        opacity: 0;  /* Instead of visibility: hidden */
+        pointer-events: none;  /* Prevent user from interacting */
+    }
+
+    /* Hide the thumb initially for Firefox */
+    .hidden-thumb::-moz-range-thumb {
+        opacity: 0;  /* Instead of visibility: hidden */
+        pointer-events: none;  /* Prevent user from interacting */
+    }
+
+    /* Hide the thumb initially for IE/Edge */
+    .hidden-thumb::-ms-thumb {
+        opacity: 0;  /* Instead of visibility: hidden */
+        pointer-events: none;  /* Prevent user from interacting */
+    }
+
+    /* Style the slider thumb for Safari/Chrome */
+    input[type=range]::-webkit-slider-thumb {
+        border: 0px solid #000000;
+        height: 21px;
+        width: 10px;
+        background: #0d6efd;
+        cursor: pointer;
+        -webkit-appearance: none;
+        margin-top: -7px;
+    }
+
+    /* Style the slider thumb for Firefox */
+    input[type=range]::-moz-range-thumb {
+        border: 0px solid #000000;
+        height: 21px;
+        width: 10px;
+        background: #0d6efd;
+        cursor: pointer;
+        -moz-appearance: none;  /* Firefox-specific appearance reset */
+        margin-top: -7px;
+    }
+
+    /* Style the slider thumb for IE/Edge */
+    input[type=range]::-ms-thumb {
+        border: 0px solid #000000;
+        height: 21px;
+        width: 10px;
+        background: #0d6efd;
+        cursor: pointer;
+        -ms-appearance: none;  /* Edge/IE-specific appearance reset */
+        margin-top: -7px;
     }
 
 </style>
@@ -37,53 +181,57 @@
 
 
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            function validateField(input) {
-                const min = parseInt(input.dataset.min);
-                const max = parseInt(input.dataset.max);
-                const value = parseInt(input.value);
-                const errorDiv = document.getElementById('error_' + input.id);
+        document.addEventListener("DOMContentLoaded", function () {
+            // Slider setup
+            const sliders = [
+                { sliderId: "slider1", outputId: "output1", checkId: "check_slider1" },
+                { sliderId: "slider2", outputId: "output2", checkId: "check_slider2" },
+                { sliderId: "slider3", outputId: "output3", checkId: "check_slider3" },
+            ];
 
-                if (isNaN(value)) {
-                    errorDiv.textContent = `Please enter a number between ${min} and ${max}.`;
-                    input.classList.add('is-invalid');
-                    return false;
-                } else if (value < min || value > max) {
-                    errorDiv.textContent = `Value must be between ${min} and ${max}.`;
-                    input.classList.add('is-invalid');
-                    return false;
+            sliders.forEach(({ sliderId, outputId, checkId }) => {
+                const slider = document.getElementById(sliderId);
+                const output = document.getElementById(outputId);
+                const checkSlider = document.getElementById(checkId);
+
+                slider.value = "";
+                output.textContent = "";
+                checkSlider.value = "0"; // Not moved yet
+                slider.classList.add("hidden-thumb");
+
+                slider.addEventListener("input", function () {
+                    output.textContent = this.value;
+                    checkSlider.value = "1"; // Mark as moved
+                    this.classList.remove("hidden-thumb");
+                    hideError();
+                });
+            });
+
+            // Combined form validation
+            $('#submit-button').on('click', function (e) {
+                const allSlidersMoved = sliders.every(({ checkId }) => document.getElementById(checkId).value === "1");
+
+                if (!allSlidersMoved) {
+                    e.preventDefault();
+                    showError();
                 } else {
-                    errorDiv.textContent = '';
-                    input.classList.remove('is-invalid');
-                    return true;
+                    $('form').submit();
                 }
+            });
+
+            function showError() {
+                document.getElementById("error-message").style.display = "block";
             }
 
-            document.querySelectorAll('input[type="number"]').forEach(input => {
-                input.addEventListener('input', () => validateField(input));
-            });
-
-            document.getElementById('next-button').addEventListener('click', function (event) {
-                let allValid = true;
-                document.querySelectorAll('input[type="number"]').forEach(input => {
-                    if (!validateField(input)) {
-                        allValid = false;
-                    }
-                });
-                if (!allValid) {
-                    event.preventDefault();
-                }
-            });
+            function hideError() {
+                document.getElementById("error-message").style.display = "none";
+            }
         });
     </script>
 
 </head>
 
 <body>
-
-
-{{ formfield_errors 'send_back_2' }}
-{{ formfield_errors 'send_back_3' }}
 
 <div class="card bg-light instructions">
     <div class="card-body" style="font-size: 14px">
@@ -115,42 +263,86 @@
                     <td class="text-center">1</td>
                     <td class="text-center">3</td>
                     <td class="text-center">
-                        <input type="number" id="send_back_1" name="send_back_1"
-                            data-min="{{ bounds.send_back_1.min }}"
-                            data-max="{{ bounds.send_back_1.max }}"
-                            class="form-control mx-auto" style="max-width: 100px;">
-                        <div class="text-danger small mt-1" id="error_send_back_1"></div>
+                        <div class="slider-container">
+                            <span style="flex-grow: 1;">
+                                <input type="hidden" name="slider1_moved" value="0" id="check_slider1" />
+                                <input type="range" name="trustworthiness" id="slider1" min="0" max="3" value="" class="hidden-thumb">
+                            </span>
+                            <div class="slider-labels">
+                                <span>0</span>
+                                <span>3</span>
+                            </div>
+                        </div>
+                        <div style="text-align: center; margin-top: -15px">
+                            You send back:
+                            <span style="color: #0d6efd">
+                                <output id="output1"></output>
+                            </span>
+                        </div>
                     </td>
                 </tr>
                 <tr>
                     <td class="text-center">2</td>
                     <td class="text-center">6</td>
                     <td class="text-center">
-                        <input type="number" id="send_back_2" name="send_back_2"
-                            data-min="{{ bounds.send_back_2.min }}"
-                            data-max="{{ bounds.send_back_2.max }}"
-                            class="form-control mx-auto" style="max-width: 100px;">
-                        <div class="text-danger small mt-1" id="error_send_back_2"></div>
+                        <div class="slider-container">
+                            <span style="flex-grow: 1;">
+                                <input type="hidden" name="slider2_moved" value="0" id="check_slider2" />
+                                <input type="range" name="likability" id="slider2" min="0" max="6" value="" class="hidden-thumb">
+                            </span>
+
+                            <div class="slider-labels">
+                                <span>0</span>
+                                <span>6</span>
+                            </div>
+                        </div>
+                        <div style="text-align: center; margin-top: -15px">
+                            You send back:
+                            <span style="color: #0d6efd">
+                                <output id="output2"></output>
+                            </span>
+                        </div>
                     </td>
                 </tr>
                 <tr>
                     <td class="text-center">3</td>
                     <td class="text-center">9</td>
                     <td class="text-center">
-                        <input type="number" id="send_back_3" name="send_back_3"
-                            data-min="{{ bounds.send_back_3.min }}"
-                            data-max="{{ bounds.send_back_3.max }}"
-                            class="form-control mx-auto" style="max-width: 100px;">
-                        <div class="text-danger small mt-1" id="error_send_back_3"></div>
+                        <div class="slider-container">
+                            <span style="flex-grow: 1;">
+                                <input type="hidden" name="slider3_moved" value="0" id="check_slider3" />
+                                <input type="range" name="likability" id="slider3" min="0" max="9" value="" class="hidden-thumb">
+                            </span>
+
+                            <div class="slider-labels">
+                                <span>0</span>
+                                <span>9</span>
+                            </div>
+                        </div>
+                        <div style="text-align: center; margin-top: -15px">
+                            You send back:
+                            <span style="color: #0d6efd">
+                                <output id="output3"></output>
+                            </span>
+                        </div>
                     </td>
                 </tr>
             </tbody>
         </table>
     </div>
+
+    <!-- Error message -->
+    <div id="error-message" style="display: none; color: red; text-align: center;">
+        Please make all decisions to continue.
+    </div>
+
 </div>
 
-    <div style="display: flex; justify-content: flex-end">
-        <button type="submit" class="btn btn-primary" id="next-button">Next</button>
+
+    <div class="button-container">
+        <button type="button" id="submit-button" class="submit-button">
+            NEXT
+        </button>
     </div>
 
 
