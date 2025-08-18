@@ -118,8 +118,8 @@ class Player(BasePlayer):
         choices=[
             [0, f'I will be paid the number I roll from one randomly selected die roll'],
             [1, f'I will be paid the number I report from one randomly selected die roll'],
-            [2, f'I will be paid the number I roll from all five die roll summed up'],
-            [3, f'I will be paid the number I report from all five die roll summed up'],
+            [2, f'I will be paid the number I roll from all five die rolls summed up'],
+            [3, f'I will be paid the number I report from all five die rolls summed up'],
         ],
         verbose_name='What determines the number of bonus points you will be paid from stage 1?',
         widget=widgets.RadioSelect,
@@ -130,9 +130,9 @@ class Player(BasePlayer):
         initial=9,
         choices=[
             [0, f'The points sent by another participants'],
-            [1, f'The points sent by another participants and doubled'],
-            [2, f'The points sent by another participants and tripled'],
-            [3, f'The points I decide to keep from those sent by another participant and tripled'],
+            [1, f'The points sent by another participants, doubled'],
+            [2, f'The points sent by another participants, tripled'],
+            [3, f'The points I decide to keep from those sent by another participant and tripled by us'],
         ],
         verbose_name='What determines the number of bonus points you will be paid from stage 2?',
         widget=widgets.RadioSelect,
