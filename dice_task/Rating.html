@@ -1,0 +1,274 @@
+{{ block title }}
+
+    Second stage
+
+{{ endblock }}
+
+{{ block style }}
+
+<style>
+
+    body {
+        margin: 0;
+    }
+
+    .button-container {
+        display: flex;
+        justify-content: flex-end;
+    }
+
+    .submit-button {
+        color: #fff;
+        background-color: #007bff;
+        border: 1px solid #007bff;
+        font-size: 1rem;
+        border-radius: 0.25rem;
+        padding: 4px 12px;
+        cursor: pointer;
+        font-family: Arial, Helvetica, sans-serif;
+        transition: background-color 0.2s ease, border-color 0.2s ease;
+    }
+
+    .submit-button:hover {
+        background-color: #0056b3;
+        border-color: #0056b3;
+    }
+
+    .submit-button:active {
+        background-color: #004a99;
+        border-color: #004a99;
+    }
+
+    .slider {
+        width: 100%;
+        margin: 20px 0;
+    }
+
+    .slider-container {
+        width: 100%;
+        max-width: 600px;
+        margin: auto;
+        border:0px solid black;
+    }
+
+    .slider-labels {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 0px; /* optional: pulls labels closer to slider */
+        padding: 0;
+        text-align: center;
+    }
+
+    .slider-labels span {
+        font-size: 14px;
+        white-space: nowrap;
+    }
+
+    /* Webkit-based browsers (Chrome, Safari) */
+    input[type=range]::-webkit-slider-runnable-track {
+        width: 100%;
+        height: 8.4px;
+        cursor: pointer;
+        background: white;
+        border-radius: 1px;
+        border: 1px solid lightgrey;
+    }
+
+    /* Firefox */
+    input[type=range]::-moz-range-track {
+        width: 100%;
+        height: 8.4px;
+        cursor: pointer;
+        background: white;
+        border-radius: 1px;
+        border: 1px solid lightgrey;
+    }
+
+    /* Internet Explorer and Edge */
+    input[type=range]::-ms-track {
+        width: 100%;
+        height: 8.4px;
+        cursor: pointer;
+        background: white;
+        border-radius: 1px;
+        border: 1px solid lightgrey;
+        /* Remove default styling for MS track */
+        border-color: transparent;
+        color: transparent;
+        background-color: transparent;
+    }
+
+    /* Style the range input element itself to reset default styling across browsers */
+    input[type=range] {
+        -webkit-appearance: none; /* For Webkit browsers */
+        appearance: none; /* For Firefox and other browsers */
+        width: 100%;
+        height: 8px; /* Adjust the input height */
+        background: transparent; /* Make sure the input background is transparent */
+        border: none; /* Remove default border */
+        margin-top: 5px;
+    }
+
+    /* Hide the thumb initially for Safari/Chrome */
+    .hidden-thumb::-webkit-slider-thumb {
+        opacity: 0;  /* Instead of visibility: hidden */
+        pointer-events: none;  /* Prevent user from interacting */
+    }
+
+    /* Hide the thumb initially for Firefox */
+    .hidden-thumb::-moz-range-thumb {
+        opacity: 0;  /* Instead of visibility: hidden */
+        pointer-events: none;  /* Prevent user from interacting */
+    }
+
+    /* Hide the thumb initially for IE/Edge */
+    .hidden-thumb::-ms-thumb {
+        opacity: 0;  /* Instead of visibility: hidden */
+        pointer-events: none;  /* Prevent user from interacting */
+    }
+
+    /* Style the slider thumb for Safari/Chrome */
+    input[type=range]::-webkit-slider-thumb {
+        border: 0px solid #000000;
+        height: 21px;
+        width: 10px;
+        background: #0d6efd;
+        cursor: pointer;
+        -webkit-appearance: none;
+        margin-top: -7px;
+    }
+
+    /* Style the slider thumb for Firefox */
+    input[type=range]::-moz-range-thumb {
+        border: 0px solid #000000;
+        height: 21px;
+        width: 10px;
+        background: #0d6efd;
+        cursor: pointer;
+        -moz-appearance: none;  /* Firefox-specific appearance reset */
+        margin-top: -7px;
+    }
+
+    /* Style the slider thumb for IE/Edge */
+    input[type=range]::-ms-thumb {
+        border: 0px solid #000000;
+        height: 21px;
+        width: 10px;
+        background: #0d6efd;
+        cursor: pointer;
+        -ms-appearance: none;  /* Edge/IE-specific appearance reset */
+        margin-top: -7px;
+    }
+
+</style>
+
+
+{{ endblock }}
+
+{{ block content }}
+
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Slider setup
+            const sliders = [
+                { sliderId: "slider1", outputId: "output1", checkId: "check_slider1" },
+            ];
+
+            sliders.forEach(({ sliderId, outputId, checkId }) => {
+                const slider = document.getElementById(sliderId);
+                const output = document.getElementById(outputId);
+                const checkSlider = document.getElementById(checkId);
+
+                slider.value = "";
+                output.textContent = "";
+                checkSlider.value = "0"; // Not moved yet
+                slider.classList.add("hidden-thumb");
+
+                slider.addEventListener("input", function () {
+                    output.textContent = this.value;
+                    checkSlider.value = "1"; // Mark as moved
+                    this.classList.remove("hidden-thumb");
+                    hideError();
+                });
+            });
+
+            // Combined form validation
+            $('#submit-button').on('click', function (e) {
+                const allSlidersMoved = sliders.every(({ checkId }) => document.getElementById(checkId).value === "1");
+
+                if (!allSlidersMoved) {
+                    e.preventDefault();
+                    showError();
+                } else {
+                    $('form').submit();
+                }
+            });
+
+            function showError() {
+                document.getElementById("error-message").style.display = "block";
+            }
+
+            function hideError() {
+                document.getElementById("error-message").style.display = "none";
+            }
+        });
+    </script>
+
+</head>
+
+<body>
+
+<div class="card bg-light instructions">
+    <div class="card-body" style="font-size: 14px">
+        <p>
+            Rate this sequence:
+        </p>
+
+    </div>
+</div>
+
+    <br>
+    <p style="text-align: center;">
+        <strong>How trustworthy is this participant based on their sequence of decision?</strong>
+    </p>
+
+    <div class="slider-container">
+        <span style="flex-grow: 1;">
+            <input type="hidden" name="slider1_moved" value="0" id="check_slider1" />
+            <input type="range" name="trustworthiness" id="slider1" min="0" max="100" value="" class="hidden-thumb">
+        </span>
+        <div class="slider-labels">
+            <span>Very untrustworthy</span>
+            <span>Very trustworthy</span>
+        </div>
+        <div style="text-align: center; margin-top: -15px">
+            <span style="color: #FFFFFF">
+                <output id="output1"></output>
+            </span>
+        </div>
+    </div>
+
+
+    <!-- Error message -->
+    <div id="error-message" style="display: none; color: red; text-align: center;">
+        Please rate the sequence of the other participant to continue.
+    </div>
+
+    <div class="button-container">
+        <button type="button" id="submit-button" class="submit-button">
+            NEXT
+        </button>
+    </div>
+
+
+</body>
+</html>
+
+{{ endblock }}

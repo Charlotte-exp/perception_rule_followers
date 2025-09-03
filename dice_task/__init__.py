@@ -24,11 +24,21 @@ class Subsession(BaseSubsession):
 
 def creating_session(subsession):
     """
-    Pairs of original and reported dice from the prolific pilot.
-    Must be called from a separate page or in the creating_session
+    create a fixed sequence of 10 elements for each player bu calling generate_k_sequence function.
+    Stored in a participant.vars since player field cannot be lists (and I don't need it in the database).
+    Because creating_session calls the function every round
+    we force it not to do that by setting a value based on round number instead.
     """
-    for p in subsession.get_players():
-        p.dice_roll()
+    if subsession.round_number == 1:
+        for p in subsession.get_players():
+            sequence = generate_dice_sequence()
+            p.participant.vars['sequence'] = sequence
+            # set first round value directly
+            p.original_dice = sequence[0]
+    else:
+        for p in subsession.get_players():
+            # for rounds >1, just pick from participant.vars
+            p.original_dice = p.participant.vars['sequence'][p.round_number - 1]
 
 
 class Group(BaseGroup):
@@ -38,61 +48,13 @@ class Group(BaseGroup):
 class Player(BasePlayer):
 
     original_dice = models.IntegerField(blank=True)
-    reported_dice = models.IntegerField(blank=True)
-
-    original_dice_1 = models.IntegerField(initial=0)
-    reported_dice_1 = models.IntegerField(
+    reported_dice = models.IntegerField(
         initial=0,
         choices=[
             [1, f'value 1'], [2, f'value 2'], [3, f'value 3'],
             [4, f'value 4'], [5, f'value 5'], [6, f'value 6'],
         ],
         widget=widgets.RadioSelect,
-        # error_messages={'required': 'You must select an option before continuing.'}, # does not display
-    )
-
-    original_dice_2 = models.IntegerField(initial=0)
-    reported_dice_2 = models.IntegerField(
-        initial=0,
-        choices=[
-            [1, f'value 1'], [2, f'value 2'], [3, f'value 3'],
-            [4, f'value 4'], [5, f'value 5'], [6, f'value 6'],
-        ],
-        widget=widgets.RadioSelect,
-        # error_messages={'required': 'You must select an option before continuing.'}, # does not display
-    )
-
-    original_dice_3 = models.IntegerField(initial=0)
-    reported_dice_3 = models.IntegerField(
-        initial=0,
-        choices=[
-            [1, f'value 1'], [2, f'value 2'], [3, f'value 3'],
-            [4, f'value 4'], [5, f'value 5'], [6, f'value 6'],
-        ],
-        widget=widgets.RadioSelect,
-        # error_messages={'required': 'You must select an option before continuing.'}, # does not display
-    )
-
-    original_dice_4 = models.IntegerField(initial=0)
-    reported_dice_4 = models.IntegerField(
-        initial=0,
-        choices=[
-            [1, f'value 1'], [2, f'value 2'], [3, f'value 3'],
-            [4, f'value 4'], [5, f'value 5'], [6, f'value 6'],
-        ],
-        widget=widgets.RadioSelect,
-        # error_messages={'required': 'You must select an option before continuing.'}, # does not display
-    )
-
-    original_dice_5 = models.IntegerField(initial=0)
-    reported_dice_5 = models.IntegerField(
-        initial=0,
-        choices=[
-            [1, f'value 1'], [2, f'value 2'], [3, f'value 3'],
-            [4, f'value 4'], [5, f'value 5'], [6, f'value 6'],
-        ],
-        widget=widgets.RadioSelect,
-        # error_messages={'required': 'You must select an option before continuing.'}, # does not display
     )
 
     send_back_1 = models.FloatField(
@@ -106,6 +68,23 @@ class Player(BasePlayer):
         min=0, max=C.two_points*3)
 
     send_back_3 = models.FloatField(
+        verbose_name='You received X points from the other participant: <br>'
+                     'How many points to do you send back?',
+        min=0, max=C.three_points*3)
+
+    trustworthiness = models.IntegerField(initial=0)
+
+    send_back_CCP_1 = models.FloatField(
+        verbose_name='You received X points from the other participant: <br>'
+                     'How many points to do you send back?',
+        min=0, max=C.one_points*3)
+
+    send_back_CCP_2 = models.FloatField(
+        verbose_name='You received X points from the other participant: <br>'
+                     'How many points to do you send back?',
+        min=0, max=C.two_points*3)
+
+    send_back_CCP_3 = models.FloatField(
         verbose_name='You received X points from the other participant: <br>'
                      'How many points to do you send back?',
         min=0, max=C.three_points*3)
@@ -151,18 +130,17 @@ class Player(BasePlayer):
     #     print(player.original_dice)
     #     return player.original_dice
 
-    def dice_roll(player):
-        dice_values = [random.randint(1, 6) for _ in range(C.NUM_ROUNDS)]
-
-        # Save each value to the corresponding player field
-        for i, value in enumerate(dice_values, start=1):
-            setattr(player, f'original_dice_{i}', value)
-            # print(f'original_dice_{i}', value)
-
-
 
 ######## FUNCTIONS #########
 
+def generate_dice_sequence():
+    """
+    Generate a random sequence of C.NUM_ROUNDS numbers.
+    One different sequence is assigned to a player at creating_session
+    """
+    # dice_values = [random.randint(1, 6) for _ in range(C.NUM_ROUNDS)]
+    sequence = [random.randint(1, 6) for _ in range(C.NUM_ROUNDS)]
+    return sequence
 
 
 ######### PAGES #########
@@ -204,6 +182,7 @@ class Instructions(Page):
 
         if errors:
             return errors
+        return None
 
 
 class Dice(Page):
@@ -212,33 +191,18 @@ class Dice(Page):
 
     @staticmethod
     def vars_for_template(player: Player):
-        reported_dice_field = f'reported_dice_{player.round_number}'
-        reported_dice = getattr(player, reported_dice_field, None)  # Default to None if not set
-        original_dice_field = f'original_dice_{player.round_number}'
-        original_dice = getattr(player, original_dice_field, None)
         return dict(
-            original_dice = original_dice,
-            reported_dice = reported_dice,
+            original_dice = player.original_dice,
+            reported_dice = player.reported_dice,
         )
 
-    def before_next_page(player, timeout_happened):
-        round_field = f'reported_dice_{player.round_number}'
-        setattr(player, round_field, player.reported_dice)
+    # def before_next_page(player, timeout_happened):
+    #     round_field = f'reported_dice_{player.round_number}'
+    #     setattr(player, round_field, player.reported_dice)
+
 
 class TrustGame(Page):
     form_model = "player"
-    # def get_form_fields(player: Player):
-    #     if player.round_number == 1:
-    #         return ['send_back_1']
-    #     elif player.round_number == 2:
-    #         return ['send_back_2']
-    #     elif player.round_number == 3:
-    #         return ['send_back_3']
-    #     elif player.round_number == 4:
-    #         return ['send_back_4']
-    #     return None
-
-    ### if only one trust game use this ###
     form_fields = ["send_back_1", "send_back_2", "send_back_3"]
 
     @staticmethod
@@ -256,6 +220,44 @@ class TrustGame(Page):
                 'send_back_1': {'min': 0, 'max': C.one_points*3},
                 'send_back_2': {'min': 0, 'max': C.two_points*3},
                 'send_back_3': {'min': 0, 'max': C.three_points*3},
+            }
+        )
+
+
+class Rating(Page):
+    form_model = "player"
+    form_fields = ["trustworthiness"]
+
+    @staticmethod
+    def is_displayed(player: Player):
+        return player.round_number == C.NUM_ROUNDS
+
+    @staticmethod
+    def vars_for_template(player: Player):
+        return dict(
+
+        )
+
+
+class TrustGameForCCP(Page):
+    form_model = "player"
+    form_fields = ["send_back_CCP_1", "send_back_CCP_2", "send_back_CCP_3"]
+
+    @staticmethod
+    def is_displayed(player: Player):
+        return player.round_number == C.NUM_ROUNDS
+
+    @staticmethod
+    def vars_for_template(player: Player):
+        return dict(
+            zero_points_tripled = C.zero_points*3,
+            one_points_tripled = C.one_points*3,
+            two_points_tripled = C.two_points*3,
+            three_points_tripled = C.three_points*3,
+            bounds={
+                'send_back_CCP_1': {'min': 0, 'max': C.one_points*3},
+                'send_back_CCP_2': {'min': 0, 'max': C.two_points*3},
+                'send_back_CCP_3': {'min': 0, 'max': C.three_points*3},
             }
         )
 
@@ -282,6 +284,8 @@ page_sequence = [Consent,
                  Instructions,
                  Dice,
                  TrustGame,
+                 Rating,
+                 TrustGameForCCP,
                  # End,
                  Payment,
                  ProlificLink]
