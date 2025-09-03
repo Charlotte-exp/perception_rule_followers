@@ -1,6 +1,6 @@
 {{ block title }}
 
-    Second stage
+    Third stage
 
 {{ endblock }}
 
@@ -72,7 +72,7 @@
     }
 
     .slider-labels span {
-        font-size: 14px;
+        font-size: 16px;
         white-space: nowrap;
     }
 
@@ -190,8 +190,6 @@
             // Slider setup
             const sliders = [
                 { sliderId: "slider1", outputId: "output1", checkId: "check_slider1" },
-                { sliderId: "slider2", outputId: "output2", checkId: "check_slider2" },
-                { sliderId: "slider3", outputId: "output3", checkId: "check_slider3" },
             ];
 
             sliders.forEach(({ sliderId, outputId, checkId }) => {
@@ -270,87 +268,28 @@
 </div>
 
 <div  class="card-body">
-    <div class="question-container">
-        <table class="table">
-            <thead>
-                <tr>
-                    <th class="text-center">Points sent to you</th>
-                    <th class="text-center">New points tripled by us</th>
-                    <th class="text-center">How many points do you wish to send back?</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td class="text-center">1</td>
-                    <td class="text-center">3</td>
-                    <td class="text-center">
-                        <div class="slider-container">
-                            <span style="flex-grow: 1;">
-                                <input type="hidden" name="slider1_moved" value="0" id="check_slider1" />
-                                <input type="range" name="send_back_1" id="slider1" min="0" max="3" step="0.1" value="" class="hidden-thumb">
-                            </span>
-                            <div class="slider-labels">
-                                <span>0</span>
-                                <span>3</span>
-                            </div>
-                        </div>
-                        <div style="text-align: center; margin-top: -15px">
-                            You send back:
-                            <span style="color: #0d6efd">
-                                <output id="output1"></output>
-                            </span>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="text-center">2</td>
-                    <td class="text-center">6</td>
-                    <td class="text-center">
-                        <div class="slider-container">
-                            <span style="flex-grow: 1;">
-                                <input type="hidden" name="slider2_moved" value="0" id="check_slider2" />
-                                <input type="range" name="send_back_2" id="slider2" min="0" max="6" step="0.1" value="" class="hidden-thumb">
-                            </span>
 
-                            <div class="slider-labels">
-                                <span>0</span>
-                                <span>6</span>
-                            </div>
-                        </div>
-                        <div style="text-align: center; margin-top: -15px">
-                            You send back:
-                            <span style="color: #0d6efd">
-                                <output id="output2"></output>
-                            </span>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="text-center">3</td>
-                    <td class="text-center">9</td>
-                    <td class="text-center">
-                        <div class="slider-container">
-                            <span style="flex-grow: 1;">
-                                <input type="hidden" name="slider3_moved" value="0" id="check_slider3" />
-                                <input type="range" name="send_back_3" id="slider3" min="0" max="9" step="0.1" value="" class="hidden-thumb">
-                            </span>
+        <p style="text-align: center;">
+            <strong>How many points do you return to the other participant?</strong>
+        </p>
 
-                            <div class="slider-labels">
-                                <span>0</span>
-                                <span>9</span>
-                            </div>
-                        </div>
-                        <div style="text-align: center; margin-top: -15px">
-                            You send back:
-                            <span style="color: #0d6efd">
-                                <output id="output3"></output>
-                            </span>
-                        </div>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
+        <div class="slider-container">
+            <span style="flex-grow: 1;">
+                <input type="hidden" name="slider1_moved" value="0" id="check_slider1" />
+                <input type="range" name="send_back_1" id="slider1" min="0" max="3" step="0.1" value="" class="hidden-thumb">
+            </span>
+            <div class="slider-labels">
+                <span>0</span>
+                <span>3</span>
+            </div>
+        </div>
+        <div style="text-align: center; margin-top: -15px">
+            You send back:
+            <span style="color: #0d6efd">
+                <output id="output1"></output>
+            </span>
+        </div>
+
 
     <!-- Error message -->
     <div id="error-message" style="display: none; color: red; text-align: center;">

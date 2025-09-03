@@ -1,6 +1,7 @@
 from otree.api import *
 
 import random
+import itertools
 
 doc = """
 Your app description
@@ -11,6 +12,10 @@ class C(BaseConstants):
     NAME_IN_URL = 'dice_task'
     PLAYERS_PER_GROUP = None
     NUM_ROUNDS = 5
+
+    number_of_trials = NUM_ROUNDS # from the actor task
+    percent_accurate = 10
+    bonus = cu(2)
 
     conversion = '43p'
     zero_points = cu(0)
@@ -29,6 +34,11 @@ def creating_session(subsession):
     Because creating_session calls the function every round
     we force it not to do that by setting a value based on round number instead.
     """
+    treatments = itertools.cycle(['TG', 'DG', 'rating', 'dont_know'])
+    for p in subsession.get_players():
+        p.treatment = next(treatments)
+        # p.participant.treatment = p.treatment
+
     if subsession.round_number == 1:
         for p in subsession.get_players():
             sequence = generate_dice_sequence()
@@ -47,6 +57,8 @@ class Group(BaseGroup):
 
 class Player(BasePlayer):
 
+    treatment = models.StringField()
+
     original_dice = models.IntegerField(blank=True)
     reported_dice = models.IntegerField(
         initial=0,
@@ -57,20 +69,30 @@ class Player(BasePlayer):
         widget=widgets.RadioSelect,
     )
 
+    k_value = models.IntegerField(initial=99)
+
+    trust_points = models.IntegerField(
+        choices=[
+            [0, '0 point'], [1, '1 point'], [2, '2 points'], [3, '3 points'],
+        ],
+        verbose_name='',
+        widget=widgets.RadioSelectHorizontal
+    )
+
     send_back_1 = models.FloatField(
         verbose_name='You received X points from the other participant: <br>'
                      'How many points to do you send back?',
         min=0, max=C.one_points*3)
 
-    send_back_2 = models.FloatField(
-        verbose_name='You received X points from the other participant: <br>'
-                     'How many points to do you send back?',
-        min=0, max=C.two_points*3)
-
-    send_back_3 = models.FloatField(
-        verbose_name='You received X points from the other participant: <br>'
-                     'How many points to do you send back?',
-        min=0, max=C.three_points*3)
+    # send_back_2 = models.FloatField(
+    #     verbose_name='You received X points from the other participant: <br>'
+    #                  'How many points to do you send back?',
+    #     min=0, max=C.two_points*3)
+    #
+    # send_back_3 = models.FloatField(
+    #     verbose_name='You received X points from the other participant: <br>'
+    #                  'How many points to do you send back?',
+    #     min=0, max=C.three_points*3)
 
     trustworthiness = models.IntegerField(initial=0)
 
@@ -88,6 +110,14 @@ class Player(BasePlayer):
         verbose_name='You received X points from the other participant: <br>'
                      'How many points to do you send back?',
         min=0, max=C.three_points*3)
+
+    random_selection = models.StringField(
+        initial='',
+        choices=['randomise', 'whatever'],
+    )
+
+    randomly_selected_round = models.IntegerField(initial=0)
+    randomly_selected_reported_dice = models.IntegerField(initial=0)
 
     q1_failed_attempts = models.IntegerField(initial=0)
     q2_failed_attempts = models.IntegerField(initial=0)
@@ -142,6 +172,23 @@ def generate_dice_sequence():
     sequence = [random.randint(1, 6) for _ in range(C.NUM_ROUNDS)]
     return sequence
 
+def random_payment(player: Player):
+    """
+    This function selects one round among all with equal probability.
+    It records the value of each variable on this round as new random_variable fields
+    """
+    randomly_selected_round = random.randint(1, C.NUM_ROUNDS)
+    me = player.in_round(randomly_selected_round)
+    player.randomly_selected_round = randomly_selected_round
+    #player.participant.randomly_selected_round = randomly_selected_round
+
+    attributes = ['reported_dice']
+    for attr in attributes:
+        value = getattr(me, attr)
+        setattr(player, f'randomly_selected_{attr}', value)
+        #setattr(player.participant, f'randomly_selected_{attr}', value)
+
+
 
 ######### PAGES #########
 
@@ -157,7 +204,9 @@ class Instructions(Page):
 
     @staticmethod
     def is_displayed(player: Player):
-        return player.round_number == 1
+        if player.round_number == 1 and player.treatment != 'dont_know':
+            return True
+        return None
 
     @staticmethod
     def error_message(player: Player, values):
@@ -196,18 +245,32 @@ class Dice(Page):
             reported_dice = player.reported_dice,
         )
 
-    # def before_next_page(player, timeout_happened):
-    #     round_field = f'reported_dice_{player.round_number}'
-    #     setattr(player, round_field, player.reported_dice)
 
-
-class TrustGame(Page):
+class TrustGameSender(Page):
     form_model = "player"
-    form_fields = ["send_back_1", "send_back_2", "send_back_3"]
+    form_fields = ["trust_points"]
 
     @staticmethod
     def is_displayed(player: Player):
-        return player.round_number == C.NUM_ROUNDS
+        if player.round_number == C.NUM_ROUNDS and player.treatment == 'TG':
+            return True
+        return None
+
+    def vars_for_template(player: Player):
+        return dict(
+            k_value=player.k_value,
+        )
+
+
+class TrustGameBack(Page):
+    form_model = "player"
+    form_fields = ["send_back_1"]
+
+    @staticmethod
+    def is_displayed(player: Player):
+        if player.round_number == C.NUM_ROUNDS and player.treatment == 'TG':
+            return True
+        return None
 
     @staticmethod
     def vars_for_template(player: Player):
@@ -218,8 +281,8 @@ class TrustGame(Page):
             three_points_tripled = C.three_points*3,
             bounds={
                 'send_back_1': {'min': 0, 'max': C.one_points*3},
-                'send_back_2': {'min': 0, 'max': C.two_points*3},
-                'send_back_3': {'min': 0, 'max': C.three_points*3},
+                # 'send_back_2': {'min': 0, 'max': C.two_points*3},
+                # 'send_back_3': {'min': 0, 'max': C.three_points*3},
             }
         )
 
@@ -230,7 +293,26 @@ class Rating(Page):
 
     @staticmethod
     def is_displayed(player: Player):
-        return player.round_number == C.NUM_ROUNDS
+        if player.round_number == C.NUM_ROUNDS and player.treatment == 'rating':
+            return True
+        return None
+
+    @staticmethod
+    def vars_for_template(player: Player):
+        return dict(
+
+        )
+
+
+class NonTrustBasedTask(Page):
+    form_model = "player"
+    form_fields = ["dictator"]
+
+    @staticmethod
+    def is_displayed(player: Player):
+        if player.round_number == C.NUM_ROUNDS and player.treatment == 'DG':
+            return True
+        return None
 
     @staticmethod
     def vars_for_template(player: Player):
@@ -261,11 +343,38 @@ class TrustGameForCCP(Page):
             }
         )
 
+class RandomSelection(Page):
+    form_model = 'player'
+    form_fields = ['random_selection']
+
+    @staticmethod
+    def is_displayed(player: Player):
+        return player.round_number == C.NUM_ROUNDS
+
+    def vars_for_template(player: Player):
+        return dict(
+            player_in_all_rounds=player.in_all_rounds(),
+            round_number=player.round_number,
+
+            call_payment=random_payment(player),
+        )
+
+
 class End(Page):
 
     @staticmethod
     def is_displayed(player: Player):
         return player.round_number == C.NUM_ROUNDS
+
+    def vars_for_template(player: Player):
+        return dict(
+            player_in_all_rounds=player.in_all_rounds(),
+            round_number=player.round_number,
+
+            random_round=player.randomly_selected_round,
+            random_reported_dice=player.randomly_selected_reported_dice,
+        )
+
 
 class Payment(Page):
 
@@ -283,9 +392,12 @@ class ProlificLink(Page):
 page_sequence = [Consent,
                  Instructions,
                  Dice,
-                 TrustGame,
+                 TrustGameSender,
+                 TrustGameBack,
                  Rating,
+                 # NonTrustBasedTask,
                  TrustGameForCCP,
-                 # End,
+                 RandomSelection,
+                 End,
                  Payment,
                  ProlificLink]

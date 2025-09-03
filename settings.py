@@ -6,7 +6,7 @@ SESSION_CONFIGS = [
         name='perception',
         display_name="Dice and trust game",
         app_sequence=['dice_task'],
-        num_demo_participants=6,
+        num_demo_participants=8,
         use_browser_bots=False,
         oTree_version_used=popen('otree --version').read().strip()
     ),
