@@ -1,0 +1,236 @@
+{{ block title }}
+
+    Extra stage
+
+{{ endblock }}
+
+{{ block content }}
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+
+        body {
+            margin: 0;
+            font-size: 14px
+        }
+
+        .fraction-square {
+            position: relative;
+            width: 80px;
+            height: 80px;
+            margin: 0 auto; /* centers the square */
+        }
+
+        .diagonal-line {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 70px;
+            height: 2px;
+            background: black;
+            transform: translate(-50%, -50%) rotate(-45deg);
+            transform-origin: center;
+        }
+
+        .k-value {
+        <!-- font-family: monospace;-->
+          font-size: 2rem;
+          font-weight: bold;
+          width: 2ch;       /* enough for 2 digits */
+          text-align: right; /* aligns single digits to right of the slot */
+          position: absolute;
+          top: -5px;
+          left: -20px;
+          font-size: 2.5rem;
+          font-weight: bold;
+        }
+
+        .denominator {
+          position: absolute;
+          bottom: 5px;
+          right: 5px;
+          font-size: 1.5rem;
+          font-weight: bold;
+        }
+
+        .points-row {
+            justify-content: center;
+            display: flex;
+            margin-top:1vw;
+            margin-bottom:25px;
+            left:calc(50% - 10vw);
+            /*gap: 1vw; PREVIOUS GAP WITH 30 ENDOWMENT !* Space between numbers scales with viewport width *!*/
+            gap: 1.5vw; /* Space between numbers scales with viewport width */
+            flex-wrap: wrap; /* Optional: allows wrapping if buttons exceed container width */
+            align-items: center; /* Ensures proper vertical alignment */
+        }
+            
+        .points {
+            width: 65px; /* should not scale */
+            height: 35px; /* should not scale */
+            flex-direction: column;
+            text-align: center; /* Center-aligns the text */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 14px; /* should not scale */
+            background-color: #e0e0e0;
+            padding: 1.5px;
+            border: 1.5px solid #000000;
+            border-radius: 6px; /* Slightly rounded corners */
+            cursor: pointer;
+            font-family: Arial, Helvetica, sans-serif;
+            transition: background-color 0.3s ease;
+        }
+    
+        .points:hover {
+            background-color: #ffcc00; /* Change background color on hover */
+        }
+    
+        .points:active {
+            background-color: #ffa500; /* Change background color on click */
+        }
+    
+        .points.selected {
+                 background-color: #ffa500; /* Permanent color when clicked */
+        }
+    
+        .points.disabled {
+            background-color: #F3F3F3; /* Grey color for disabled buttons */
+            border: 1px solid #d3d3d3;
+            color:#d3d3d3;
+            cursor: not-allowed;
+            pointer-events: none; /* Disable interactions */
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .submit-button {
+            color: #fff;
+            background-color: #007bff;
+            border: 1px solid #007bff;
+            font-size: 1rem;
+            border-radius: 0.25rem;
+            padding: 4px 12px;
+            cursor: pointer;
+            font-family: Arial, Helvetica, sans-serif;
+            transition: background-color 0.2s ease, border-color 0.2s ease;
+        }
+
+        .submit-button:hover {
+            background-color: #0056b3;
+            border-color: #0056b3;
+        }
+
+        .submit-button:active {
+            background-color: #004a99;
+            border-color: #004a99;
+        }
+
+
+    </style>
+
+
+    <script>
+
+        // Button selection setup
+        document.addEventListener("DOMContentLoaded", function () {
+            const rows = document.querySelectorAll(".points-row");
+            rows.forEach(row => {
+                const buttons = row.querySelectorAll(".points");
+
+                buttons.forEach(button => {
+                    button.addEventListener("click", function () {
+                        buttons.forEach(btn => btn.classList.remove("selected"));
+                        this.classList.add("selected");
+                        const value = $(this).data('value');
+                        $("#selected-points").val(value);
+                        hideError();
+                    });
+                });
+            });
+
+            // Combined form validation
+            $('#submit-button').on('click', function (e) {
+                const points = $("#selected-points").val();
+
+                if (!points) {
+                    e.preventDefault();
+                    showError();
+                } else {
+                    $('form').submit();
+                }
+            });
+
+            function showError() {
+                document.getElementById("error-message").style.display = "block";
+            }
+
+            function hideError() {
+                document.getElementById("error-message").style.display = "none";
+            }
+        });
+
+    </script>
+
+</head>
+
+<body>
+<div class="card-body">
+
+    <div>
+        <p>
+            Here is the number of times, out of {{ C.number_of_trials }},
+            that another participant chose the cooperative option:
+        </p>
+        <div class="container my-5">
+            <div class="mx-auto p-4 bg-light text-center shadow" style="max-width: 250px; border-radius: 10px;">
+                <div class="fraction-square">
+                    <div class="diagonal-line"></div>
+                    <div class="k-value">{{ k_value }}</div>
+                    <div class="denominator">{{ C.number_of_trials }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <p style="text-align: center;">
+        <strong>How many points do you send to the other participant?</strong>
+    </p>
+
+    <div class="points-row" data-input="selected-points">
+        <input type="hidden" name="trust_points" id="selected-points" value="">
+            <div class="points" data-value="0">0 points</div>
+            <div class="points" data-value="1">1 point</div>
+            <div class="points" data-value="2">2 points</div>
+            <div class="points" data-value="3">3 points</div>
+    </div>
+
+
+
+    <!-- Error message -->
+    <div id="error-message" style="display: none; color: red; text-align: center; margin-top: 10px;">
+        Please decide how many points to send to the other participant to continue.
+    </div>
+
+    <div class="button-container">
+        <button type="button" id="submit-button" class="submit-button">
+            NEXT
+        </button>
+    </div>
+
+
+
+</div>
+</body>
+</html>
+
+{{ endblock }}

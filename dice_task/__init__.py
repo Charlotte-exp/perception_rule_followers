@@ -12,6 +12,10 @@ class C(BaseConstants):
     PLAYERS_PER_GROUP = None
     NUM_ROUNDS = 5
 
+    number_of_trials = NUM_ROUNDS # from the actor task
+    percent_accurate = 10
+    bonus = cu(2)
+
     conversion = '43p'
     zero_points = cu(0)
     one_points = cu(1)
@@ -57,20 +61,30 @@ class Player(BasePlayer):
         widget=widgets.RadioSelect,
     )
 
+    k_value = models.IntegerField(initial=99)
+
+    trust_points = models.IntegerField(
+        choices=[
+            [0, '0 point'], [1, '1 point'], [2, '2 points'], [3, '3 points'],
+        ],
+        verbose_name='',
+        widget=widgets.RadioSelectHorizontal
+    )
+
     send_back_1 = models.FloatField(
         verbose_name='You received X points from the other participant: <br>'
                      'How many points to do you send back?',
         min=0, max=C.one_points*3)
 
-    send_back_2 = models.FloatField(
-        verbose_name='You received X points from the other participant: <br>'
-                     'How many points to do you send back?',
-        min=0, max=C.two_points*3)
-
-    send_back_3 = models.FloatField(
-        verbose_name='You received X points from the other participant: <br>'
-                     'How many points to do you send back?',
-        min=0, max=C.three_points*3)
+    # send_back_2 = models.FloatField(
+    #     verbose_name='You received X points from the other participant: <br>'
+    #                  'How many points to do you send back?',
+    #     min=0, max=C.two_points*3)
+    #
+    # send_back_3 = models.FloatField(
+    #     verbose_name='You received X points from the other participant: <br>'
+    #                  'How many points to do you send back?',
+    #     min=0, max=C.three_points*3)
 
     trustworthiness = models.IntegerField(initial=0)
 
@@ -200,10 +214,23 @@ class Dice(Page):
     #     round_field = f'reported_dice_{player.round_number}'
     #     setattr(player, round_field, player.reported_dice)
 
-
-class TrustGame(Page):
+class TrustGameSender(Page):
     form_model = "player"
-    form_fields = ["send_back_1", "send_back_2", "send_back_3"]
+    form_fields = ["trust_points"]
+
+    @staticmethod
+    def is_displayed(player: Player):
+        return player.round_number == C.NUM_ROUNDS
+
+    def vars_for_template(player: Player):
+        return dict(
+            k_value=player.k_value,
+        )
+
+
+class TrustGameBack(Page):
+    form_model = "player"
+    form_fields = ["send_back_1"]
 
     @staticmethod
     def is_displayed(player: Player):
@@ -218,8 +245,8 @@ class TrustGame(Page):
             three_points_tripled = C.three_points*3,
             bounds={
                 'send_back_1': {'min': 0, 'max': C.one_points*3},
-                'send_back_2': {'min': 0, 'max': C.two_points*3},
-                'send_back_3': {'min': 0, 'max': C.three_points*3},
+                # 'send_back_2': {'min': 0, 'max': C.two_points*3},
+                # 'send_back_3': {'min': 0, 'max': C.three_points*3},
             }
         )
 
@@ -281,9 +308,10 @@ class ProlificLink(Page):
 
 
 page_sequence = [Consent,
-                 Instructions,
+                 # Instructions,
                  Dice,
-                 TrustGame,
+                 TrustGameSender,
+                 TrustGameBack,
                  Rating,
                  TrustGameForCCP,
                  # End,
