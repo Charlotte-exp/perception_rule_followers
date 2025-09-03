@@ -1,0 +1,373 @@
+{{ block title }}
+
+    Third stage
+
+{{ endblock }}
+
+{{ block style }}
+
+<style>
+
+    body {
+        margin: 0;
+    }
+
+    .button-container {
+        display: flex;
+        justify-content: flex-end;
+    }
+
+    .submit-button {
+        color: #fff;
+        background-color: #007bff;
+        border: 1px solid #007bff;
+        font-size: 1rem;
+        border-radius: 0.25rem;
+        padding: 4px 12px;
+        cursor: pointer;
+        font-family: Arial, Helvetica, sans-serif;
+        transition: background-color 0.2s ease, border-color 0.2s ease;
+    }
+
+    .submit-button:hover {
+        background-color: #0056b3;
+        border-color: #0056b3;
+    }
+
+    .submit-button:active {
+        background-color: #004a99;
+        border-color: #004a99;
+    }
+
+    .question-container {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+        padding: 0.5rem 0;
+    }
+
+    .text-center {
+        text-align: center;
+        vertical-align: middle;
+    }
+
+    .slider {
+        width: 100%;
+        margin: 20px 0;
+    }
+
+    .slider-container {
+        width: 100%;
+        max-width: 600px;
+        margin: auto;
+        border:0px solid black;
+    }
+
+    .slider-labels {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 0px; /* optional: pulls labels closer to slider */
+        padding: 0;
+        text-align: center;
+    }
+
+    .slider-labels span {
+        font-size: 14px;
+        white-space: nowrap;
+    }
+
+    /* Webkit-based browsers (Chrome, Safari) */
+    input[type=range]::-webkit-slider-runnable-track {
+        width: 100%;
+        height: 8.4px;
+        cursor: pointer;
+        background: white;
+        border-radius: 1px;
+        border: 1px solid lightgrey;
+    }
+
+    /* Firefox */
+    input[type=range]::-moz-range-track {
+        width: 100%;
+        height: 8.4px;
+        cursor: pointer;
+        background: white;
+        border-radius: 1px;
+        border: 1px solid lightgrey;
+    }
+
+    /* Internet Explorer and Edge */
+    input[type=range]::-ms-track {
+        width: 100%;
+        height: 8.4px;
+        cursor: pointer;
+        background: white;
+        border-radius: 1px;
+        border: 1px solid lightgrey;
+        /* Remove default styling for MS track */
+        border-color: transparent;
+        color: transparent;
+        background-color: transparent;
+    }
+
+    /* Style the range input element itself to reset default styling across browsers */
+    input[type=range] {
+        -webkit-appearance: none; /* For Webkit browsers */
+        appearance: none; /* For Firefox and other browsers */
+        width: 100%;
+        height: 8px; /* Adjust the input height */
+        background: transparent; /* Make sure the input background is transparent */
+        border: none; /* Remove default border */
+        margin-top: 5px;
+    }
+
+    /* Hide the thumb initially for Safari/Chrome */
+    .hidden-thumb::-webkit-slider-thumb {
+        opacity: 0;  /* Instead of visibility: hidden */
+        pointer-events: none;  /* Prevent user from interacting */
+    }
+
+    /* Hide the thumb initially for Firefox */
+    .hidden-thumb::-moz-range-thumb {
+        opacity: 0;  /* Instead of visibility: hidden */
+        pointer-events: none;  /* Prevent user from interacting */
+    }
+
+    /* Hide the thumb initially for IE/Edge */
+    .hidden-thumb::-ms-thumb {
+        opacity: 0;  /* Instead of visibility: hidden */
+        pointer-events: none;  /* Prevent user from interacting */
+    }
+
+    /* Style the slider thumb for Safari/Chrome */
+    input[type=range]::-webkit-slider-thumb {
+        border: 0px solid #000000;
+        height: 21px;
+        width: 10px;
+        background: #0d6efd;
+        cursor: pointer;
+        -webkit-appearance: none;
+        margin-top: -7px;
+    }
+
+    /* Style the slider thumb for Firefox */
+    input[type=range]::-moz-range-thumb {
+        border: 0px solid #000000;
+        height: 21px;
+        width: 10px;
+        background: #0d6efd;
+        cursor: pointer;
+        -moz-appearance: none;  /* Firefox-specific appearance reset */
+        margin-top: -7px;
+    }
+
+    /* Style the slider thumb for IE/Edge */
+    input[type=range]::-ms-thumb {
+        border: 0px solid #000000;
+        height: 21px;
+        width: 10px;
+        background: #0d6efd;
+        cursor: pointer;
+        -ms-appearance: none;  /* Edge/IE-specific appearance reset */
+        margin-top: -7px;
+    }
+
+</style>
+
+{{ endblock }}
+
+{{ block content }}
+
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Slider setup
+            const sliders = [
+                { sliderId: "slider1", outputId: "output1", checkId: "check_slider1" },
+                { sliderId: "slider2", outputId: "output2", checkId: "check_slider2" },
+                { sliderId: "slider3", outputId: "output3", checkId: "check_slider3" },
+            ];
+
+            sliders.forEach(({ sliderId, outputId, checkId }) => {
+                const slider = document.getElementById(sliderId);
+                const output = document.getElementById(outputId);
+                const checkSlider = document.getElementById(checkId);
+
+                slider.value = "";
+                output.textContent = "";
+                checkSlider.value = "0"; // Not moved yet
+                slider.classList.add("hidden-thumb");
+
+                slider.addEventListener("input", function () {
+                    output.textContent = this.value;
+                    checkSlider.value = "1"; // Mark as moved
+                    this.classList.remove("hidden-thumb");
+                    hideError();
+                });
+            });
+
+            // Combined form validation
+            $('#submit-button').on('click', function (e) {
+                const allSlidersMoved = sliders.every(({ checkId }) => document.getElementById(checkId).value === "1");
+
+                if (!allSlidersMoved) {
+                    e.preventDefault();
+                    showError();
+                } else {
+                    $('form').submit();
+                }
+            });
+
+            function showError() {
+                document.getElementById("error-message").style.display = "block";
+            }
+
+            function hideError() {
+                document.getElementById("error-message").style.display = "none";
+            }
+        });
+    </script>
+
+</head>
+
+<body>
+
+<div class="card bg-light instructions">
+    <div class="card-body" style="font-size: 14px">
+        <p>
+            In the second stage, another participant from a different study will see
+            one of your die rolls and the number you reported to us in the first stage.
+            Based on this, the other participant will decide how many points, if any, they wish to send to you.
+        </p>
+        <u>Remember</u>:
+        <ul>
+            <li> The other participant starts with 3 points.
+            <li> The other participant then chooses how many points, if any, to send to you.
+            <li> Any point sent to you is tripled: for every 1 point the other participant sends you,
+                    you will receive 3 points.
+            <li> You then choose how many points, if any, to return to the other participant.
+            <li> You can return nothing, any intermediate amount, or everything.
+        </ul>
+        <p>
+            If the other participant sends all 3 points, you will receive 9 points.
+            If you return half of the 9 points, you and the other participant will both earn 4.5 points,
+            and will both have more than the other participant started with.
+            But if you return nothing, you will earn 9 points, while the Sender will earn nothing.
+            So, the other participant can gain points or lose points by sending you points,
+            depending on how much you return.
+        </p>
+        <p>
+            Below we are asking you to tell us how much you would want to return
+            depending on how much you receive from the other participant you will be matched with.
+        </p>
+    </div>
+</div>
+
+<div  class="card-body">
+    <div class="question-container">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th class="text-center">Points sent to you</th>
+                    <th class="text-center">New points tripled by us</th>
+                    <th class="text-center">How many points do you wish to send back?</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="text-center">1</td>
+                    <td class="text-center">3</td>
+                    <td class="text-center">
+                        <div class="slider-container">
+                            <span style="flex-grow: 1;">
+                                <input type="hidden" name="slider1_moved" value="0" id="check_slider1" />
+                                <input type="range" name="send_back_CCP_1" id="slider1" min="0" max="3" step="0.1" value="" class="hidden-thumb">
+                            </span>
+                            <div class="slider-labels">
+                                <span>0</span>
+                                <span>3</span>
+                            </div>
+                        </div>
+                        <div style="text-align: center; margin-top: -15px">
+                            You send back:
+                            <span style="color: #0d6efd">
+                                <output id="output1"></output>
+                            </span>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="text-center">2</td>
+                    <td class="text-center">6</td>
+                    <td class="text-center">
+                        <div class="slider-container">
+                            <span style="flex-grow: 1;">
+                                <input type="hidden" name="slider2_moved" value="0" id="check_slider2" />
+                                <input type="range" name="send_back_CCP_2" id="slider2" min="0" max="6" step="0.1" value="" class="hidden-thumb">
+                            </span>
+
+                            <div class="slider-labels">
+                                <span>0</span>
+                                <span>6</span>
+                            </div>
+                        </div>
+                        <div style="text-align: center; margin-top: -15px">
+                            You send back:
+                            <span style="color: #0d6efd">
+                                <output id="output2"></output>
+                            </span>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="text-center">3</td>
+                    <td class="text-center">9</td>
+                    <td class="text-center">
+                        <div class="slider-container">
+                            <span style="flex-grow: 1;">
+                                <input type="hidden" name="slider3_moved" value="0" id="check_slider3" />
+                                <input type="range" name="send_back_CCP_3" id="slider3" min="0" max="9" step="0.1" value="" class="hidden-thumb">
+                            </span>
+
+                            <div class="slider-labels">
+                                <span>0</span>
+                                <span>9</span>
+                            </div>
+                        </div>
+                        <div style="text-align: center; margin-top: -15px">
+                            You send back:
+                            <span style="color: #0d6efd">
+                                <output id="output3"></output>
+                            </span>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Error message -->
+    <div id="error-message" style="display: none; color: red; text-align: center;">
+        Please make all decisions to continue.
+    </div>
+
+</div>
+
+
+    <div class="button-container">
+        <button type="button" id="submit-button" class="submit-button">
+            NEXT
+        </button>
+    </div>
+
+
+</body>
+</html>
+
+{{ endblock }}

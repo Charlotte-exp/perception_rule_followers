@@ -110,6 +110,23 @@ class Player(BasePlayer):
                      'How many points to do you send back?',
         min=0, max=C.three_points*3)
 
+    trustworthiness = models.IntegerField(initial=0)
+
+    send_back_CCP_1 = models.FloatField(
+        verbose_name='You received X points from the other participant: <br>'
+                     'How many points to do you send back?',
+        min=0, max=C.one_points*3)
+
+    send_back_CCP_2 = models.FloatField(
+        verbose_name='You received X points from the other participant: <br>'
+                     'How many points to do you send back?',
+        min=0, max=C.two_points*3)
+
+    send_back_CCP_3 = models.FloatField(
+        verbose_name='You received X points from the other participant: <br>'
+                     'How many points to do you send back?',
+        min=0, max=C.three_points*3)
+
     q1_failed_attempts = models.IntegerField(initial=0)
     q2_failed_attempts = models.IntegerField(initial=0)
 
@@ -204,6 +221,7 @@ class Instructions(Page):
 
         if errors:
             return errors
+        return None
 
 
 class Dice(Page):
@@ -225,20 +243,9 @@ class Dice(Page):
         round_field = f'reported_dice_{player.round_number}'
         setattr(player, round_field, player.reported_dice)
 
+
 class TrustGame(Page):
     form_model = "player"
-    # def get_form_fields(player: Player):
-    #     if player.round_number == 1:
-    #         return ['send_back_1']
-    #     elif player.round_number == 2:
-    #         return ['send_back_2']
-    #     elif player.round_number == 3:
-    #         return ['send_back_3']
-    #     elif player.round_number == 4:
-    #         return ['send_back_4']
-    #     return None
-
-    ### if only one trust game use this ###
     form_fields = ["send_back_1", "send_back_2", "send_back_3"]
 
     @staticmethod
@@ -256,6 +263,44 @@ class TrustGame(Page):
                 'send_back_1': {'min': 0, 'max': C.one_points*3},
                 'send_back_2': {'min': 0, 'max': C.two_points*3},
                 'send_back_3': {'min': 0, 'max': C.three_points*3},
+            }
+        )
+
+
+class Rating(Page):
+    form_model = "player"
+    form_fields = ["trustworthiness"]
+
+    @staticmethod
+    def is_displayed(player: Player):
+        return player.round_number == C.NUM_ROUNDS
+
+    @staticmethod
+    def vars_for_template(player: Player):
+        return dict(
+
+        )
+
+
+class TrustGameForCCP(Page):
+    form_model = "player"
+    form_fields = ["send_back_CCP_1", "send_back_CCP_2", "send_back_CCP_3"]
+
+    @staticmethod
+    def is_displayed(player: Player):
+        return player.round_number == C.NUM_ROUNDS
+
+    @staticmethod
+    def vars_for_template(player: Player):
+        return dict(
+            zero_points_tripled = C.zero_points*3,
+            one_points_tripled = C.one_points*3,
+            two_points_tripled = C.two_points*3,
+            three_points_tripled = C.three_points*3,
+            bounds={
+                'send_back_CCP_1': {'min': 0, 'max': C.one_points*3},
+                'send_back_CCP_2': {'min': 0, 'max': C.two_points*3},
+                'send_back_CCP_3': {'min': 0, 'max': C.three_points*3},
             }
         )
 
@@ -282,6 +327,8 @@ page_sequence = [Consent,
                  Instructions,
                  Dice,
                  TrustGame,
+                 Rating,
+                 TrustGameForCCP,
                  # End,
                  Payment,
                  ProlificLink]
