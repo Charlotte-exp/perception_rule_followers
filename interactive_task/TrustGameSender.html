@@ -183,11 +183,12 @@
 </head>
 
 <body>
+
 <div class="card-body">
 
     <div>
         <p>
-            Here is the number of times, out of {{ C.number_of_trials }},
+            Here is the number of times, out of {{ number_of_trials }},
             that the other participant chose to report the correct die:
         </p>
         <div class="container my-5">
@@ -195,7 +196,7 @@
                 <div class="fraction-square">
                     <div class="diagonal-line"></div>
                     <div class="k-value">{{ k_value }}</div>
-                    <div class="denominator">{{ C.number_of_trials }}</div>
+                    <div class="denominator">{{ number_of_trials }}</div>
                 </div>
             </div>
         </div>
