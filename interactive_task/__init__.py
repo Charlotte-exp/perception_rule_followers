@@ -85,8 +85,12 @@ def group_by_arrival_time_method(subsession, waiting_players):
         return None
 
 
-def other_player(player: Player):
-    return player.get_others_in_group()[0]
+def other_players(player: Player):
+    previous_pp = player.get_others_in_group()[0]
+    next_pp = player.get_others_in_group()[1]
+    print(next_pp, previous_pp)
+    return previous_pp, next_pp
+
 
 def calculate_k(player: Player):
     list_of_correct = []
@@ -154,11 +158,28 @@ class TrustGameSender(Page):
         return None
 
     def vars_for_template(player: Player):
+        next_pp = other_players(player)[0]
         return dict(
             k_value=sum(player.participant.k_list),
+            k_value_next = sum(next_pp.participant.k_list),
             number_of_trials = player.session.number_of_trials,
         )
 
+class ResultsWaitPage(WaitPage):
+    """
+    This wait page is necessary to compile the payoffs as the results can only be displayed on the results page if all
+    the players have made a decision. Thus players have to wait for the decision of the others before moving on to the
+    results page.
+    I use a template for some special text rather than just the body_text variable.
+    """
+    template_name = 'interactive_task/ResultsWaitPage.html'
+    # after_all_players_arrive = set_payoffs
+
+    @staticmethod
+    def is_displayed(player: Player):
+        if player.round_number == C.NUM_ROUNDS and player.participant.treatment == 'TG':
+            return True
+        return None
 
 class TrustGameBack(Page):
     form_model = "player"
@@ -172,13 +193,13 @@ class TrustGameBack(Page):
 
     @staticmethod
     def vars_for_template(player: Player):
-        other_pp = other_player(player)
+        previous_pp = other_players(player)[1]
         return dict(
             zero_points_tripled = C.zero_points*3,
             one_points_tripled = C.one_points*3,
             two_points_tripled = C.two_points*3,
             three_points_tripled = C.three_points*3,
-            sent_points = player.trust_points,
+            sent_points = previous_pp.trust_points,
             bounds={
                 'send_back_1': {'min': 0, 'max': C.one_points*3},
                 # 'send_back_2': {'min': 0, 'max': C.two_points*3},
@@ -291,6 +312,7 @@ class ProlificLink(Page):
 
 page_sequence = [PairingWaitPage,
                  TrustGameSender,
+                 ResultsWaitPage,
                  TrustGameBack,
                  Rating,
                  NonTrustBasedTask,
