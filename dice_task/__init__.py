@@ -138,12 +138,23 @@ class Player(BasePlayer):
     q2 = models.IntegerField(
         initial=9,
         choices=[
-            [0, f'The points sent by another participants'],
-            [1, f'The points sent by another participants, doubled'],
-            [2, f'The points sent by another participants, tripled'],
-            [3, f'The points I decide to keep from those sent by another participant and tripled by us'],
+            [0, f'The points returned to me by another participants, independent of how much I send in the first place'],
+            [1, f'The points returned to me by another participants, depending on how much I send in the first place'],
         ],
         verbose_name='What determines the number of bonus points you will be paid from stage 2?',
+        widget=widgets.RadioSelect,
+        # error_messages={'required': 'You must select an option before continuing.'}, # does not display
+    )
+
+    q3 = models.IntegerField(
+        initial=9,
+        choices=[
+            [0, f'The points sent the participant in another study'],
+            [1, f'The points sent the participant in another study, doubled'],
+            [2, f'The points sent the participant in another study, tripled'],
+            [3, f'The points I decide to keep from those sent by another participant and tripled by us'],
+        ],
+        verbose_name='What determines the number of bonus points you will be paid from stage 3?',
         widget=widgets.RadioSelect,
         # error_messages={'required': 'You must select an option before continuing.'}, # does not display
     )
@@ -172,6 +183,9 @@ def generate_dice_sequence():
     sequence = [random.randint(1, 6) for _ in range(C.NUM_ROUNDS)]
     return sequence
 
+def other_player(player: Player):
+    return player.get_others_in_group()[0]
+
 def random_payment(player: Player):
     """
     This function selects one round among all with equal probability.
@@ -198,13 +212,13 @@ class Consent(Page):
     def is_displayed(player: Player):
         return player.round_number == 1
 
-class Instructions(Page):
+class Introduction(Page):
     form_model = "player"
-    form_fields = ["q1", "q2"]
+    form_fields = ["q1"]
 
     @staticmethod
     def is_displayed(player: Player):
-        if player.round_number == 1 and player.treatment != 'dont_know':
+        if player.round_number == 1:
             return True
         return None
 
@@ -213,7 +227,7 @@ class Instructions(Page):
         """
         records the number of time the page was submitted with an error. which specific error is not recorded.
         """
-        solutions = dict(q1=1, q2=3)
+        solutions = dict(q1=1)
         # if player.treatment == 'treatment':
         #     solutions = dict(q1=1, q2=2)
         # else:
@@ -233,6 +247,76 @@ class Instructions(Page):
             return errors
         return None
 
+
+class InstruStage2(Page):
+    form_model = "player"
+    form_fields = ["q2"]
+
+    @staticmethod
+    def is_displayed(player: Player):
+        if player.round_number == 1 and player.treatment != 'dont_know':
+            return True
+        return None
+
+    @staticmethod
+    def error_message(player: Player, values):
+        """
+        records the number of time the page was submitted with an error. which specific error is not recorded.
+        """
+        solutions = dict(q2=1)
+        # if player.treatment == 'treatment':
+        #     solutions = dict(q1=1, q2=2)
+        # else:
+        #     solutions = dict(q5=1, q6=2)
+
+        # error_message can return a dict whose keys are field names and whose values are error messages
+        errors = {}
+        for question, correct_answer in solutions.items():
+            if values[question] != correct_answer:
+                errors[question] = 'This answer is wrong'
+                # Increment the specific failed attempt counter for the incorrect question
+                failed_attempt_field = f"{question}_failed_attempts"
+                if hasattr(player, failed_attempt_field):  # Ensure the field exists
+                    setattr(player, failed_attempt_field, getattr(player, failed_attempt_field) + 1)
+
+        if errors:
+            return errors
+        return None
+
+class InstruStage3(Page):
+    form_model = "player"
+    form_fields = ["q3"]
+
+    @staticmethod
+    def is_displayed(player: Player):
+        if player.round_number == 1 and player.treatment != 'dont_know':
+            return True
+        return None
+
+    @staticmethod
+    def error_message(player: Player, values):
+        """
+        records the number of time the page was submitted with an error. which specific error is not recorded.
+        """
+        solutions = dict(q3=2)
+        # if player.treatment == 'treatment':
+        #     solutions = dict(q1=1, q2=2)
+        # else:
+        #     solutions = dict(q5=1, q6=2)
+
+        # error_message can return a dict whose keys are field names and whose values are error messages
+        errors = {}
+        for question, correct_answer in solutions.items():
+            if values[question] != correct_answer:
+                errors[question] = 'This answer is wrong'
+                # Increment the specific failed attempt counter for the incorrect question
+                failed_attempt_field = f"{question}_failed_attempts"
+                if hasattr(player, failed_attempt_field):  # Ensure the field exists
+                    setattr(player, failed_attempt_field, getattr(player, failed_attempt_field) + 1)
+
+        if errors:
+            return errors
+        return None
 
 class Dice(Page):
     form_model = "player"
@@ -274,11 +358,13 @@ class TrustGameBack(Page):
 
     @staticmethod
     def vars_for_template(player: Player):
+        other_pp = other_player(player)
         return dict(
             zero_points_tripled = C.zero_points*3,
             one_points_tripled = C.one_points*3,
             two_points_tripled = C.two_points*3,
             three_points_tripled = C.three_points*3,
+            sent_points = player.trust_points,
             bounds={
                 'send_back_1': {'min': 0, 'max': C.one_points*3},
                 # 'send_back_2': {'min': 0, 'max': C.two_points*3},
@@ -390,7 +476,9 @@ class ProlificLink(Page):
 
 
 page_sequence = [Consent,
-                 Instructions,
+                 Introduction,
+                 InstruStage2,
+                 InstruStage3,
                  Dice,
                  TrustGameSender,
                  TrustGameBack,

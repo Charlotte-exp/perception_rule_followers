@@ -1,6 +1,6 @@
 {{ block title }}
 
-    Third stage
+    Stage 2
 
 {{ endblock }}
 
@@ -236,36 +236,12 @@
 
 <body>
 
-<div class="card bg-light instructions">
-    <div class="card-body" style="font-size: 14px">
-        <p>
-            In the second stage, another participant from a different study will see
-            one of your die rolls and the number you reported to us in the first stage.
-            Based on this, the other participant will decide how many points, if any, they wish to send to you.
-        </p>
-        <u>Remember</u>:
-        <ul>
-            <li> The other participant starts with 3 points.
-            <li> The other participant then chooses how many points, if any, to send to you.
-            <li> Any point sent to you is tripled: for every 1 point the other participant sends you,
-                    you will receive 3 points.
-            <li> You then choose how many points, if any, to return to the other participant.
-            <li> You can return nothing, any intermediate amount, or everything.
-        </ul>
-        <p>
-            If the other participant sends all 3 points, you will receive 9 points.
-            If you return half of the 9 points, you and the other participant will both earn 4.5 points,
-            and will both have more than the other participant started with.
-            But if you return nothing, you will earn 9 points, while the Sender will earn nothing.
-            So, the other participant can gain points or lose points by sending you points,
-            depending on how much you return.
-        </p>
-        <p>
-            Below we are asking you to tell us how much you would want to return
-            depending on how much you receive from the other participant you will be matched with.
-        </p>
-    </div>
-</div>
+    <p>
+        Now, you decide how much to send back from the amount sent by another participant in the study.
+    </p>
+    <p style="font-weight: bold">
+        They decided to send to you: {{ sent_points }} points.
+    </p>
 
 <div  class="card-body">
 
@@ -298,12 +274,29 @@
 
 </div>
 
-
     <div class="button-container">
         <button type="button" id="submit-button" class="submit-button">
             NEXT
         </button>
     </div>
+    <br>
+
+
+<div class="card bg-light instructions">
+    <div class="card-body" style="font-size: 14px">
+
+        <u>Remember</u>:
+        <ul>
+            <li> Just like you, the other participant started with 3 points.
+            <li> They saw how many times you reported the correct die.
+            <li> Based on this, they chose how many points, if any, to send to you.
+            <li> Any point sent to you is tripled: for every 1 point the other participant sends you,
+                    you will receive 3 points.
+            <li> You then choose how many points, if any, to return to the other participant.
+            <li> You can return nothing, some, or all points.
+        </ul>
+    </div>
+</div>
 
 
 </body>

@@ -1,0 +1,78 @@
+{{ block title }}
+
+    Format of the study
+
+{{ endblock }}
+{{ block content }}
+
+<div class="card-body">
+    <p>
+        This study is made of three stages:
+    </p>
+
+    <p style="font-size: 18px; font-weight: bold">Stage 1: Die rolls</p>
+    <ul>
+        <li>You will roll a die {{ C.NUM_ROUNDS }} times.
+        <li>After each roll, you report the number you rolled.
+        <li>The number you report is the number of points you will be paid for that roll.
+        <li><b>1 point is worth {{ C.conversion }}</b>.
+    </ul>
+
+    <p style="font-size: 18px; font-weight: bold">Stage 2: Interaction with another participant in the study</p>
+    <ul>
+        <li>After the {{ C.NUM_ROUNDS }} die rolls,
+        you are <b>matched with another participant</b> from the same study.
+        <li>You will the number of times the other participant reported the correct number,
+        and they will see the number of times <u>you</u> reported the correct number.
+
+        {{ if player.treatment == 'rating' }}
+        <li>Based on this information, you will rate their behaviour.
+        <li>You will be paid a {{ C.bonus }} points bonus if your rating is the same as the most common answer for that participant.
+        {{ endif }}
+
+        {{ if player.treatment == 'TG' }}
+        <li>Based on this information, you will interact in a two stage task with them.
+        <li>You will be paid two separate bonus points based on that interaction ranging from 0 to 9 points.
+        {{ endif }}
+
+        {{ if player.treatment == 'DG' }}
+        <li>Based on this information, you will interact in a two stage task with them.
+        <li>You will the opportunity to earn another bonus based on that interaction ranging from 0 to 9 points.
+        {{ endif }}
+    </ul>
+
+    <p style="font-size: 18px; font-weight: bold">Stage 3: Extra interaction with a participant from another study</p>
+    <ul>
+        <li>After stage 2 is over,
+        you are matched with a <b>new participant from a different study</b>.
+        <li>The other participant will now see <u>only one</u> of your randomly selected die roll,
+        <u>as well as</u> the number you reported for that roll.
+        <li>Based on this information, you will interact in an extra task with them.
+        <li>You will the opportunity to earn another bonus based on that interaction ranging from 0 to 9 points.
+    </ul>
+
+    <p>
+        <b>To summarise</b>: You get three bonus, one from the die number you report,
+        two from the interaction in stage 2, and one from the interaction in stage 3.
+        Because the 3rd participant will be matched with you in a later study,
+        you will receive both bonuses later.
+    </p>
+
+</div>
+
+<div class="card bg-light instructions">
+    <div  class="card-body">
+        <h5>Please answer this question before continuing:</h5>
+            {{ formfields }}
+    </div>
+</div>
+
+    <div style="display: flex; justify-content: flex-end;margin-top: 20px; margin-bottom: 10px;">
+        Click next to read the detailed instructions for stage 2.
+    </div>
+    <div style="display: flex; justify-content: flex-end">
+        {{ next_button }}
+    </div>
+
+
+{{ endblock }}
