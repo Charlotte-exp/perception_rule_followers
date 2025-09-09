@@ -10,6 +10,14 @@ SESSION_CONFIGS = [
         use_browser_bots=False,
         oTree_version_used=popen('otree --version').read().strip()
     ),
+    dict(
+        name='stage2',
+        display_name="stage 2 games only",
+        app_sequence=['interactive_task'],
+        num_demo_participants=9,
+        use_browser_bots=False,
+        oTree_version_used=popen('otree --version').read().strip()
+    ),
 ]
 
 # if you set a property in SESSION_CONFIG_DEFAULTS, it will be inherited by all configs

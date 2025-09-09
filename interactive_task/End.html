@@ -6,26 +6,50 @@
 
 {{ block content }}
 
-<div style="font-size: 14px">
+<div style="font-size: 16px">
 
+    <p>
+        The study is over, thanks for taking part!
+    </p>
+    <p>
+        Below are the bonuses you got for each stage:
+    </p>
 
-<div>
-    The study is over, thanks for taking part!
-</div>
-
-    <p style="color:white; font-size: 2px">same white gap</p>
-
-        <div class="card bg-light instructions">
-        <div  class="card-body">
+    <div class="card bg-light instructions">
+        <div class="card-body" style="font-size: 15px">
             <p>
-                The round randomly selected for payment is <b>round {{ random_round }}</b>
+                <b>In stage 1, the die on round {{ random_round }} was selected for your bonus.
+                <br>
+                On that round you reported die of {{ random_reported_dice }}
+                which will be paid to you as a bonus of {{ random_reported_dice}} points.
             </p>
+            {{ if treatment == "TG" }}
             <p>
-                This means that if your reported dice of {{ random_reported_dice }}
-                and it will be paid to you as a bonus of {{ random_reported_dice}} points.
+                In stage 2, you sent {{ points_i_sent }} points to the next participant.
+                They returned {{ points_returned_to_me}} points to you.
+                You also decided to return {{ points_i_returned }} points of the {{ points_sent_to_me }} points sent to you.
+            </p>
+            {{ endif }}
+            {{ if treatment == "DG" }}
+            <p>
+                In stage 2, you sent {{ points_sent }} points to the next participant and kept {{ player.points_kept }} points.
+                The previous participant sent you {{ previous_pp_points_sent }} points.
+            </p>
+            {{ endif }}
+            {{ if treatment == "rating" }}
+            <p>
+                In stage 2, you sent {{ points_i_sent }} points to the next participant.
+                They returned {{ points_returned_to_me}} points to you.
+                You also decided to return {{ points_i_returned }} points of the {{ points_sent_to_me }} points sent to you.
+            </p>
+            {{ endif }}
+            <p>
+                For stage 3, the bonus will be paid to you at a later date
+                depending on the decision of the participant in another study.
             </p>
         </div>
     </div>
+
 </div>
 
     <br>
