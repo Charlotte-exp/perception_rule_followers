@@ -90,13 +90,6 @@ class Player(BasePlayer):
                      'How many points to do you send back?',
         min=0, max=C.three_points*3)
 
-    random_selection = models.StringField(
-        initial='',
-        choices=['randomise', 'whatever'],
-    )
-
-    randomly_selected_round = models.IntegerField(initial=0)
-    randomly_selected_reported_dice = models.IntegerField(initial=0)
 
 ######## FUNCTIONS #########
 
@@ -130,25 +123,6 @@ def calculate_k(player: Player):
         # k_value = sum(list_of_correct)
         # p.participant.k_value = k_value
     # return list_of_correct
-
-
-def random_payment(player: Player):
-    """
-    This function selects one round among all with equal probability.
-    It records the value of each variable on this round as new random_variable fields
-    """
-    number_of_rounds = player.session.number_of_trials
-    randomly_selected_round = random.randint(1, number_of_rounds)
-    me = player.in_round(randomly_selected_round)
-    player.randomly_selected_round = randomly_selected_round
-    #player.participant.randomly_selected_round = randomly_selected_round
-
-    attributes = ['reported_dice']
-    for attr in attributes:
-        value = getattr(me.participant, attr)
-        setattr(player, f'randomly_selected_{attr}', value)
-        #setattr(player.participant, f'randomly_selected_{attr}', value)
-
 
 
 ######### PAGES #########
@@ -291,7 +265,6 @@ class TrustGameForCCP(Page):
                 'send_back_CCP_2': {'min': 0, 'max': C.two_points*3},
                 'send_back_CCP_3': {'min': 0, 'max': C.three_points*3},
             },
-            call_payment = random_payment(player),
         )
 
 
@@ -307,9 +280,8 @@ class Payment(Page):
         base_data = dict(
             player_in_all_rounds=player.in_all_rounds(),
             treatment=player.participant.treatment,
-            round_number=player.round_number,
-            random_round=player.randomly_selected_round,
-            random_reported_dice=player.randomly_selected_reported_dice,
+            random_round=player.participant.randomly_selected_round,
+            random_reported_dice=player.participant.randomly_selected_reported_dice,
         )
 
         if player.participant.treatment == 'TG':
@@ -334,8 +306,7 @@ class ProlificLink(Page):
         return player.round_number == C.NUM_ROUNDS
 
 
-page_sequence = [
-    # PairingWaitPage,
+page_sequence = [PairingWaitPage,
                  TrustGameSender,
                  ResultsWaitPage,
                  TrustGameBack,

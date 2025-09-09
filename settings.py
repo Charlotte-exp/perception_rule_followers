@@ -31,7 +31,8 @@ SESSION_CONFIG_DEFAULTS = dict(
     doc=""
 )
 
-PARTICIPANT_FIELDS = ['original_dice', 'reported_dice', 'treatment', 'k_list']
+PARTICIPANT_FIELDS = ['original_dice', 'reported_dice', 'treatment', 'k_list',
+                      'randomly_selected_round', 'randomly_selected_reported_dice']
 SESSION_FIELDS = ['number_of_trials']
 
 # ISO-639 code

@@ -111,6 +111,14 @@ class Player(BasePlayer):
         # error_messages={'required': 'You must select an option before continuing.'}, # does not display
     )
 
+    random_selection = models.StringField(
+        initial='',
+        choices=['randomise', 'whatever'],
+    )
+
+    randomly_selected_round = models.IntegerField(initial=0)
+    randomly_selected_reported_dice = models.IntegerField(initial=0)
+
 
 ######## FUNCTIONS #########
 
@@ -135,6 +143,25 @@ def calculate_k(player: Player):
         p.participant.k_list = list_of_correct
         # k_value = sum(list_of_correct)
         # p.participant.k_value = k_value
+
+
+def random_payment(player: Player):
+    """
+    This function selects one round among all with equal probability.
+    It records the value of each variable on this round as new random_variable fields
+    """
+    # number_of_rounds = player.session.number_of_trials
+    number_of_rounds = C.NUM_ROUNDS
+    randomly_selected_round = random.randint(1, number_of_rounds)
+    me = player.in_round(randomly_selected_round)
+    player.randomly_selected_round = randomly_selected_round
+    player.participant.randomly_selected_round = randomly_selected_round
+
+    attributes = ['reported_dice']
+    for attr in attributes:
+        value = getattr(me, attr)
+        setattr(player, f'randomly_selected_{attr}', value)
+        setattr(player.participant, f'randomly_selected_{attr}', value)
 
 
 
@@ -266,6 +293,7 @@ class Dice(Page):
     def before_next_page(player: Player, timeout_happened):
         if player.round_number == C.NUM_ROUNDS:
             calculate_k(player)
+            random_payment(player),
 
 
 page_sequence = [Consent,
