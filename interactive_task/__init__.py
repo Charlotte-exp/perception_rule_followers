@@ -27,27 +27,27 @@ class C(BaseConstants):
 class Subsession(BaseSubsession):
     pass
 
-## to test without dice task and pairings
-def creating_session(subsession):
-    """
-    create a fixed sequence of 10 elements for each player bu calling generate_k_sequence function.
-    Stored in a participant.vars since player field cannot be lists (and I don't need it in the database).
-    Because creating_session calls the function every round
-    we force it not to do that by setting a value based on round number instead.
-    """
-    subsession.session.number_of_trials = C.NUM_ROUNDS
-
-    treatments = itertools.cycle(['TG', 'DG', 'rating'])
-    for p in subsession.get_players():
-        p.treatment = next(treatments)
-        p.participant.treatment = p.treatment
-
-        p.participant.reported_dice = random.randint(1, 6)
-        p.participant.original_dice = random.randint(1, 6)
-
-        k_value = sum(calculate_k(p))
-        p.participant.k_value = k_value
-
+# ## to test without dice task and pairings
+# def creating_session(subsession):
+#     """
+#     create a fixed sequence of 10 elements for each player bu calling generate_k_sequence function.
+#     Stored in a participant.vars since player field cannot be lists (and I don't need it in the database).
+#     Because creating_session calls the function every round
+#     we force it not to do that by setting a value based on round number instead.
+#     """
+#     subsession.session.number_of_trials = C.NUM_ROUNDS
+#
+#     treatments = itertools.cycle(['TG', 'DG', 'rating'])
+#     for p in subsession.get_players():
+#         p.treatment = next(treatments)
+#         p.participant.treatment = p.treatment
+#
+#         p.participant.reported_dice = random.randint(1, 6)
+#         p.participant.original_dice = random.randint(1, 6)
+#
+#         k_value = sum(calculate_k(p))
+#         p.participant.k_value = k_value
+#
 
 
 class Group(BaseGroup):
@@ -129,7 +129,7 @@ def calculate_k(player: Player):
         p.participant.k_list = list_of_correct
         # k_value = sum(list_of_correct)
         # p.participant.k_value = k_value
-    return list_of_correct
+    # return list_of_correct
 
 
 def random_payment(player: Player):
@@ -153,27 +153,27 @@ def random_payment(player: Player):
 
 ######### PAGES #########
 
-# class PairingWaitPage(WaitPage):
-#     """
-#     The Waitroom. This wait page has two purposes: making sure pps don't wait too long for other players in case there
-#     is little traffic, and allows one pp to leave before being grouped with others so that a dropout at the instruction
-#     level does not mean all pp in the group are out.
-#     The code below keeps the groups the same across all rounds automatically.
-#     We added a special pairing method in models.py.
-#     The waitroom has a 5min timer after which the pp is given a code to head back to prolific.
-#     This is coded on the template below and uses a javascript. (don't forget to paste the correct link!)
-#     """
-#     group_by_arrival_time = True
-#
-#     def is_displayed(player: Player):
-#         return player.round_number == 1
-#
-#
-#     # def vars_for_template(player: Player):
-#     #     player.participant.k_list = calculate_k(player)
-#     #     return dict(k_list=player.participant.k_list)
-#
-#     template_name = 'interactive_task/Waitroom.html'
+class PairingWaitPage(WaitPage):
+    """
+    The Waitroom. This wait page has two purposes: making sure pps don't wait too long for other players in case there
+    is little traffic, and allows one pp to leave before being grouped with others so that a dropout at the instruction
+    level does not mean all pp in the group are out.
+    The code below keeps the groups the same across all rounds automatically.
+    We added a special pairing method in models.py.
+    The waitroom has a 5min timer after which the pp is given a code to head back to prolific.
+    This is coded on the template below and uses a javascript. (don't forget to paste the correct link!)
+    """
+    group_by_arrival_time = True
+
+    def is_displayed(player: Player):
+        return player.round_number == 1
+
+
+    # def vars_for_template(player: Player):
+    #     player.participant.k_list = calculate_k(player)
+    #     return dict(k_list=player.participant.k_list)
+
+    template_name = 'interactive_task/Waitroom.html'
 
 
 class TrustGameSender(Page):
