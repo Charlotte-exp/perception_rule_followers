@@ -105,10 +105,24 @@ def group_by_arrival_time_method(subsession, waiting_players):
 
 
 def other_players(player: Player):
-    previous_pp = player.get_others_in_group()[0]
-    next_pp = player.get_others_in_group()[1]
-    print(next_pp, previous_pp)
-    return previous_pp, next_pp
+    """
+    Get_others_in_group returns a list in ascending order so need to use player ID in group.
+    """
+    number_of_players = C.PLAYERS_PER_GROUP
+    id_in_group = player.id_in_group  # 1, 2, or 3
+
+    # modulo to avoid negative values
+    prev_id = (id_in_group - 2) % number_of_players + 1   # previous player
+    next_id = id_in_group % number_of_players + 1    # next player
+
+    previous_pp = player.group.get_player_by_id(prev_id)
+    next_pp = player.group.get_player_by_id(next_id)
+
+    print(f"Player {id_in_group}: prev={previous_pp.id_in_group}, next={next_pp.id_in_group}")
+    return {
+        "previous": player.group.get_player_by_id(prev_id),
+        "next": player.group.get_player_by_id(next_id),
+    }
 
 
 def calculate_k(player: Player):
@@ -160,10 +174,10 @@ class TrustGameSender(Page):
         return None
 
     def vars_for_template(player: Player):
-        next_pp = other_players(player)[0]
+        others = other_players(player)
+        next_pp = others["next"]
         return dict(
-            k_value=sum(player.participant.k_list),
-            k_value_next = sum(next_pp.participant.k_list),
+            k_value=sum(next_pp.participant.k_list),
             number_of_trials = player.session.number_of_trials,
         )
 
@@ -196,17 +210,12 @@ class TrustGameBack(Page):
 
     @staticmethod
     def vars_for_template(player: Player):
-        previous_pp = other_players(player)[1]
+        others = other_players(player)
+        previous_pp = others["previous"]
         return dict(
-            zero_points_tripled = C.zero_points*3,
-            one_points_tripled = C.one_points*3,
-            two_points_tripled = C.two_points*3,
-            three_points_tripled = C.three_points*3,
             sent_points = previous_pp.trust_points,
             bounds={
-                'send_back_1': {'min': 0, 'max': C.one_points*3},
-                # 'send_back_2': {'min': 0, 'max': C.two_points*3},
-                # 'send_back_3': {'min': 0, 'max': C.three_points*3},
+                'send_back_1': {'min': 0, 'max': previous_pp.trust_points},
             }
         )
 
@@ -275,21 +284,21 @@ class Payment(Page):
         return player.round_number == C.NUM_ROUNDS
 
     def vars_for_template(player: Player):
-        previous_pp = other_players(player)[0]
-        next_pp = other_players(player)[1]
+        others = other_players(player)
+        previous_pp = others["previous"]
+        next_pp = others["next"]
         base_data = dict(
             player_in_all_rounds=player.in_all_rounds(),
             treatment=player.participant.treatment,
             random_round=player.participant.randomly_selected_round,
             random_reported_dice=player.participant.randomly_selected_reported_dice,
         )
-
         if player.participant.treatment == 'TG':
             base_data.update(
                 points_i_sent=player.trust_points,
-                points_returned_to_me=next_pp.trust_points,
+                points_returned_to_me=next_pp.send_back_1,
                 points_sent_to_me=previous_pp.trust_points,
-                points_i_kept=previous_pp.trust_points - player.send_back_1,
+                points_i_kept=round(previous_pp.trust_points - player.send_back_1, 1),
             )
         elif player.participant.treatment == 'DG':
             base_data.update(
