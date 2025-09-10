@@ -71,7 +71,7 @@ class Player(BasePlayer):
     send_back_1 = models.FloatField(
         verbose_name='You received X points from the other participant: <br>'
                      'How many points to do you send back?',
-        min=0, max=C.one_points*3)
+        min=0, max=9)
 
     points_kept = models.IntegerField(initial=0)
 
@@ -255,9 +255,9 @@ class TrustGameBack(Page):
         others = other_players(player)
         previous_pp = others["previous"]
         return dict(
-            sent_points = previous_pp.trust_points,
+            sent_points = previous_pp.trust_points*3, # multiplied!!!
             bounds={
-                'send_back_1': {'min': 0, 'max': previous_pp.trust_points},
+                'send_back_1': {'min': 0, 'max': previous_pp.trust_points*3},
             }
         )
 
@@ -319,8 +319,8 @@ class Payment(Page):
             base_data.update(
                 points_i_sent=player.trust_points,
                 points_returned_to_me=next_pp.send_back_1,
-                points_sent_to_me=previous_pp.trust_points,
-                points_i_kept=round(previous_pp.trust_points - player.send_back_1, 1),
+                points_sent_to_me=previous_pp.trust_points*3, #  multiplied !!!
+                points_i_kept=round(previous_pp.trust_points*3 - player.send_back_1, 1),
             )
         elif player.participant.treatment == 'DG':
             base_data.update(
