@@ -1,0 +1,104 @@
+{{ block title }}
+
+    Detailed instructions
+
+{{ endblock }}
+{{ block content }}
+
+<div>
+
+    <p style="font-size: 16px; font-weight: bold">Stage 1: Die rolls</p>
+
+    <ul style="font-size: 14px">
+        <li>You will roll a die {{ C.NUM_ROUNDS }} times.
+        <li>After each roll, you report the number you rolled.
+        <li>The number you report is the number of points you will be paid for that roll.
+        <li><b>1 point is worth {{ C.conversion }}</b>.
+    </ul>
+
+    <p style="font-size: 18px; font-weight: bold">Stage 2: Interaction with another participant in the study</p>
+
+    {{ if player.treatment == 'rating' }}
+    <ul>
+        <li>After the {{ C.NUM_ROUNDS }} die rolls,
+        you are <b>matched with another participant</b> from the same study.
+        <li>First, you will see the number of times the other participant reported the correct number.
+        <li>Based on this information, you will rate how trustworthy you find them.
+        <li>You will be paid a {{ C.bonus }} points bonus if your rating is the same as the most common answer for that participant.
+    </ul>
+    {{ endif }}
+
+    {{ if player.treatment == 'TG' }}
+    <ul>
+        <li>After the {{ C.NUM_ROUNDS }} die rolls,
+        you are <b>matched with another participant</b> from the same study.
+        <li>First, you will see the number of times the other participant reported the correct number.
+        <li>Based on this information, you will have the opportunity to send points to them.
+        <li>Every point you send is tripled: 1 point sent becomes 3 points received.
+        <li>Second, the other participant then decides how many points from those, if any, to return to you.
+        <li>They can return nothing, some, or all points.
+    </ul>
+
+    <div class="card bg-light instructions">
+        <div class="card-body" style="font-size: 14px">
+        Example:
+        <ul>
+            <li>If you send all 3 points, the other participant will receive 9 points.
+            <li>If they return half of the 9 points, you and the other participant will both earn 4.5 points,
+            and will both have more than you started with.
+            <li>If they return nothing, they will earn 9 points, while you will earn nothing.
+        </ul>
+        </div>
+    </div>
+
+    <div style="margin-top: 20px; margin-bottom: 20px">
+    <p>
+        Your bonus will be the points the other participant returns to you,
+        and the bonus of the other participant will be the points they keep.
+        In addition, you will also decide how much to return to another participant who had to opportunity to send you points.
+        This will be <b>ANOTHER PARTICIPANT</b> than the one you decide to send points to.
+    </p>
+    </div>
+    {{ endif }}
+
+    {{ if player.treatment == 'DG' }}
+    <ul>
+        <li>Based on this information, you will interact in a two stage task with them.
+        <li>You will the opportunity to earn another bonus based on that interaction ranging from 0 to 9 points.
+    </ul>
+
+    <div class="card bg-light instructions">
+        <div class="card-body" style="font-size: 14px">
+        Example:
+        <ul>
+            <li>If you send all 3 points, the other participant will receive 9 points.
+            <li>If they return half of the 9 points, you and the other participant will both earn 4.5 points,
+            and will both have more than you started with.
+            <li>If they return nothing, they will earn 9 points, while you will earn nothing.
+        </ul>
+        </div>
+    </div>
+
+    <br>
+    <p>
+        You will also decide how much to return to another participant who had to opportunity to send you points.
+        This will be <b>ANOTHER PARTICIPANT</b> than the one you decide to send points to.
+    </p>
+    {{ endif }}
+
+</div>
+
+<div class="card bg-light instructions">
+    <div  class="card-body">
+        <h5>Please answer this question before continuing:</h5>
+            {{ formfields }}
+    </div>
+</div>
+
+    <br>
+    <div style="display: flex; justify-content: flex-end">
+        {{ next_button }}
+    </div>
+
+
+{{ endblock }}

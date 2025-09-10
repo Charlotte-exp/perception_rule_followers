@@ -1,0 +1,62 @@
+{{ block title }}
+
+    Detailed instructions
+
+{{ endblock }}
+{{ block content }}
+
+<div>
+
+    <p style="font-size: 16px; font-weight: bold">Stage 1: Die rolls</p>
+
+    <ul style="font-size: 14px">
+        <li>You will roll a die {{ C.NUM_ROUNDS }} times.
+        <li>After each roll, you report the number you rolled.
+        <li>The number you report is the number of points you will be paid for that roll.
+        <li><b>1 point is worth {{ C.conversion }}</b>.
+    </ul>
+
+    <p style="font-size: 18px; font-weight: bold"> Stage 3: Extra interaction with a participant from another study</p>
+    <ul>
+        <li>After stage 3, you are matched with <b>a new participant from a different study</b>.
+        <li>The other participant will now see <u>only one</u> of your randomly selected die roll,
+        <u>as well as</u> the number you reported for that roll.
+        <li>Based on this information, they will have the opportunity to send points to them.
+        <li>Every point they send is tripled: 1 point sent becomes 3 points received.
+        <li>You then decide how many points from those, if any, to return to them.
+        <li>You can return nothing, some, or all points.
+    </ul>
+
+    <div class="card bg-light instructions">
+        <div class="card-body" style="font-size: 14px">
+        Example:
+        <ul>
+            <li>If they send all 3 points, you will receive 9 points.
+            <li>If you return half of the 9 points, you and the other participant will both earn 4.5 points,
+            and will both have more than you started with.
+            <li>If you return nothing, they will earn 9 points, while you will earn nothing.
+        </ul>
+        </div>
+    </div>
+
+    <div style="margin-top: 20px; margin-bottom: 20px">
+        Your bonus will be the points you keep,
+        and the bonus of the other participant will be the points you return.
+    </div>
+
+</div>
+
+<div class="card bg-light instructions">
+    <div  class="card-body">
+        <h5>Now we will ask some comprehension questions to check your understanding:</h5>
+            {{ formfields }}
+    </div>
+</div>
+
+    <br>
+    <div style="display: flex; justify-content: flex-end">
+        {{ next_button }}
+    </div>
+
+
+{{ endblock }}

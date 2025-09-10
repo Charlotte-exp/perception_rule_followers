@@ -1,0 +1,77 @@
+{{ block title }}
+
+    End of the task
+
+{{ endblock }}
+
+{{ block content }}
+
+    <div class="panel panel-default" style="margin-bottom:10px">
+    <div class="panel-body">
+        <strong>The study is over, thank you for participating!</strong>
+        <br>
+        <p>
+            Below are the bonuses you got for each stage:
+        </p>
+
+        <div class="card bg-light instructions">
+            <div class="card-body" style="font-size: 15px">
+                <p>
+                    <b>In stage 1</b>, the die on round {{ random_round }} was selected for your bonus.
+                    <br>
+                    On that round you reported die of {{ random_reported_dice }}
+                    which will be paid to you as a bonus of <u>{{ random_reported_dice}} points</u>.
+                </p>
+                {{ if treatment == "TG" }}
+                <p>
+                    <b>In stage 2</b>, you sent {{ points_i_sent }} points to the next participant.
+                    They returned <u>{{ points_returned_to_me}} points</u> to you.
+                    <br>
+                    You also decided to keep <u>{{ points_i_kept }} points</u> of the {{ points_sent_to_me }} points sent to you.
+                </p>
+                {{ endif }}
+                {{ if treatment == "DG" }}
+                <p>
+                    <b>In stage 2</b>, you sent {{ points_sent }} points to the next participant
+                    and kept <u>{{ player.points_kept }} points</u> for yourself.
+                    <br>
+                    In addition, the previous participant sent you <u>{{ previous_pp_points_sent }} points</u>.
+                </p>
+                {{ endif }}
+                {{ if treatment == "rating" }}
+                <p>
+                    <b>For stage 2</b>, you will receive your bonus of {{ C.bonus }} points
+                    once the data for the whole study has been compiled and the most common answer calculated.
+                </p>
+                {{ endif }}
+                <p>
+                    <b>For stage 3</b>, the bonus will be paid to you at a later date
+                    depending on the decision of the participant in another study.
+                </p>
+            </div>
+        </div>
+
+        <br>
+        <p>
+            Once all participants are done with the study, you will receive your bonus as one amount through Prolific.
+            This can take a couple of weeks.
+        </p>
+
+        <p> </p>
+        <hr size="6" width="50%" align="center" color="black">
+    </div>
+    <p></p>
+        <p>
+            Click on the <b>next button</b> to be redirected to Prolific.
+            The participation payment will be paid immediately.
+        </p>
+
+        <div style="display: flex; justify-content: flex-end">
+            {% next_button %}
+        </div>
+</div>
+
+{{ endblock }}
+
+
+

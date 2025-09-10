@@ -5,8 +5,16 @@ SESSION_CONFIGS = [
     dict(
         name='perception',
         display_name="Dice and trust game",
-        app_sequence=['dice_task'],
-        num_demo_participants=8,
+        app_sequence=['dice_task', 'interactive_task'],
+        num_demo_participants=9,
+        use_browser_bots=False,
+        oTree_version_used=popen('otree --version').read().strip()
+    ),
+    dict(
+        name='stage2',
+        display_name="stage 2 games only",
+        app_sequence=['interactive_task'],
+        num_demo_participants=9,
         use_browser_bots=False,
         oTree_version_used=popen('otree --version').read().strip()
     ),
@@ -23,18 +31,19 @@ SESSION_CONFIG_DEFAULTS = dict(
     doc=""
 )
 
-PARTICIPANT_FIELDS = []
-SESSION_FIELDS = []
+PARTICIPANT_FIELDS = ['original_dice', 'reported_dice', 'treatment', 'k_list',
+                      'randomly_selected_round', 'randomly_selected_reported_dice']
+SESSION_FIELDS = ['number_of_trials']
 
 # ISO-639 code
 # for example: de, fr, ja, ko, zh-hans
 LANGUAGE_CODE = 'en'
 
 # e.g. EUR, GBP, CNY, JPY
-REAL_WORLD_CURRENCY_CODE = 'USD'
+REAL_WORLD_CURRENCY_CODE = 'GBP'
 USE_POINTS = True
 
-ADMIN_USERNAME = 'admin'
+ADMIN_USERNAME = 'charlotte'
 # for security, best to set admin password in an environment variable
 ADMIN_PASSWORD = environ.get('OTREE_ADMIN_PASSWORD')
 
