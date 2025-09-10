@@ -39,6 +39,45 @@
         border-color: #004a99;
     }
 
+    .fraction-square {
+        position: relative;
+        width: 80px;
+        height: 80px;
+        margin: 0 auto; /* centers the square */
+    }
+
+    .diagonal-line {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 70px;
+        height: 2px;
+        background: black;
+        transform: translate(-50%, -50%) rotate(-45deg);
+        transform-origin: center;
+    }
+
+    .k-value {
+    <!-- font-family: monospace;-->
+        font-size: 2rem;
+        font-weight: bold;
+        width: 2ch;       /* enough for 2 digits */
+        text-align: right; /* aligns single digits to right of the slot */
+        position: absolute;
+        top: -5px;
+        left: -20px;
+        font-size: 2.5rem;
+        font-weight: bold;
+    }
+
+    .denominator {
+        position: absolute;
+        bottom: 5px;
+        right: 5px;
+        font-size: 1.5rem;
+        font-weight: bold;
+    }
+
     .slider {
         width: 100%;
         margin: 20px 0;
@@ -215,8 +254,10 @@
                 labelRight.textContent = 0;
 
                 slider.addEventListener("input", function () {
-                    const leftValue = parseInt(this.value, 10);
-                    const rightValue = 10 - leftValue;
+                    const DG_points = {{ DG_points }}; // punishment points
+                    // const leftValue = parseInt(this.value, 10);
+                    const leftValue = parseInt(this.value);
+                    const rightValue = DG_points - leftValue;
 
                     labelLeft.textContent = leftValue;
                     labelRight.textContent = rightValue;
@@ -255,16 +296,22 @@
 
 <body>
 
-    <div class="card bg-light instructions">
-        <div class="card-body" style="font-size: 14px">
+<div class="card-body">
 
-            <p>
-                DG
-            </p>
-         </div>
-    </div>
+        <p>
+            Here is the number of times among the {{ number_of_trials }} rounds,
+            that the next participant chose to report the correct die:
+        </p>
+        <div class="container my-5">
+            <div class="mx-auto p-4 bg-light text-center shadow" style="max-width: 250px; border-radius: 10px;">
+                <div class="fraction-square">
+                    <div class="diagonal-line"></div>
+                    <div class="k-value">{{ k_value }}</div>
+                    <div class="denominator">{{ number_of_trials }}</div>
+                </div>
+            </div>
+        </div>
 
-    <br>
     <p style="text-align: center;">
         <strong>How many points do you send to the other participant?</strong>
     </p>
@@ -272,11 +319,11 @@
     <div class="slider-container">
         <span style="flex-grow: 1;">
             <input type="hidden" name="slider1_moved" value="0" id="check_slider1" />
-            <input type="range" name="points_kept" id="slider1" min="0" max="10" value="0" class="hidden-thumb">
+            <input type="range" name="points_kept" id="slider1" min="0" max="{{ DG_points }}" value="0" class="hidden-thumb">
         </span>
         <div class="slider-labels">
             <span>0</span>
-            <span>10</span>
+            <span>{{ DG_points }}</span>
         </div>
         <div style="text-align: center; margin-top: -15px">
             <span style="color: #FFFFFF">
@@ -307,6 +354,20 @@
         <button type="button" id="submit-button" class="submit-button">
             NEXT
         </button>
+    </div>
+
+</div>
+
+
+    <div class="card bg-light instructions">
+        <div class="card-body" style="font-size: 14px">
+            <u>Remember</u>:
+                <ul>
+                    <li> You start with 6 points.
+                    <li> You then choose how many points, if any, to send to the next participant.
+                    <li> The next participant has no say in this interaction.
+                </ul>
+         </div>
     </div>
 
 

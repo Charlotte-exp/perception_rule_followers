@@ -16,12 +16,14 @@ class C(BaseConstants):
     # number_of_trials = NUM_ROUNDS # from the actor task
     percent_accurate = 10
     bonus = cu(2)
-
     conversion = '43p'
+
     zero_points = cu(0)
     one_points = cu(1)
     two_points = cu(2)
     three_points = cu(3)
+
+    DG_points = cu(6)
 
 
 class Subsession(BaseSubsession):
@@ -181,6 +183,46 @@ class TrustGameSender(Page):
             number_of_trials = player.session.number_of_trials,
         )
 
+
+class DictGame(Page):
+    form_model = "player"
+    form_fields = ["points_kept"]
+
+    @staticmethod
+    def is_displayed(player: Player):
+        if player.round_number == C.NUM_ROUNDS and player.participant.treatment == 'DG':
+            return True
+        return None
+
+    @staticmethod
+    def vars_for_template(player: Player):
+        others = other_players(player)
+        next_pp = others["next"]
+        return dict(
+            DG_points = int(C.DG_points),
+            k_value = sum(next_pp.participant.k_list),
+            number_of_trials = player.session.number_of_trials,
+            points_kept = player.points_kept,
+        )
+
+
+class Rating(Page):
+    form_model = "player"
+    form_fields = ["trustworthiness"]
+
+    @staticmethod
+    def is_displayed(player: Player):
+        if player.round_number == C.NUM_ROUNDS and player.participant.treatment == 'rating':
+            return True
+        return None
+
+    @staticmethod
+    def vars_for_template(player: Player):
+        return dict(
+
+        )
+
+
 class ResultsWaitPage(WaitPage):
     """
     This wait page is necessary to compile the payoffs as the results can only be displayed on the results page if all
@@ -193,7 +235,7 @@ class ResultsWaitPage(WaitPage):
 
     @staticmethod
     def is_displayed(player: Player):
-        if player.round_number == C.NUM_ROUNDS and player.participant.treatment == 'TG':
+        if player.round_number == C.NUM_ROUNDS and player.participant.treatment != 'rating':
             return True
         return None
 
@@ -220,38 +262,18 @@ class TrustGameBack(Page):
         )
 
 
-class Rating(Page):
-    form_model = "player"
-    form_fields = ["trustworthiness"]
+class EndWaitPage(WaitPage):
+    """
+    In case some people go to payment before their received decided what points to return
+    """
+    template_name = 'interactive_task/EndWaitPage.html'
+    # after_all_players_arrive = set_payoffs
 
     @staticmethod
     def is_displayed(player: Player):
-        if player.round_number == C.NUM_ROUNDS and player.participant.treatment == 'rating':
+        if player.round_number == C.NUM_ROUNDS and player.participant.treatment == 'TG':
             return True
         return None
-
-    @staticmethod
-    def vars_for_template(player: Player):
-        return dict(
-
-        )
-
-
-class NonTrustBasedTask(Page):
-    form_model = "player"
-    form_fields = ["points_kept"]
-
-    @staticmethod
-    def is_displayed(player: Player):
-        if player.round_number == C.NUM_ROUNDS and player.participant.treatment == 'DG':
-            return True
-        return None
-
-    @staticmethod
-    def vars_for_template(player: Player):
-        return dict(
-            points_kept = player.points_kept,
-        )
 
 
 class TrustGameForCCP(Page):
@@ -317,10 +339,11 @@ class ProlificLink(Page):
 
 page_sequence = [PairingWaitPage,
                  TrustGameSender,
+                 DictGame,
+                 Rating,
                  ResultsWaitPage,
                  TrustGameBack,
-                 Rating,
-                 NonTrustBasedTask,
+                 EndWaitPage,
                  TrustGameForCCP,
                  Payment,
                  ProlificLink]
