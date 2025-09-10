@@ -39,6 +39,45 @@
         border-color: #004a99;
     }
 
+    .fraction-square {
+        position: relative;
+        width: 80px;
+        height: 80px;
+        margin: 0 auto; /* centers the square */
+    }
+
+    .diagonal-line {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 70px;
+        height: 2px;
+        background: black;
+        transform: translate(-50%, -50%) rotate(-45deg);
+        transform-origin: center;
+    }
+
+    .k-value {
+    <!-- font-family: monospace;-->
+        font-size: 2rem;
+        font-weight: bold;
+        width: 2ch;       /* enough for 2 digits */
+        text-align: right; /* aligns single digits to right of the slot */
+        position: absolute;
+        top: -5px;
+        left: -20px;
+        font-size: 2.5rem;
+        font-weight: bold;
+    }
+
+    .denominator {
+        position: absolute;
+        bottom: 5px;
+        right: 5px;
+        font-size: 1.5rem;
+        font-weight: bold;
+    }
+
     .slider {
         width: 100%;
         margin: 20px 0;
@@ -225,14 +264,20 @@
 
 <body>
 
-<div class="card bg-light instructions">
-    <div class="card-body" style="font-size: 14px">
-        <p>
-            Rate this sequence:
-        </p>
 
+    <p>
+        Here is the number of times among the {{ number_of_trials }} rounds,
+        that the next participant chose to report the correct die:
+    </p>
+    <div class="container my-5">
+        <div class="mx-auto p-4 bg-light text-center shadow" style="max-width: 250px; border-radius: 10px;">
+            <div class="fraction-square">
+                <div class="diagonal-line"></div>
+                <div class="k-value">{{ k_value }}</div>
+                <div class="denominator">{{ number_of_trials }}</div>
+            </div>
+        </div>
     </div>
-</div>
 
     <br>
     <p style="text-align: center;">

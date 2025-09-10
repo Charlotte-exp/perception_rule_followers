@@ -219,7 +219,8 @@ class Rating(Page):
     @staticmethod
     def vars_for_template(player: Player):
         return dict(
-
+            k_value = sum(next_pp.participant.k_list),
+            number_of_trials = player.session.number_of_trials,
         )
 
 
