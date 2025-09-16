@@ -18,24 +18,14 @@
 
     <p style="font-size: 18px; font-weight: bold">Stage 2: Interaction with another participant in the study</p>
 
-    {{ if player.treatment == 'rating' }}
-    <ul>
-        <li>After the {{ C.NUM_ROUNDS }} die rolls,
-        you are <b>matched with another participant</b> from the same study.
-        <li>First, you will see the number of times the other participant reported the correct number.
-        <li>Based on this information, you will rate how trustworthy you find them.
-        <li>You will be paid a {{ C.bonus }} points bonus if your rating is the same as the most common answer for that participant.
-    </ul>
-    {{ endif }}
-
     {{ if player.treatment == 'TG' }}
     <ul>
         <li>After the {{ C.NUM_ROUNDS }} die rolls,
-        you are <b>matched with another participant</b> from the same study.
-        <li>First, you will see the number of times the other participant reported the correct number.
+        you are <b>matched with next participant</b> from this same study.
+        <li>First, you will see the number of times the next participant reported the correct number.
         <li>Based on this information, you will have the opportunity to send points to them.
         <li>Every point you send is tripled: 1 point sent becomes 3 points received.
-        <li>Second, the other participant then decides how many points from those, if any, to return to you.
+        <li>Second, the next participant then decides how many points from those, if any, to return to you.
         <li>They can return nothing, some, or all points.
     </ul>
 
@@ -43,8 +33,8 @@
         <div class="card-body" style="font-size: 14px">
         Example:
         <ul>
-            <li>If you send all 3 points, the other participant will receive 9 points.
-            <li>If they return half of the 9 points, you and the other participant will both earn 4.5 points,
+            <li>If you send all 3 points, the next participant will receive 9 points.
+            <li>If they return half of the 9 points, you and the next participant will both earn 4.5 points,
             and will both have more than you started with.
             <li>If they return nothing, they will earn 9 points, while you will earn nothing.
         </ul>
@@ -53,16 +43,19 @@
 
     <div style="margin-top: 20px; margin-bottom: 20px">
     <p>
-        Your bonus will be the points the other participant returns to you,
-        and the bonus of the other participant will be the points they keep.
-        In addition, you will also decide how much to return to another participant who had to opportunity to send you points.
-        This will be <b>ANOTHER PARTICIPANT</b> than the one you decide to send points to.
+        Your bonus will be the points the next participant returns to you,
+        and the bonus of the next participant will be the points they keep.
+        You will also decide how much to return to the previous participant who had the same opportunity to send you points
+        based on the number of times you reported the correct number.
     </p>
     </div>
     {{ endif }}
 
     {{ if player.treatment == 'DG' }}
     <ul>
+        <li>After the {{ C.NUM_ROUNDS }} die rolls,
+        you are <b>matched with the next participant</b> from this same study.
+        <li>First, you will see the number of times the next participant reported the correct number.
         <li>Based on this information, you will interact in a two stage task with them.
         <li>You will the opportunity to earn another bonus based on that interaction ranging from 0 to 9 points.
     </ul>
@@ -79,11 +72,23 @@
         </div>
     </div>
 
-    <br>
+    <div style="margin-top: 20px; margin-bottom: 20px">
     <p>
-        You will also decide how much to return to another participant who had to opportunity to send you points.
+        You will also decide how much to return to the <u>previous</u> participant who had the same opportunity to send you points
+        based on the number of times you reported the correct number.
         This will be <b>ANOTHER PARTICIPANT</b> than the one you decide to send points to.
     </p>
+    </div>
+    {{ endif }}
+
+    {{ if player.treatment == 'rating' }}
+    <ul>
+        <li>After the {{ C.NUM_ROUNDS }} die rolls,
+        you are <b>matched with the next participant</b> from this same study.
+        <li>First, you will see the number of times the next participant reported the correct number.
+        <li>Based on this information, you will rate how trustworthy you find them.
+        <li>You will be paid a {{ C.bonus }} points bonus if your rating is the same as the most common answer for that participant.
+    </ul>
     {{ endif }}
 
 </div>
@@ -95,7 +100,9 @@
     </div>
 </div>
 
-    <br>
+    <div style="display: flex; justify-content: flex-end;margin-top: 20px; margin-bottom: 10px;">
+        Click next to read the detailed instructions for stage 3.
+    </div>
     <div style="display: flex; justify-content: flex-end">
         {{ next_button }}
     </div>
