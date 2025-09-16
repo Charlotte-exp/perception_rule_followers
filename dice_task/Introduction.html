@@ -21,23 +21,25 @@
     <p style="font-size: 18px; font-weight: bold">Stage 2: Interaction with another participant in the study</p>
     <ul>
         <li>After the {{ C.NUM_ROUNDS }} die rolls,
-        you are <b>matched with another participant</b> from the same study.
-        <li>You will the number of times the other participant reported the correct number,
-        and they will see the number of times <u>you</u> reported the correct number.
-
-        {{ if player.treatment == 'rating' }}
-        <li>Based on this information, you will rate their behaviour.
-        <li>You will be paid a {{ C.bonus }} points bonus if your rating is the same as the most common answer for that participant.
-        {{ endif }}
+        you are <b>matched with the next participant</b> from this same study.
+        <li>You will see the number of times the next participant reported the correct number from the die roll stage.
 
         {{ if player.treatment == 'TG' }}
         <li>Based on this information, you will interact in a two stage task with them.
         <li>You will be paid two separate bonus points based on that interaction ranging from 0 to 9 points.
+        <li>In addition, the <u>previous</u> participant will have the same task based on your reported die rolls from stage 1.
         {{ endif }}
 
         {{ if player.treatment == 'DG' }}
         <li>Based on this information, you will interact in a two stage task with them.
         <li>You will the opportunity to earn another bonus based on that interaction ranging from 0 to 9 points.
+        <li>In addition, the <u>previous</u> participant will have the same task based on your reported die rolls from stage 1.
+        {{ endif }}
+
+        {{ if player.treatment == 'rating' }}
+        <li>Based on this information, you will rate their behaviour.
+        <li>You will be paid a {{ C.bonus }} bonus if your rating is the same as the most common answer for that participant.
+        <li>In addition, the <u>previous</u> participant will have the same task based on your reported die rolls from stage 1.
         {{ endif }}
     </ul>
 

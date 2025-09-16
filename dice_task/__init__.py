@@ -90,8 +90,10 @@ class Player(BasePlayer):
     q2 = models.IntegerField(
         initial=9,
         choices=[
-            [0, f'The points returned to me by another participants, independent of how much I send in the first place'],
-            [1, f'The points returned to me by another participants, depending on how much I send in the first place'],
+            [0, f'The points returned to me by the next participant, independent of how much I send in the first place'],
+            [1, f'The points returned to me by the next participant, depending on how much I send in the first place'],
+            [2, f'The points returned to me by the next participant, depending on how much I send in the first place, '
+                f'as well as how much I keep from what the previous participant sent to me'],
         ],
         verbose_name='What determines the number of bonus points you will be paid from stage 2?',
         widget=widgets.RadioSelect,
@@ -224,7 +226,7 @@ class InstruStage2(Page):
         """
         records the number of time the page was submitted with an error. which specific error is not recorded.
         """
-        solutions = dict(q2=1)
+        solutions = dict(q2=2)
         # if player.treatment == 'treatment':
         #     solutions = dict(q1=1, q2=2)
         # else:
@@ -259,7 +261,7 @@ class InstruStage3(Page):
         """
         records the number of time the page was submitted with an error. which specific error is not recorded.
         """
-        solutions = dict(q3=2)
+        solutions = dict(q3=3)
         # if player.treatment == 'treatment':
         #     solutions = dict(q1=1, q2=2)
         # else:
@@ -297,7 +299,7 @@ class Dice(Page):
 
 
 page_sequence = [Consent,
-                 # Introduction,
-                 # InstruStage2,
-                 # InstruStage3,
+                 Introduction,
+                 InstruStage2,
+                 InstruStage3,
                  Dice]
