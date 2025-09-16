@@ -12,6 +12,8 @@ class C(BaseConstants):
     NAME_IN_URL = 'dice_task'
     PLAYERS_PER_GROUP = None
     NUM_ROUNDS = 3
+    participant_fee = 1
+    time = 10
 
     number_of_trials = NUM_ROUNDS # from the actor task
     percent_accurate = 10
