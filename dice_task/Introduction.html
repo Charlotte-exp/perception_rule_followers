@@ -12,36 +12,50 @@
 
     <p style="font-size: 18px; font-weight: bold">Stage 1: Die rolls</p>
     <ul>
-        <li>You will roll a die {{ C.NUM_ROUNDS }} times.
+        <li>You will roll a die in the game {{ C.NUM_ROUNDS }} times.
         <li>After each roll, you report the number you rolled.
         <li>The number you report is the number of points you will be paid for that roll.
         <li><b>1 point is worth {{ C.conversion }}</b>.
+        <li>Only one of the {{ C.NUM_ROUNDS }} dice will be randomly selected for payment</li>
     </ul>
 
     <p style="font-size: 18px; font-weight: bold">Stage 2: Interaction with another participant in the study</p>
     <ul>
         <li>After the {{ C.NUM_ROUNDS }} die rolls,
-        you are <b>matched with the next participant</b> from this same study.
-        <li>You will see the number of times the next participant reported the correct number from the die roll stage.
+        you are <b>matched with another participant</b> from this same study.
+        <li>This participant will see the number of times you reported the correct number from stage 1,
+        and you will interact together in stage 2.
 
         {{ if player.treatment == 'TG' }}
-        <li>Based on this information, you will interact in a two stage task with them.
-        <li>You will be paid two separate bonus points based on that interaction ranging from 0 to 9 points.
-        <li>In addition, the <u>previous</u> participant will have the same task based on your reported die rolls from stage 1.
+        <li>First, the other participant will choose how many points to send to you
+        after having seen how many times you reported the correct die.
+        <li>then, these points are tripled by the computer so that you get 3x as much as they sent you.
+        <li>Finally, you have to decide how many of those tripled points you wish to keep to yourself
+        and how many you want to send back, if any.
+        <li>The points you kept will be paid to you as the stage 2 bonus.
+        <li><b>Important:</b> to decide how many points to send to you in the first place,
+        the other participant will only know how many times you reported the correct die.
         {{ endif }}
 
         {{ if player.treatment == 'DG' }}
-        <li>Based on this information, you will interact in a two stage task with them.
-        <li>You will the opportunity to earn another bonus based on that interaction ranging from 0 to 9 points.
-        <li>In addition, the <u>previous</u> participant will have the same task based on your reported die rolls from stage 1.
+        <li>In stage 2, the other participant is given {{ C.DG_points }} and must choose how many of these points to send to you
+        after having seen how many times you reported the correct die.
+        <li>The points you receive from the other participant will be paid to you as the stage 2 bonus.
+        <li><b>Important:</b> to decide how many points to send to you in the first place,
+        the other participant will only know how many times you reported the correct die.
         {{ endif }}
 
         {{ if player.treatment == 'rating' }}
-        <li>Based on this information, you will rate their behaviour.
-        <li>You will be paid a {{ C.bonus }} bonus if your rating is the same as the most common answer for that participant.
-        <li>In addition, the <u>previous</u> participant will have the same task based on your reported die rolls from stage 1.
+        <li>In stage 2, the other participant must rate how trustworthy you seem
+        after having seen how many times you reported the correct die.
+        <li><b>Important:</b> to decide how many points to send to you in the first place,
+        the other participant will only know how many times you reported the correct die.
         {{ endif }}
     </ul>
+
+    <p>
+        You will also be the other role.
+    </p>
 
     <p style="font-size: 18px; font-weight: bold">Stage 3: Extra interaction with a participant from another study</p>
     <ul>
@@ -49,15 +63,11 @@
         you are matched with a <b>new participant from a different study</b>.
         <li>The other participant will now see <u>only one</u> of your randomly selected die roll,
         <u>as well as</u> the number you reported for that roll.
-        <li>Based on this information, you will interact in an extra task with them.
-        <li>You will the opportunity to earn another bonus based on that interaction ranging from 0 to 9 points.
+        <li>Based on this information, you will interact in a task with them and earn a bonus based on the outcome of that task.
     </ul>
 
     <p>
-        <b>To summarise</b>: You get three bonus, one from the die number you report,
-        two from the interaction in stage 2, and one from the interaction in stage 3.
-        Because the 3rd participant will be matched with you in a later study,
-        you will receive both bonuses later.
+        The bonuses from each stage will be paid once the whole study is over.
     </p>
 
 </div>

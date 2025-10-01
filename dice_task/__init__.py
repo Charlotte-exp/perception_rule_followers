@@ -25,6 +25,8 @@ class C(BaseConstants):
     two_points = cu(2)
     three_points = cu(3)
 
+    DG_points = cu(6)
+
 
 class Subsession(BaseSubsession):
     pass
@@ -85,32 +87,6 @@ class Player(BasePlayer):
             [3, f'I will be paid the number I report from all five die rolls summed up'],
         ],
         verbose_name='What determines the number of bonus points you will be paid from stage 1?',
-        widget=widgets.RadioSelect,
-        # error_messages={'required': 'You must select an option before continuing.'}, # does not display
-    )
-
-    q2 = models.IntegerField(
-        initial=9,
-        choices=[
-            [0, f'The points returned to me by the next participant, independent of how much I send in the first place'],
-            [1, f'The points returned to me by the next participant, depending on how much I send in the first place'],
-            [2, f'The points returned to me by the next participant, depending on how much I send in the first place, '
-                f'as well as how much I keep from what the previous participant sent to me'],
-        ],
-        verbose_name='What determines the number of bonus points you will be paid from stage 2?',
-        widget=widgets.RadioSelect,
-        # error_messages={'required': 'You must select an option before continuing.'}, # does not display
-    )
-
-    q3 = models.IntegerField(
-        initial=9,
-        choices=[
-            [0, f'The points sent the participant in another study'],
-            [1, f'The points sent the participant in another study, doubled'],
-            [2, f'The points sent the participant in another study, tripled'],
-            [3, f'The points I decide to keep from those sent by another participant and tripled by us'],
-        ],
-        verbose_name='What determines the number of bonus points you will be paid from stage 3?',
         widget=widgets.RadioSelect,
         # error_messages={'required': 'You must select an option before continuing.'}, # does not display
     )
@@ -219,7 +195,7 @@ class InstruStage2(Page):
 
     @staticmethod
     def is_displayed(player: Player):
-        if player.round_number == 1 and player.treatment != 'dont_know':
+        if player.round_number == 1:
             return True
         return None
 
@@ -254,7 +230,7 @@ class InstruStage3(Page):
 
     @staticmethod
     def is_displayed(player: Player):
-        if player.round_number == 1 and player.treatment != 'dont_know':
+        if player.round_number == 1:
             return True
         return None
 
@@ -302,6 +278,6 @@ class Dice(Page):
 
 page_sequence = [Consent,
                  Introduction,
-                 InstruStage2,
-                 InstruStage3,
+                 # InstruStage2,
+                 # InstruStage3,
                  Dice]
