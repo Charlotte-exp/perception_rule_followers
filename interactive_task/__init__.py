@@ -16,7 +16,7 @@ class C(BaseConstants):
     # number_of_trials = NUM_ROUNDS # from the actor task
     percent_accurate = 10
     bonus = cu(2)
-    conversion = '43p'
+    conversion = '34p'
 
     zero_points = cu(0)
     one_points = cu(1)
@@ -95,8 +95,7 @@ class Player(BasePlayer):
     q2 = models.IntegerField(
         initial=9,
         choices=[
-            [0,
-             f'The points returned to me by the next participant, independent of how much I send in the first place'],
+            [0, f'The points returned to me by the next participant, independent of how much I send in the first place'],
             [1, f'The points returned to me by the next participant, depending on how much I send in the first place'],
             [2, f'The points returned to me by the next participant, depending on how much I send in the first place, '
                 f'as well as how much I keep from what the previous participant sent to me'],

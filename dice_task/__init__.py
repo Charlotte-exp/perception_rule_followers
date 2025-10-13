@@ -19,7 +19,7 @@ class C(BaseConstants):
     percent_accurate = 10
     bonus = cu(2)
 
-    conversion = '43p'
+    conversion = '34p'
     zero_points = cu(0)
     one_points = cu(1)
     two_points = cu(2)
@@ -76,17 +76,30 @@ class Player(BasePlayer):
     )
 
     q1_failed_attempts = models.IntegerField(initial=0)
-    q2_failed_attempts = models.IntegerField(initial=0)
+    q_treatment_failed_attempts = models.IntegerField(initial=0)
 
     q1 = models.IntegerField(
-        initial=9,
+        initial=0,
         choices=[
-            [0, f'I will be paid the number I roll from one randomly selected die roll'],
-            [1, f'I will be paid the number I report from one randomly selected die roll'],
-            [2, f'I will be paid the number I roll from all five die rolls summed up'],
-            [3, f'I will be paid the number I report from all five die rolls summed up'],
+            [1, f'I will be paid the number I roll from one randomly selected die roll'],
+            [2, f'I will be paid the number I report from one randomly selected die roll'],
+            [3, f'I will be paid the number I roll from all five die rolls summed up'],
+            [4, f'I will be paid the number I report from all five die rolls summed up'],
         ],
         verbose_name='What determines the number of bonus points you will be paid from stage 1?',
+        widget=widgets.RadioSelect,
+        # error_messages={'required': 'You must select an option before continuing.'}, # does not display
+    )
+
+    q_treatment = models.IntegerField(
+        initial=0,
+        choices=[
+            [1, f'They can send you points, which are then tripled by the computer, and you can choose to send some back to them.'],
+            [2, f'They can take away your points, which are then tripled by the computer.'],
+            [3, f'They can share points with you'],
+            [4, f'They must rate how trustworthy they find you'],
+        ],
+        verbose_name='What can the other participant do in stage 2 after learning how many times you reported the correct number in stage 1?',
         widget=widgets.RadioSelect,
         # error_messages={'required': 'You must select an option before continuing.'}, # does not display
     )
@@ -155,7 +168,13 @@ class Consent(Page):
 
 class Introduction(Page):
     form_model = "player"
-    form_fields = ["q1"]
+    # form_fields = ["q1"]
+
+    def get_form_fields(player:Player):
+        if player.treatment == 'control':
+            return ['q1']
+        else:
+            return ['q1', 'q_treatment']
 
     @staticmethod
     def is_displayed(player: Player):
@@ -168,15 +187,21 @@ class Introduction(Page):
         """
         records the number of time the page was submitted with an error. which specific error is not recorded.
         """
-        solutions = dict(q1=1)
-        # if player.treatment == 'treatment':
-        #     solutions = dict(q1=1, q2=2)
-        # else:
-        #     solutions = dict(q5=1, q6=2)
+        # solutions = dict(q1=2, q_treatment=1)
+        if player.treatment == 'TG':
+            solutions = dict(q1=2, q_treatment=1)
+        elif player.treatment == 'DG':
+            solutions = dict(q1=2, q_treatment=3)
+        elif player.treatment == 'rating':
+            solutions = dict(q1=2, q_treatment=4)
+        else:
+            solutions = dict(q1=2)
 
         # error_message can return a dict whose keys are field names and whose values are error messages
         errors = {}
         for question, correct_answer in solutions.items():
+            print(f"Treatment: {player.treatment}")
+            print(f"Solutions: {solutions}")
             if values[question] != correct_answer:
                 errors[question] = 'This answer is wrong'
                 # Increment the specific failed attempt counter for the incorrect question
