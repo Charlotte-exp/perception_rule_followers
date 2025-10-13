@@ -104,9 +104,9 @@ class Player(BasePlayer):
         # error_messages={'required': 'You must select an option before continuing.'}, # does not display
     )
 
-    random_selection = models.StringField(
+    random_roll = models.StringField(
         initial='',
-        choices=['randomise', 'whatever'],
+        choices=['roll', 'whatever'],
     )
 
     randomly_selected_round = models.IntegerField(initial=0)
@@ -284,6 +284,18 @@ class InstruStage3(Page):
             return errors
         return None
 
+
+class Roll(Page):
+    form_model = "player"
+
+    @staticmethod
+    def vars_for_template(player: Player):
+        return dict(
+            original_dice = player.original_dice,
+            reported_dice = player.reported_dice,
+        )
+
+
 class Dice(Page):
     form_model = "player"
     form_fields = ["reported_dice"]
@@ -305,4 +317,5 @@ page_sequence = [Consent,
                  Introduction,
                  # InstruStage2,
                  # InstruStage3,
+                 Roll,
                  Dice]

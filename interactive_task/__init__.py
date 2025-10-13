@@ -29,27 +29,30 @@ class C(BaseConstants):
 class Subsession(BaseSubsession):
     pass
 
-# ## to test without dice task and pairings
-# def creating_session(subsession):
-#     """
-#     create a fixed sequence of 10 elements for each player bu calling generate_k_sequence function.
-#     Stored in a participant.vars since player field cannot be lists (and I don't need it in the database).
-#     Because creating_session calls the function every round
-#     we force it not to do that by setting a value based on round number instead.
-#     """
-#     subsession.session.number_of_trials = C.NUM_ROUNDS
-#
-#     treatments = itertools.cycle(['TG', 'DG', 'rating'])
-#     for p in subsession.get_players():
-#         p.treatment = next(treatments)
-#         p.participant.treatment = p.treatment
-#
-#         p.participant.reported_dice = random.randint(1, 6)
-#         p.participant.original_dice = random.randint(1, 6)
-#
-#         k_value = sum(calculate_k(p))
-#         p.participant.k_value = k_value
-#
+## to test without dice task and pairings
+def creating_session(subsession):
+    """
+    create a fixed sequence of 10 elements for each player bu calling generate_k_sequence function.
+    Stored in a participant.vars since player field cannot be lists (and I don't need it in the database).
+    Because creating_session calls the function every round
+    we force it not to do that by setting a value based on round number instead.
+    """
+    subsession.session.number_of_trials = C.NUM_ROUNDS
+
+    treatments = itertools.cycle(['TG', 'TG'])
+    for p in subsession.get_players():
+        p.treatment = next(treatments)
+        p.participant.treatment = p.treatment
+
+        p.participant.reported_dice = random.randint(1, 6)
+        p.participant.original_dice = random.randint(1, 6)
+
+        k_value = sum(calculate_k(p))
+        p.participant.k_value = k_value
+
+        p.participant.randomly_selected_round = random.randint(1, 3)
+        p.participant.randomly_selected_reported_dice = random.randint(1, 6)
+
 
 
 class Group(BaseGroup):
@@ -162,34 +165,35 @@ def calculate_k(player: Player):
             value = 0
         list_of_correct.append(value)
         p.participant.k_list = list_of_correct
-        # k_value = sum(list_of_correct)
-        # p.participant.k_value = k_value
-    # return list_of_correct
+        ## if testing only stage 2
+        k_value = sum(list_of_correct)
+        p.participant.k_value = k_value
+    return list_of_correct
 
 
 ######### PAGES #########
 
-class PairingWaitPage(WaitPage):
-    """
-    The Waitroom. This wait page has two purposes: making sure pps don't wait too long for other players in case there
-    is little traffic, and allows one pp to leave before being grouped with others so that a dropout at the instruction
-    level does not mean all pp in the group are out.
-    The code below keeps the groups the same across all rounds automatically.
-    We added a special pairing method in models.py.
-    The waitroom has a 5min timer after which the pp is given a code to head back to prolific.
-    This is coded on the template below and uses a javascript. (don't forget to paste the correct link!)
-    """
-    group_by_arrival_time = True
-
-    def is_displayed(player: Player):
-        return player.round_number == 1
-
-
-    # def vars_for_template(player: Player):
-    #     player.participant.k_list = calculate_k(player)
-    #     return dict(k_list=player.participant.k_list)
-
-    template_name = 'interactive_task/Waitroom.html'
+# class PairingWaitPage(WaitPage):
+#     """
+#     The Waitroom. This wait page has two purposes: making sure pps don't wait too long for other players in case there
+#     is little traffic, and allows one pp to leave before being grouped with others so that a dropout at the instruction
+#     level does not mean all pp in the group are out.
+#     The code below keeps the groups the same across all rounds automatically.
+#     We added a special pairing method in models.py.
+#     The waitroom has a 5min timer after which the pp is given a code to head back to prolific.
+#     This is coded on the template below and uses a javascript. (don't forget to paste the correct link!)
+#     """
+#     group_by_arrival_time = True
+#
+#     def is_displayed(player: Player):
+#         return player.round_number == 1
+#
+#
+#     # def vars_for_template(player: Player):
+#     #     player.participant.k_list = calculate_k(player)
+#     #     return dict(k_list=player.participant.k_list)
+#
+#     template_name = 'interactive_task/Waitroom.html'
 
 
 class InstruStage2(Page):
@@ -226,6 +230,13 @@ class InstruStage2(Page):
         if errors:
             return errors
         return None
+
+    def vars_for_template(player: Player):
+        others = other_players(player)
+        next_pp = others["next"]
+        return dict(
+            treatment=player.participant.treatment,
+        )
 
 
 class TrustGameSender(Page):
@@ -438,7 +449,8 @@ class ProlificLink(Page):
         return player.round_number == C.NUM_ROUNDS
 
 
-page_sequence = [PairingWaitPage,
+page_sequence = [
+    # PairingWaitPage,
                  InstruStage2,
                  TrustGameSender,
                  DictGame,
