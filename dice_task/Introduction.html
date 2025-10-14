@@ -19,6 +19,10 @@
         <li>Only one of the {{ C.NUM_ROUNDS }} dice will be randomly selected for payment</li>
     </ul>
 
+    {{ if player.treatment == 'control' }}
+
+    {{ else }}
+
     <p style="font-size: 18px; font-weight: bold">Stage 2: Interaction with another participant in the study</p>
     <ul>
         <li>After the {{ C.NUM_ROUNDS }} die rolls,
@@ -66,6 +70,7 @@
         The bonuses from each stage will be paid once the whole study is over.
     </p>
 
+    {{ endif }}
 </div>
 
 <hr size="6" width="50%" align="center" color="black">

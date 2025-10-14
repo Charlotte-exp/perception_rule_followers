@@ -73,20 +73,20 @@ def creating_session(subsession):
             p.k_value = p.participant.vars['sequence'][p.round_number - 1]
 
     ## to test without dice task and pairings when live interaction
-    subsession.session.number_of_trials = 10
-    treatments = itertools.cycle(['TG', 'DG', 'rating'])
-    for p in subsession.get_players():
-        p.treatment = next(treatments)
-        p.participant.treatment = p.treatment
-
-        p.participant.reported_dice = random.randint(1, 6)
-        p.participant.original_dice = random.randint(1, 6)
-
-        # k_value = sum(calculate_k(p))
-        # p.participant.k_value = k_value
-
-        p.participant.randomly_selected_round = random.randint(1, 3)
-        p.participant.randomly_selected_reported_dice = random.randint(1, 6)
+    # subsession.session.number_of_trials = 10
+    # treatments = itertools.cycle(['TG', 'DG', 'rating', 'control'])
+    # for p in subsession.get_players():
+    #     p.treatment = next(treatments)
+    #     p.participant.treatment = p.treatment
+    #
+    #     p.participant.reported_dice = random.randint(1, 6)
+    #     p.participant.original_dice = random.randint(1, 6)
+    #
+    #     # k_value = sum(calculate_k(p))
+    #     # p.participant.k_value = k_value
+    #
+    #     p.participant.randomly_selected_round = random.randint(1, 3)
+    #     p.participant.randomly_selected_reported_dice = random.randint(1, 6)
 
 
 
@@ -298,9 +298,7 @@ class InstruStage2(Page):
 
     @staticmethod
     def is_displayed(player: Player):
-        if player.round_number == 1:
-            return True
-        return None
+        return player.round_number == 1 or player.participant.treatment != 'control'
 
     @staticmethod
     def error_message(player: Player, values):
@@ -469,7 +467,7 @@ class InstruStage3(Page):
 
     @staticmethod
     def is_displayed(player: Player):
-        if player.round_number == C.NUM_ROUNDS:
+        if player.round_number == C.NUM_ROUNDS or player.participant.treatment != 'control':
             return True
         return None
 
@@ -509,7 +507,9 @@ class TrustGameForCCP(Page):
 
     @staticmethod
     def is_displayed(player: Player):
-        return player.round_number == C.NUM_ROUNDS
+        if player.round_number == C.NUM_ROUNDS or player.participant.treatment != 'control':
+            return True
+        return None
 
     @staticmethod
     def vars_for_template(player: Player):
@@ -530,7 +530,9 @@ class Payment(Page):
 
     @staticmethod
     def is_displayed(player: Player):
-        return player.round_number == C.NUM_ROUNDS
+        if player.round_number == C.NUM_ROUNDS or player.participant.treatment != 'control':
+            return True
+        return None
 
     # def vars_for_template(player: Player):
     #     others = other_players(player)

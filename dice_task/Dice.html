@@ -113,10 +113,11 @@
     <div class="card-body" style="font-size: 14px">
         Keep in mind:
         <ul>
-            <li>After each roll, you must report the number you rolled.
-            <li>The number you report is the number of points you will be paid for that roll.
-            <li><b>1 point is worth {{ C.conversion }}</b>.
-            <li>Only one die will be randomly selected for payment</li>
+            <li>Please report the number that you rolled. Your bonus will depend on your reported number.
+            <li>The higher the number you report, the more money you earn.
+            {{ if treatment != 'control' }}
+            <li>What you do will be observed by other participants.
+            {{ endif }}
         </ul>
     </div>
 </div>
