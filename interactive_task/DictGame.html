@@ -235,32 +235,32 @@
 
         document.addEventListener("DOMContentLoaded", function () {
             const sliders = [
-                { sliderId: "slider1", outputId: "output1", checkId: "check_slider1", leftLabel: "label-left", rightLabel: "label-right" },
+                { sliderId: "slider1", outputId: "output1", checkId: "check_slider1", keepLabel: "label-keep", sendLabel: "label-send" },
             ];
 
-            sliders.forEach(({ sliderId, outputId, checkId, leftLabel, rightLabel }) => {
+            sliders.forEach(({ sliderId, outputId, checkId, keepLabel, sendLabel }) => {
                 const slider = document.getElementById(sliderId);
                 const output = document.getElementById(outputId);
                 const checkSlider = document.getElementById(checkId);
-                const labelLeft = document.getElementById(leftLabel);
-                const labelRight = document.getElementById(rightLabel);
+                const labelkeep = document.getElementById(keepLabel);
+                const labelsend = document.getElementById(sendLabel);
 
                 // Initial state
                 slider.value = 0;
                 output.textContent = "";
                 checkSlider.value = "0";
                 slider.classList.add("hidden-thumb");
-                labelLeft.textContent = 0;
-                labelRight.textContent = 0;
+                labelkeep.textContent = 0;
+                labelsend.textContent = 0;
 
                 slider.addEventListener("input", function () {
                     const DG_points = {{ DG_points }}; // punishment points
-                    // const leftValue = parseInt(this.value, 10);
-                    const leftValue = parseInt(this.value);
-                    const rightValue = DG_points - leftValue;
+                    // const keepValue = parseInt(this.value, 10);
+                    const sendValue = parseInt(this.value);
+                    const keepValue = DG_points - sendValue;
 
-                    labelLeft.textContent = leftValue;
-                    labelRight.textContent = rightValue;
+                    labelkeep.textContent = keepValue;
+                    labelsend.textContent = sendValue;
 
                     output.textContent = this.value;
                     checkSlider.value = "1";
@@ -335,11 +335,11 @@
     <div class="results-display">
         <div>
             <div class="results-label">You keep:</div>
-            <div class="results-number" id="label-left"></div>
+            <div class="results-number" id="label-keep"></div>
         </div>
         <div>
             <div class="results-label">You send:</div>
-            <div class="results-number" id="label-right"></div>
+            <div class="results-number" id="label-send"></div>
         </div>
     </div>
 

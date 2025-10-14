@@ -1,31 +1,22 @@
 {{ block title }}
 
-    Detailed instructions
+    Stage 2 instructions
 
 {{ endblock }}
 {{ block content }}
 
 <div>
 
-    <p style="font-size: 16px; font-weight: bold">Stage 1: Die rolls</p>
-
-    <ul style="font-size: 14px">
-        <li>You will roll a die {{ C.NUM_ROUNDS }} times.
-        <li>After each roll, you report the number you rolled.
-        <li>The number you report is the number of points you will be paid for that roll.
-        <li><b>1 point is worth {{ C.conversion }}</b>.
-    </ul>
-
-    <p style="font-size: 18px; font-weight: bold">Stage 2: Interaction with another participant in the study</p>
+    <p style="font-size: 18px; font-weight: bold">Interaction with another participant in the study</p>
 
     {{ if player.treatment == 'TG' }}
     <ul>
-        <li>After the {{ C.NUM_ROUNDS }} die rolls,
-        you are <b>matched with next participant</b> from this same study.
-        <li>First, you will see the number of times the next participant reported the correct number.
-        <li>Based on this information, you will have the opportunity to send points to them.
+        <li>Just like this other participant will see how many times you reported the correct die outcome,
+        you will see that information about yet another participant.
+        <li>We will call this participant "Person A"
+        <li>Based on this information, you will have the opportunity to send points to Person A.
         <li>Every point you send is tripled: 1 point sent becomes 3 points received.
-        <li>Second, the next participant then decides how many points from those, if any, to return to you.
+        <li>Second, Person A then decides how many points from those, if any, to return to you.
         <li>They can return nothing, some, or all points.
     </ul>
 
@@ -43,10 +34,12 @@
 
     <div style="margin-top: 20px; margin-bottom: 20px">
     <p>
-        Your bonus will be the points the next participant returns to you,
-        and the bonus of the next participant will be the points they keep.
-        You will also decide how much to return to the previous participant who had the same opportunity to send you points
-        based on the number of times you reported the correct number.
+        Your bonus will be the points Person A returns to you,
+        and the bonus of Person A will be the points they keep.
+    </p>
+    <p>
+        You will also decide how much to return to the participant who sees <b>your stage 1 outcome</b>
+        and had the same opportunity to send you points based on that information.
     </p>
     </div>
     {{ endif }}
@@ -76,7 +69,7 @@
     <p>
         You will also decide how much to return to the <u>previous</u> participant who had the same opportunity to send you points
         based on the number of times you reported the correct number.
-        This will be <b>ANOTHER PARTICIPANT</b> than the one you decide to send points to.
+        This will be <b><u>Another participant</u></b> than the one you decide to send points to.
     </p>
     </div>
     {{ endif }}

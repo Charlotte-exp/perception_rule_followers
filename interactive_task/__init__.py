@@ -16,7 +16,7 @@ class C(BaseConstants):
     # number_of_trials = NUM_ROUNDS # from the actor task
     percent_accurate = 10
     bonus = cu(2)
-    conversion = '43p'
+    conversion = '34p'
 
     zero_points = cu(0)
     one_points = cu(1)
@@ -29,27 +29,30 @@ class C(BaseConstants):
 class Subsession(BaseSubsession):
     pass
 
-# ## to test without dice task and pairings
-# def creating_session(subsession):
-#     """
-#     create a fixed sequence of 10 elements for each player bu calling generate_k_sequence function.
-#     Stored in a participant.vars since player field cannot be lists (and I don't need it in the database).
-#     Because creating_session calls the function every round
-#     we force it not to do that by setting a value based on round number instead.
-#     """
-#     subsession.session.number_of_trials = C.NUM_ROUNDS
-#
-#     treatments = itertools.cycle(['TG', 'DG', 'rating'])
-#     for p in subsession.get_players():
-#         p.treatment = next(treatments)
-#         p.participant.treatment = p.treatment
-#
-#         p.participant.reported_dice = random.randint(1, 6)
-#         p.participant.original_dice = random.randint(1, 6)
-#
-#         k_value = sum(calculate_k(p))
-#         p.participant.k_value = k_value
-#
+## to test without dice task and pairings
+def creating_session(subsession):
+    """
+    create a fixed sequence of 10 elements for each player bu calling generate_k_sequence function.
+    Stored in a participant.vars since player field cannot be lists (and I don't need it in the database).
+    Because creating_session calls the function every round
+    we force it not to do that by setting a value based on round number instead.
+    """
+    subsession.session.number_of_trials = C.NUM_ROUNDS
+
+    treatments = itertools.cycle(['TG', 'TG'])
+    for p in subsession.get_players():
+        p.treatment = next(treatments)
+        p.participant.treatment = p.treatment
+
+        p.participant.reported_dice = random.randint(1, 6)
+        p.participant.original_dice = random.randint(1, 6)
+
+        k_value = sum(calculate_k(p))
+        p.participant.k_value = k_value
+
+        p.participant.randomly_selected_round = random.randint(1, 3)
+        p.participant.randomly_selected_reported_dice = random.randint(1, 6)
+
 
 
 class Group(BaseGroup):
@@ -91,6 +94,32 @@ class Player(BasePlayer):
         verbose_name='You received X points from the other participant: <br>'
                      'How many points to do you send back?',
         min=0, max=C.three_points*3)
+
+    q2 = models.IntegerField(
+        initial=9,
+        choices=[
+            [0, f'The points returned to me by the next participant, independent of how much I send in the first place'],
+            [1, f'The points returned to me by the next participant, depending on how much I send in the first place'],
+            [2, f'The points returned to me by the next participant, depending on how much I send in the first place, '
+                f'as well as how much I keep from what the previous participant sent to me'],
+        ],
+        verbose_name='What determines the number of bonus points you will be paid from stage 2?',
+        widget=widgets.RadioSelect,
+        # error_messages={'required': 'You must select an option before continuing.'}, # does not display
+    )
+
+    q3 = models.IntegerField(
+        initial=9,
+        choices=[
+            [0, f'The points sent the participant in another study'],
+            [1, f'The points sent the participant in another study, doubled'],
+            [2, f'The points sent the participant in another study, tripled'],
+            [3, f'The points I decide to keep from those sent by another participant and tripled by us'],
+        ],
+        verbose_name='What determines the number of bonus points you will be paid from stage 3?',
+        widget=widgets.RadioSelect,
+        # error_messages={'required': 'You must select an option before continuing.'}, # does not display
+    )
 
 
 ######## FUNCTIONS #########
@@ -136,34 +165,78 @@ def calculate_k(player: Player):
             value = 0
         list_of_correct.append(value)
         p.participant.k_list = list_of_correct
-        # k_value = sum(list_of_correct)
-        # p.participant.k_value = k_value
-    # return list_of_correct
+        ## if testing only stage 2
+        k_value = sum(list_of_correct)
+        p.participant.k_value = k_value
+    return list_of_correct
 
 
 ######### PAGES #########
 
-class PairingWaitPage(WaitPage):
-    """
-    The Waitroom. This wait page has two purposes: making sure pps don't wait too long for other players in case there
-    is little traffic, and allows one pp to leave before being grouped with others so that a dropout at the instruction
-    level does not mean all pp in the group are out.
-    The code below keeps the groups the same across all rounds automatically.
-    We added a special pairing method in models.py.
-    The waitroom has a 5min timer after which the pp is given a code to head back to prolific.
-    This is coded on the template below and uses a javascript. (don't forget to paste the correct link!)
-    """
-    group_by_arrival_time = True
+# class PairingWaitPage(WaitPage):
+#     """
+#     The Waitroom. This wait page has two purposes: making sure pps don't wait too long for other players in case there
+#     is little traffic, and allows one pp to leave before being grouped with others so that a dropout at the instruction
+#     level does not mean all pp in the group are out.
+#     The code below keeps the groups the same across all rounds automatically.
+#     We added a special pairing method in models.py.
+#     The waitroom has a 5min timer after which the pp is given a code to head back to prolific.
+#     This is coded on the template below and uses a javascript. (don't forget to paste the correct link!)
+#     """
+#     group_by_arrival_time = True
+#
+#     def is_displayed(player: Player):
+#         return player.round_number == 1
+#
+#
+#     # def vars_for_template(player: Player):
+#     #     player.participant.k_list = calculate_k(player)
+#     #     return dict(k_list=player.participant.k_list)
+#
+#     template_name = 'interactive_task/Waitroom.html'
 
+
+class InstruStage2(Page):
+    form_model = "player"
+    form_fields = ["q2"]
+
+    @staticmethod
     def is_displayed(player: Player):
-        return player.round_number == 1
+        if player.round_number == 1:
+            return True
+        return None
 
+    @staticmethod
+    def error_message(player: Player, values):
+        """
+        records the number of time the page was submitted with an error. which specific error is not recorded.
+        """
+        solutions = dict(q2=2)
+        # if player.treatment == 'treatment':
+        #     solutions = dict(q1=1, q2=2)
+        # else:
+        #     solutions = dict(q5=1, q6=2)
 
-    # def vars_for_template(player: Player):
-    #     player.participant.k_list = calculate_k(player)
-    #     return dict(k_list=player.participant.k_list)
+        # error_message can return a dict whose keys are field names and whose values are error messages
+        errors = {}
+        for question, correct_answer in solutions.items():
+            if values[question] != correct_answer:
+                errors[question] = 'This answer is wrong'
+                # Increment the specific failed attempt counter for the incorrect question
+                failed_attempt_field = f"{question}_failed_attempts"
+                if hasattr(player, failed_attempt_field):  # Ensure the field exists
+                    setattr(player, failed_attempt_field, getattr(player, failed_attempt_field) + 1)
 
-    template_name = 'interactive_task/Waitroom.html'
+        if errors:
+            return errors
+        return None
+
+    def vars_for_template(player: Player):
+        others = other_players(player)
+        next_pp = others["next"]
+        return dict(
+            treatment=player.participant.treatment,
+        )
 
 
 class TrustGameSender(Page):
@@ -279,6 +352,42 @@ class EndWaitPage(WaitPage):
         return None
 
 
+class InstruStage3(Page):
+    form_model = "player"
+    form_fields = ["q3"]
+
+    @staticmethod
+    def is_displayed(player: Player):
+        if player.round_number == 1:
+            return True
+        return None
+
+    @staticmethod
+    def error_message(player: Player, values):
+        """
+        records the number of time the page was submitted with an error. which specific error is not recorded.
+        """
+        solutions = dict(q3=3)
+        # if player.treatment == 'treatment':
+        #     solutions = dict(q1=1, q2=2)
+        # else:
+        #     solutions = dict(q5=1, q6=2)
+
+        # error_message can return a dict whose keys are field names and whose values are error messages
+        errors = {}
+        for question, correct_answer in solutions.items():
+            if values[question] != correct_answer:
+                errors[question] = 'This answer is wrong'
+                # Increment the specific failed attempt counter for the incorrect question
+                failed_attempt_field = f"{question}_failed_attempts"
+                if hasattr(player, failed_attempt_field):  # Ensure the field exists
+                    setattr(player, failed_attempt_field, getattr(player, failed_attempt_field) + 1)
+
+        if errors:
+            return errors
+        return None
+
+
 class TrustGameForCCP(Page):
     form_model = "player"
     form_fields = ["send_back_CCP_1", "send_back_CCP_2", "send_back_CCP_3"]
@@ -340,13 +449,16 @@ class ProlificLink(Page):
         return player.round_number == C.NUM_ROUNDS
 
 
-page_sequence = [PairingWaitPage,
+page_sequence = [
+    # PairingWaitPage,
+                 InstruStage2,
                  TrustGameSender,
                  DictGame,
                  Rating,
                  ResultsWaitPage,
                  TrustGameBack,
                  EndWaitPage,
+                 InstruStage3,
                  TrustGameForCCP,
                  Payment,
                  ProlificLink]

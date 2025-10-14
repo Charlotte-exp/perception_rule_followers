@@ -12,12 +12,12 @@
         margin: 0;
     }
 
-    .dice-container {
+    .roll-container {
         display: flex;
         justify-content: center;
         width: 100%;
-        padding: 1.5rem 0;
-        margin-bottom: -1rem;
+        padding: 2rem 0;
+        margin-top: 120px;
     }
 
     .dice {
@@ -47,14 +47,14 @@
     }
 
    .number-row {
-    justify-content: center;
-    display: flex;
-    flex-direction: row
-    margin-top:1vw;
-    /*gap: 1vw; !* Space between numbers scales with viewport width *!*/
-    gap: 0.5vw; /* Space between numbers scales with viewport width */
-    flex-wrap: wrap; /* Optional: allows wrapping if buttons exceed container width */
-    align-items: center; /* Ensures proper vertical alignment */
+        justify-content: center;
+        display: flex;
+        flex-direction: row
+        margin-top:1vw;
+        /*gap: 1vw; !* Space between numbers scales with viewport width *!*/
+        gap: 0.5vw; /* Space between numbers scales with viewport width */
+        flex-wrap: wrap; /* Optional: allows wrapping if buttons exceed container width */
+        align-items: center; /* Ensures proper vertical alignment */
     }
 
 </style>
@@ -119,37 +119,14 @@
     </div>
 </div>
 
-<div class="dice-container">
-    <div class="dice" id="dice1">
-        <div class="dot" id="dice1-1"></div>
-        <div class="dot" id="dice1-2"></div>
-        <div class="dot" id="dice1-3"></div>
-        <div class="dot" id="dice1-4"></div>
-        <div class="dot" id="dice1-5"></div>
-        <div class="dot" id="dice1-6"></div>
-        <div class="dot" id="dice1-7"></div>
-        <div class="dot" id="dice1-8"></div>
-        <div class="dot" id="dice1-9"></div>
-    </div>
-</div>
-    <p style="justify-content: center; display: flex;font-size: 14px">
-        This is worth {{ original_dice }} points.
+
+<div class="roll-container">
+    <p>
+        <button name="random_roll" value="draw" class="btn btn-primary btn-large">Roll</button>
     </p>
-
-
-<div  class="card-body">
-    <h5 style="text-align: center">
-        What number do you wish to report?
-    </h5>
-    <br>
-
-    <div class="number-row">
-    {% for i in range(1, 7) %}
-        <button name="reported_dice" value="{{ i }}" class="btn btn-primary btn-large">{{ i }}</button>
-    {% endfor %}
-    </div>
-
 </div>
+
+
 
 
 

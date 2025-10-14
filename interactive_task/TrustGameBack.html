@@ -250,8 +250,21 @@
         </div>
     </div>
 
-<div  class="card-body">
+    {{ if sent_points == 0 }}
 
+    <div  class="card-body">
+        Since the other participant decided to send you no point, you cannot send anything back.
+        Please click next to start stage 3.
+    </div>
+
+    <div style="display: flex; justify-content: flex-end">
+        <button name="send_back_1" value=0 class="btn btn-primary btn-large">Next</button>
+    </div>
+    <br>
+
+    {{ else }}
+
+    <div  class="card-body">
         <p style="text-align: center;">
             <strong>How many points do you return to the previous participant?</strong>
         </p>
@@ -259,7 +272,7 @@
         <div class="slider-container">
             <span style="flex-grow: 1;">
                 <input type="hidden" name="slider1_moved" value="0" id="check_slider1" />
-                <input type="range" name="send_back_1" id="slider1" min="0" max="{{ sent_points }}" step="0.1" value="" class="hidden-thumb">
+                <input type="range" name="send_back_1" id="slider1" min="0" max="{{ sent_points }}" step="0.5" value="" class="hidden-thumb">
             </span>
             <div class="slider-labels">
                 <span>0</span>
@@ -273,13 +286,11 @@
             </span>
         </div>
 
-
-    <!-- Error message -->
-    <div id="error-message" style="display: none; color: red; text-align: center;">
-        Please make all decisions to continue.
+        <!-- Error message -->
+        <div id="error-message" style="display: none; color: red; text-align: center;">
+            Please make all decisions to continue.
+        </div>
     </div>
-
-</div>
 
     <div class="button-container">
         <button type="button" id="submit-button" class="submit-button">
@@ -287,6 +298,7 @@
         </button>
     </div>
     <br>
+    {{ endif }}
 
 
 <div class="card bg-light instructions">
