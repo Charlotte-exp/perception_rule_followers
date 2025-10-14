@@ -8,16 +8,23 @@
 <div>
 
     <p style="font-size: 18px; font-weight: bold">Interaction with a participant from another study</p>
-    <ul>
-        <li>Now, you are matched with <b>a new participant from a different study</b>.
+
+    <p>
+        Now, you are matched with <b>a new participant from a different study</b>.
         We refer to this participant as "Participant C".
-        <li>Participant C will now see <u>only one</u> of your randomly selected die roll,
+        Participant C will see <u>only one</u> of your randomly selected die roll,
         <u>as well as</u> the number you reported for that roll.
-        <li>Based on this information, they will have the opportunity to send points to you.
-        <li>Every point they send is tripled by the computer: 1 point sent becomes 3 points received.
-        <li>You then decide how many points from those, if any, to return to them.
-        <li>You can return nothing, some, or all points.
-    </ul>
+    </p>
+
+    <p>
+        {{ if treatment == 'TG' }}
+        Just like in stage 2,
+        {{ endif }} based on this information, after learning how many times you reported the correct number,
+        they will have <b>the opportunity to send you up to 3 points</b>.
+        Every point they send is <u>tripled</u> by the computer: <b>1 point sent becomes 3 points received</b>.
+        Then, you decide how many points from those, if any, to return to this other participant.
+        <u>You can return nothing, some, or all points</u>.
+    </p>
 
     <div class="card bg-light instructions">
         <div class="card-body" style="font-size: 14px">
@@ -38,15 +45,14 @@
 
 </div>
 
-<div class="card bg-light instructions">
-    <div  class="card-body">
+<hr size="6" width="50%" align="center" color="black">
+    <div>
         <h5>Now we will ask some comprehension questions to check your understanding:</h5>
             {{ formfields }}
     </div>
-</div>
 
     <div style="display: flex; justify-content: flex-end;margin-top: 20px; margin-bottom: 10px;">
-        Click next to begin stage 1.
+        Click next to begin stage 3.
     </div>
     <div style="display: flex; justify-content: flex-end">
         {{ next_button }}

@@ -74,7 +74,7 @@ def creating_session(subsession):
 
     ## to test without dice task and pairings when live interaction
     subsession.session.number_of_trials = 10
-    treatments = itertools.cycle(['TG', 'TG'])
+    treatments = itertools.cycle(['TG', 'DG', 'rating'])
     for p in subsession.get_players():
         p.treatment = next(treatments)
         p.participant.treatment = p.treatment
@@ -141,13 +141,40 @@ class Player(BasePlayer):
                      'How many points to do you send back?',
         min=0, max=C.three_points*3)
 
-    q2 = models.IntegerField(
+    q2_TG = models.IntegerField(
+        initial=0,
+        choices=[
+            [1, f'The points returned to me by one other participant, independent of how much I send in the first place'],
+            [2, f'The points returned to me by one other participant, depending on how much I send in the first place'],
+            [3, f'The points returned to me by one other participant, depending on how much I send in the first place, '
+                f'as well as how much I keep from what yet another participant sent to me'],
+        ],
+        verbose_name='What determines the number of bonus points you will be paid from stage 2?',
+        widget=widgets.RadioSelect,
+        # error_messages={'required': 'You must select an option before continuing.'}, # does not display
+    )
+
+    q2_DG = models.IntegerField(
         initial=9,
         choices=[
-            [0, f'The points returned to me by the next participant, independent of how much I send in the first place'],
-            [1, f'The points returned to me by the next participant, depending on how much I send in the first place'],
-            [2, f'The points returned to me by the next participant, depending on how much I send in the first place, '
-                f'as well as how much I keep from what the previous participant sent to me'],
+            [1, f'The points I do not share with all {C.NUM_ROUNDS} participants.'],
+            [2, f'The points I do not share with another participant, selected at random from {C.NUM_ROUNDS} participants.'],
+            [3, f'The points I do not share with another participant, selected at random from {C.NUM_ROUNDS} participants, '
+                f'as well as however much yet another participant shared with me.'],
+        ],
+        verbose_name='What determines the number of bonus points you will be paid from stage 2?',
+        widget=widgets.RadioSelect,
+        # error_messages={'required': 'You must select an option before continuing.'}, # does not display
+    )
+
+    q2_rating = models.IntegerField(
+        initial=0,
+        choices=[
+            [1, f'There is no bonus in this stage'],
+            [2, f'If my rating is the same as the most common answer for each of the {C.NUM_ROUNDS} participants, '
+                f'I will receive a {C.bonus} bonus.'],
+            [3, f'If my rating is the same as the most common answer for a randomly selected participant, '
+                f'I will receive a {C.bonus} bonus.'],
         ],
         verbose_name='What determines the number of bonus points you will be paid from stage 2?',
         widget=widgets.RadioSelect,
@@ -155,12 +182,12 @@ class Player(BasePlayer):
     )
 
     q3 = models.IntegerField(
-        initial=9,
+        initial=0,
         choices=[
-            [0, f'The points sent the participant in another study'],
-            [1, f'The points sent the participant in another study, doubled'],
-            [2, f'The points sent the participant in another study, tripled'],
-            [3, f'The points I decide to keep from those sent by another participant and tripled by us'],
+            [1, f'The points sent the participant in another study'],
+            [2, f'The points sent the participant in another study, doubled'],
+            [3, f'The points sent the participant in another study, tripled'],
+            [4, f'The points I decide to keep from those sent by another participant and tripled by us'],
         ],
         verbose_name='What determines the number of bonus points you will be paid from stage 3?',
         widget=widgets.RadioSelect,
@@ -258,7 +285,16 @@ def generate_k_sequence():
 
 class InstruStage2(Page):
     form_model = "player"
-    form_fields = ["q2"]
+    # form_fields = ["q2"]
+
+    def get_form_fields(player:Player):
+        if player.participant.treatment == 'TG':
+            return ['q2_TG']
+        elif player.participant.treatment == 'DG':
+            return ['q2_DG']
+        elif player.participant.treatment == 'rating':
+            return ['q2_rating']
+        return None
 
     @staticmethod
     def is_displayed(player: Player):
@@ -271,11 +307,13 @@ class InstruStage2(Page):
         """
         records the number of time the page was submitted with an error. which specific error is not recorded.
         """
-        solutions = dict(q2=2)
-        # if player.treatment == 'treatment':
-        #     solutions = dict(q1=1, q2=2)
-        # else:
-        #     solutions = dict(q5=1, q6=2)
+        # solutions = dict(q2=3)
+        if player.participant.treatment == 'TG':
+            solutions = dict(q2_TG=3)
+        elif player.participant.treatment == 'DG':
+            solutions = dict(q2_DG=3)
+        else:
+            solutions = dict(q2_rating=3)
 
         # error_message can return a dict whose keys are field names and whose values are error messages
         errors = {}
@@ -296,6 +334,9 @@ class InstruStage2(Page):
         next_pp = others["next"]
         return dict(
             treatment=player.participant.treatment,
+            number_of_trials = player.session.number_of_trials,
+            DG_points = int(C.DG_points),
+            half_points = int(C.DG_points/2),
         )
 
 
@@ -437,11 +478,7 @@ class InstruStage3(Page):
         """
         records the number of time the page was submitted with an error. which specific error is not recorded.
         """
-        solutions = dict(q3=3)
-        # if player.treatment == 'treatment':
-        #     solutions = dict(q1=1, q2=2)
-        # else:
-        #     solutions = dict(q5=1, q6=2)
+        solutions = dict(q3=4)
 
         # error_message can return a dict whose keys are field names and whose values are error messages
         errors = {}
@@ -456,6 +493,14 @@ class InstruStage3(Page):
         if errors:
             return errors
         return None
+
+    def vars_for_template(player: Player):
+        return dict(
+            treatment=player.participant.treatment,
+            number_of_trials = player.session.number_of_trials,
+            DG_points = int(C.DG_points),
+            half_points = int(C.DG_points/2),
+        )
 
 
 class TrustGameForCCP(Page):

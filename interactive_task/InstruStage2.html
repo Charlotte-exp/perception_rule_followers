@@ -9,92 +9,120 @@
 
     <p style="font-size: 18px; font-weight: bold">Interaction with another participant in the study</p>
 
-    {{ if treatment == 'TG' }}
-    <ul>
-        <li>Just like this other participant will see how many times you reported the correct die outcome,
-        you will see that information about yet another participant.
-        <li>We will call this participant "Participant A"
-        <li>Based on this information, you will have the opportunity to send points to Participant A.
-        <li>Every point you send is tripled by the computer: 1 point sent becomes 3 points received.
-        <li>Second, Participant A then decides how many points from those, if any, to return to you.
-        <li>They can return nothing, some, or all points.
-    </ul>
+    <p>
+        While other participants sees how many times <u>you</u> reported the correct die outcome,
+        you will see that same information about several other participants.
+        We will call these participants <b>"Participant 1-{{ C.NUM_ROUNDS }}"</b>
+    </p>
 
     <div class="card bg-light instructions">
         <div class="card-body" style="font-size: 14px">
         Example:
         <ul>
-            <li>If you send all 3 points, Participant A will receive 9 points.
-            <li>If they return half of the 9 points, you and the Participant A will both earn 4.5 points,
-            and will both have more than you started with.
-            <li>If they return nothing, they will earn 9 points, while you will earn nothing.
+            <li>10/10 rolls means that the participant reported the exact number they saw on the screen everytime.
+            <li>6/10 rolls means that the participant reported the exact number they saw on the screen 6 times,<br>
+            and that they did not report the correct number 4 times.
+            <li>0/10 rolls means that the participant <u>never</u> reported the exact number they saw on the screen.
         </ul>
         </div>
     </div>
-
     <div style="margin-top: 20px; margin-bottom: 20px">
-    <p>
-        Your bonus will be the points Participant A returns to you,
-        and the bonus of Participant A will be the points they keep.
-    </p>
-    <p>
-        You will also decide how much to return to the participant who sees <b>your stage 1 outcome</b>
-        and had the same opportunity to send you points based on that information.
-    </p>
-    </div>
-    {{ endif }}
 
-    {{ if treatment == 'DG' }}
-    <ul>
-        <li>After the {{ C.NUM_ROUNDS }} die rolls,
-        you are <b>matched with Participant A</b> from this same study.
-        <li>First, you will see the number of times Participant A reported the correct number.
-        <li>Based on this information, you will interact in a two stage task with them.
-        <li>You will the opportunity to earn another bonus based on that interaction ranging from 0 to 9 points.
-    </ul>
+
+    {{ if treatment == 'TG' }}
+    <p>
+        In this stage, you are given 3 points by the computer.
+        For each of these participants, after learning how many times they reported the correct number,
+        you will have <b>the opportunity to send them up to 3 points</b>
+        These are new points given to you by the computer in stage 2.
+        Every point you send is <u>tripled</u> by the computer: <b>1 point sent becomes 3 points received</b>.
+        Then, each participant then decides how many points from those, if any, to return to you.
+        <u>They can return nothing, some, or all points</u>.
+    </p>
 
     <div class="card bg-light instructions">
         <div class="card-body" style="font-size: 14px">
         Example:
         <ul>
             <li>If you send all 3 points, the other participant will receive 9 points.
-            <li>If they return half of the 9 points, you and the other participant will both earn 4.5 points,
+            <li>If they return half of the 9 points, you and the Participant A will both earn 4.5 points,
             and will both have more than you started with.
             <li>If they return nothing, they will earn 9 points, while you will earn nothing.
+            <li>So, the other participant can gain points or lose points by sending you points,
+            depending on how much you return.
+        </ul>
+        </div>
+    </div>
+    <div style="margin-top: 20px; margin-bottom: 20px">
+
+    <p>
+        One of the {{ C.NUM_ROUNDS }} participants you observe will be selected at random to be matched with you for the bonus.
+        Your bonus will be the points this selected participant returns to you,
+        and the bonus of that participant will be the points they keep.
+    </p>
+    <p>
+        In addition, you will also decide how much to return to a participant who sees <b>your stage 1 outcome</b>
+        and has the same opportunity to send points to you based on that information.
+        This participant is referred to as "Participant B".
+        This will also be paid as a bonus.
+    </p>
+    </div>
+    {{ endif }}
+
+    {{ if treatment == 'DG' }}
+
+    <p>
+        In this stage, you are given {{ DG_points }} by the computer.
+        For each of these participants,
+        after learning how many times they reported the correct number,
+        you will have <b>the opportunity to share these points</b> with them.
+        <u>You can share nothing, some, or all the points</u>.
+    </p>
+
+    <div class="card bg-light instructions">
+        <div class="card-body" style="font-size: 14px">
+        Example:
+        <ul>
+            <li>If you share all {{ DG_points }} points,
+                the other participant will receive {{ DG_points }} points and you receive nothing.
+            <li>If you send {{ half_points }} points, both the other participant and yourself will earn {{ half_points }}.
         </ul>
         </div>
     </div>
 
     <div style="margin-top: 20px; margin-bottom: 20px">
     <p>
-        You will also decide how much to return to "Participant B" who had the same opportunity to send you points
-        based on the number of times you reported the correct number.
-        This will be <b><u>Another participant</u></b> than the one you decide to send points to.
+        In addition, you will also be the recipient of one other participant who sees <b>your stage 1 outcome</b>
+        and has the same opportunity to share points with you based on that information.
+        This will also be paid as a bonus.
     </p>
     </div>
     {{ endif }}
 
     {{ if treatment == 'rating' }}
-    <ul>
-        <li>After the {{ C.NUM_ROUNDS }} die rolls,
-        you are <b>matched with Participant A</b> from this same study.
-        <li>First, you will see the number of times Participant A reported the correct number.
-        <li>Based on this information, you will rate how trustworthy you find them.
-        <li>You will be paid a {{ C.bonus }} points bonus if your rating is the same as the most common answer for that participant.
-    </ul>
+    <p>
+        Based on this information, you will rate how <b>trustworthy</b> you find them.
+        You will be paid a {{ C.bonus }} bonus if your rating is the same as the most common answer for that participant.
+    </p>
+
+    <p>
+        In addition, you will also be the recipient of one other participant who sees <b>your stage 1 outcome</b>
+        and has the same opportunity to rate you based on that information.
+        This will also be paid as a bonus.
+    </p>
     {{ endif }}
 
 </div>
 
-<div class="card bg-light instructions">
-    <div  class="card-body">
+    <hr size="6" width="50%" align="center" color="black">
+    <div>
         <h5>Please answer this question before continuing:</h5>
             {{ formfields }}
     </div>
-</div>
 
-    <div style="display: flex; justify-content: flex-end;margin-top: 20px; margin-bottom: 10px;">
-        Click next to read the detailed instructions for stage 3.
+
+    <div style="display: flex; justify-content: flex-end;margin-top: 30px; margin-bottom: 10px;">
+        Click next to start stage 2.
     </div>
     <div style="display: flex; justify-content: flex-end">
         {{ next_button }}
