@@ -111,11 +111,14 @@
 
 <div class="card bg-light instructions">
     <div class="card-body" style="font-size: 14px">
-        <p>
-            <b>Keep in mind</b>, the number on the die is the number of points you get paid as bonus.
-            You will be paid the number you report, regardless of what you rolled.
-            Another participant in the study will see how many times you reported the correct number.
-        </p>
+        Keep in mind:
+        <ul>
+            <li>Please report the number that you rolled. Your bonus will depend on your reported number.
+            <li>The higher the number you report, the more money you earn.
+            {{ if treatment != 'control' }}
+            <li>What you do will be observed by other participants.
+            {{ endif }}
+        </ul>
     </div>
 </div>
 

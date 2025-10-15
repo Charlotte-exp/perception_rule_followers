@@ -8,48 +8,48 @@
 
     <div class="panel panel-default" style="margin-bottom:10px">
     <div class="panel-body">
-        <strong>The study is over, thank you for participating!</strong>
+        <h5 style="color:#007bff">The study is over, thank you for participating!</h5>
         <br>
+
+        {{ if treatment == 'control' }}
         <p>
-            Below are the bonuses you got for each stage:
+            The die on <b>round {{ random_round }}</b> was selected for your bonus.
+            <br>
+            On that round you reported die of {{ random_reported_dice }}
+            which will be paid to you as a bonus of <u>{{ random_reported_dice}} points</u>.
         </p>
 
-        <div class="card bg-light instructions">
-            <div class="card-body" style="font-size: 15px">
-                <p>
-                    <b>In stage 1</b>, the die on round {{ random_round }} was selected for your bonus.
-                    <br>
-                    On that round you reported die of {{ random_reported_dice }}
-                    which will be paid to you as a bonus of <u>{{ random_reported_dice}} points</u>.
-                </p>
-                {{ if treatment == "TG" }}
-                <p>
-                    <b>In stage 2</b>, you sent {{ points_i_sent }} points to the next participant.
-                    They returned <u>{{ points_returned_to_me}} points</u> to you.
-                    <br>
-                    You also decided to keep <u>{{ points_i_kept }} points</u> of the {{ points_sent_to_me }} points sent to you.
-                </p>
-                {{ endif }}
-                {{ if treatment == "DG" }}
-                <p>
-                    <b>In stage 2</b>, you sent {{ points_sent }} points to the next participant
-                    and kept <u>{{ player.points_kept }} points</u> for yourself.
-                    <br>
-                    In addition, the previous participant sent you <u>{{ previous_pp_points_sent }} points</u>.
-                </p>
-                {{ endif }}
-                {{ if treatment == "rating" }}
-                <p>
-                    <b>For stage 2</b>, you will receive your bonus of {{ C.bonus }} points
-                    once the data for the whole study has been compiled and the most common answer calculated.
-                </p>
-                {{ endif }}
-                <p>
-                    <b>For stage 3</b>, the bonus will be paid to you at a later date
-                    depending on the decision of the participant in another study.
-                </p>
-            </div>
-        </div>
+        {{ else }}
+
+        <p>
+            <b>In stage 1</b>, the die on round {{ random_round }} was selected for your bonus.
+            <br>
+            On that round you reported die of {{ random_reported_dice }}
+            which will be paid to you as a bonus of <u>{{ random_reported_dice}} points</u>.
+        </p>
+        {{ if treatment == "TG" }}
+        <p>
+            <b>For stage 2</b>, you will be matched with two participants from the study with whom your choices and what you observed matches.
+            You will thus get a bonus for your interaction with Participant A and one with Participant B.
+        </p>
+        {{ endif }}
+        {{ if treatment == "DG" }}
+        <p>
+            <b>For stage 2</b>, you will be matched with two participants from the study with whom your choices and what you observed matches.
+            You will thus get a bonus for your interaction with Participant A and one with Participant B.
+        </p>
+        {{ endif }}
+        {{ if treatment == "rating" }}
+        <p>
+            <b>For stage 2</b>, you will receive your bonus of {{ C.bonus }} points
+            once the data for the whole study has been compiled and the most common answer calculated.
+        </p>
+        {{ endif }}
+        <p>
+            <b>For stage 3</b>, you will also be matched with one participant from another study with whom your choices match.
+            You will thus get a bonus for your interaction with Participant C.
+        </p>
+        {{ endif }}
 
         <br>
         <p>

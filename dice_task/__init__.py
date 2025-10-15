@@ -40,7 +40,7 @@ def creating_session(subsession):
     """
     subsession.session.number_of_trials = C.NUM_ROUNDS
 
-    treatments = itertools.cycle(['TG', 'DG', 'rating'])
+    treatments = itertools.cycle(['TG', 'DG', 'rating', 'control'])
     for p in subsession.get_players():
         p.treatment = next(treatments)
         p.participant.treatment = p.treatment
@@ -83,8 +83,8 @@ class Player(BasePlayer):
         choices=[
             [1, f'I will be paid the number I roll from one randomly selected die roll'],
             [2, f'I will be paid the number I report from one randomly selected die roll'],
-            [3, f'I will be paid the number I roll from all five die rolls summed up'],
-            [4, f'I will be paid the number I report from all five die rolls summed up'],
+            [3, f'I will be paid the number I roll from all {C.NUM_ROUNDS} die rolls summed up'],
+            [4, f'I will be paid the number I report from all {C.NUM_ROUNDS} die rolls summed up'],
         ],
         verbose_name='What determines the number of bonus points you will be paid from stage 1?',
         widget=widgets.RadioSelect,
@@ -214,77 +214,6 @@ class Introduction(Page):
         return None
 
 
-class InstruStage2(Page):
-    form_model = "player"
-    form_fields = ["q2"]
-
-    @staticmethod
-    def is_displayed(player: Player):
-        if player.round_number == 1:
-            return True
-        return None
-
-    @staticmethod
-    def error_message(player: Player, values):
-        """
-        records the number of time the page was submitted with an error. which specific error is not recorded.
-        """
-        solutions = dict(q2=2)
-        # if player.treatment == 'treatment':
-        #     solutions = dict(q1=1, q2=2)
-        # else:
-        #     solutions = dict(q5=1, q6=2)
-
-        # error_message can return a dict whose keys are field names and whose values are error messages
-        errors = {}
-        for question, correct_answer in solutions.items():
-            if values[question] != correct_answer:
-                errors[question] = 'This answer is wrong'
-                # Increment the specific failed attempt counter for the incorrect question
-                failed_attempt_field = f"{question}_failed_attempts"
-                if hasattr(player, failed_attempt_field):  # Ensure the field exists
-                    setattr(player, failed_attempt_field, getattr(player, failed_attempt_field) + 1)
-
-        if errors:
-            return errors
-        return None
-
-class InstruStage3(Page):
-    form_model = "player"
-    form_fields = ["q3"]
-
-    @staticmethod
-    def is_displayed(player: Player):
-        if player.round_number == 1:
-            return True
-        return None
-
-    @staticmethod
-    def error_message(player: Player, values):
-        """
-        records the number of time the page was submitted with an error. which specific error is not recorded.
-        """
-        solutions = dict(q3=3)
-        # if player.treatment == 'treatment':
-        #     solutions = dict(q1=1, q2=2)
-        # else:
-        #     solutions = dict(q5=1, q6=2)
-
-        # error_message can return a dict whose keys are field names and whose values are error messages
-        errors = {}
-        for question, correct_answer in solutions.items():
-            if values[question] != correct_answer:
-                errors[question] = 'This answer is wrong'
-                # Increment the specific failed attempt counter for the incorrect question
-                failed_attempt_field = f"{question}_failed_attempts"
-                if hasattr(player, failed_attempt_field):  # Ensure the field exists
-                    setattr(player, failed_attempt_field, getattr(player, failed_attempt_field) + 1)
-
-        if errors:
-            return errors
-        return None
-
-
 class Roll(Page):
     form_model = "player"
 
@@ -293,6 +222,7 @@ class Roll(Page):
         return dict(
             original_dice = player.original_dice,
             reported_dice = player.reported_dice,
+            treatment = player.treatment,
         )
 
 
@@ -305,6 +235,7 @@ class Dice(Page):
         return dict(
             original_dice = player.original_dice,
             reported_dice = player.reported_dice,
+            treatment = player.treatment,
         )
 
     def before_next_page(player: Player, timeout_happened):
@@ -315,7 +246,5 @@ class Dice(Page):
 
 page_sequence = [Consent,
                  Introduction,
-                 # InstruStage2,
-                 # InstruStage3,
                  Roll,
                  Dice]
