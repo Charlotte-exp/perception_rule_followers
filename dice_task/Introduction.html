@@ -6,6 +6,35 @@
 {{ block content }}
 
 <div class="card-body">
+
+
+
+    {{ if player.treatment == 'control' }}
+
+    <p>
+        This study is made of one simple task repeated over {{ C.NUM_ROUNDS }} rounds:
+    </p>
+    <ul>
+        <li>You will roll a die in the game {{ C.NUM_ROUNDS }} times.
+        <li>After each roll, you must report the number you rolled.
+        <li>The number you report is the number of points you will be paid for that roll.
+        <li><b>1 point is worth {{ C.conversion }}</b>.
+        <li>Only one of the {{ C.NUM_ROUNDS }} dice will be randomly selected for payment</li>
+    </ul>
+
+
+    <hr size="6" width="50%" align="center" color="black">
+    <div>
+        <h5>Please answer this question before continuing:</h5>
+            {{ formfields }}
+    </div>
+
+    <div style="display: flex; justify-content: flex-end;margin-top: 20px; margin-bottom: 10px;">
+        Click next to start with the first round.
+    </div>
+
+    {{ else }}
+
     <p>
         This study is made of three stages:
     </p>
@@ -18,10 +47,6 @@
         <li><b>1 point is worth {{ C.conversion }}</b>.
         <li>Only one of the {{ C.NUM_ROUNDS }} dice will be randomly selected for payment</li>
     </ul>
-
-    {{ if player.treatment == 'control' }}
-
-    {{ else }}
 
     <p style="font-size: 18px; font-weight: bold">Stage 2: Interaction with another participant in the study</p>
     <ul>
@@ -70,7 +95,6 @@
         The bonuses from each stage will be paid once the whole study is over.
     </p>
 
-    {{ endif }}
 </div>
 
 <hr size="6" width="50%" align="center" color="black">
@@ -82,6 +106,8 @@
     <div style="display: flex; justify-content: flex-end;margin-top: 20px; margin-bottom: 10px;">
         Click next to read the detailed instructions for stage 2.
     </div>
+
+    {{ endif }}
     <div style="display: flex; justify-content: flex-end">
         {{ next_button }}
     </div>

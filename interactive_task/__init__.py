@@ -298,7 +298,7 @@ class InstruStage2(Page):
 
     @staticmethod
     def is_displayed(player: Player):
-        return player.round_number == 1 or player.participant.treatment != 'control'
+        return player.round_number == 1 and player.participant.treatment != 'control'
 
     @staticmethod
     def error_message(player: Player, values):
@@ -467,9 +467,7 @@ class InstruStage3(Page):
 
     @staticmethod
     def is_displayed(player: Player):
-        if player.round_number == C.NUM_ROUNDS or player.participant.treatment != 'control':
-            return True
-        return None
+        return player.round_number == C.NUM_ROUNDS and player.participant.treatment != 'control'
 
     @staticmethod
     def error_message(player: Player, values):
@@ -507,9 +505,7 @@ class TrustGameForCCP(Page):
 
     @staticmethod
     def is_displayed(player: Player):
-        if player.round_number == C.NUM_ROUNDS or player.participant.treatment != 'control':
-            return True
-        return None
+        return player.round_number == C.NUM_ROUNDS and player.participant.treatment != 'control'
 
     @staticmethod
     def vars_for_template(player: Player):
@@ -530,9 +526,7 @@ class Payment(Page):
 
     @staticmethod
     def is_displayed(player: Player):
-        if player.round_number == C.NUM_ROUNDS or player.participant.treatment != 'control':
-            return True
-        return None
+        return player.round_number == C.NUM_ROUNDS
 
     # def vars_for_template(player: Player):
     #     others = other_players(player)

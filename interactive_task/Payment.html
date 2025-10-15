@@ -10,6 +10,17 @@
     <div class="panel-body">
         <h5 style="color:#007bff">The study is over, thank you for participating!</h5>
         <br>
+
+        {{ if treatment == 'control' }}
+        <p>
+            The die on <b>round {{ random_round }}</b> was selected for your bonus.
+            <br>
+            On that round you reported die of {{ random_reported_dice }}
+            which will be paid to you as a bonus of <u>{{ random_reported_dice}} points</u>.
+        </p>
+
+        {{ else }}
+
         <p>
             <b>In stage 1</b>, the die on round {{ random_round }} was selected for your bonus.
             <br>
@@ -38,6 +49,7 @@
             <b>For stage 3</b>, you will also be matched with one participant from another study with whom your choices match.
             You will thus get a bonus for your interaction with Participant C.
         </p>
+        {{ endif }}
 
         <br>
         <p>
