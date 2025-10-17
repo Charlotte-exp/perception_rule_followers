@@ -16,7 +16,7 @@
         display: flex;
         justify-content: center;
         width: 100%;
-        padding: 1.5rem 0;
+        padding: 1.2rem 0;
         margin-bottom: -1rem;
     }
 
@@ -47,14 +47,15 @@
     }
 
    .number-row {
-    justify-content: center;
-    display: flex;
-    flex-direction: row
-    margin-top:1vw;
-    /*gap: 1vw; !* Space between numbers scales with viewport width *!*/
-    gap: 0.5vw; /* Space between numbers scales with viewport width */
-    flex-wrap: wrap; /* Optional: allows wrapping if buttons exceed container width */
-    align-items: center; /* Ensures proper vertical alignment */
+        justify-content: center;
+        display: flex;
+        flex-direction: row
+        margin-top:1vw;
+        margin-bottom:30px;
+        /*gap: 1vw; !* Space between numbers scales with viewport width *!*/
+        gap: 0.5vw; /* Space between numbers scales with viewport width */
+        flex-wrap: wrap; /* Optional: allows wrapping if buttons exceed container width */
+        align-items: center; /* Ensures proper vertical alignment */
     }
 
 </style>
@@ -109,19 +110,6 @@
 
 {{ block content }}
 
-<div class="card bg-light instructions">
-    <div class="card-body" style="font-size: 14px">
-        Keep in mind:
-        <ul>
-            <li>Please report the number that you rolled. Your bonus will depend on your reported number.
-            <li>The higher the number you report, the more money you earn.
-            {{ if treatment != 'control' }}
-            <li>What you do will be observed by other participants.
-            {{ endif }}
-        </ul>
-    </div>
-</div>
-
 <div class="dice-container">
     <div class="dice" id="dice1">
         <div class="dot" id="dice1-1"></div>
@@ -151,6 +139,19 @@
         <button name="reported_dice" value="{{ i }}" class="btn btn-primary btn-large">{{ i }}</button>
     {% endfor %}
     </div>
+
+<div class="card bg-light instructions">
+    <div class="card-body" style="font-size: 14px">
+        Keep in mind:
+        <ul>
+            <li>Please report the number that you rolled. Your bonus will depend on your reported number.
+            <li>The higher the number you report, the more money you earn.
+            {{ if treatment != 'control' }}
+            <li>What you do will be observed by other participants.
+            {{ endif }}
+        </ul>
+    </div>
+</div>
 
 </div>
 

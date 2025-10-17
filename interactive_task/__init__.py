@@ -144,10 +144,10 @@ class Player(BasePlayer):
     q2_TG = models.IntegerField(
         initial=0,
         choices=[
-            [1, f'The points returned to me by one other participant, independent of how much I send in the first place'],
-            [2, f'The points returned to me by one other participant, depending on how much I send in the first place'],
+            [1, f'The points returned to me by one other participant, independent of how much I send in the first place.'],
+            [2, f'The points returned to me by one other participant, depending on how much I send in the first place.'],
             [3, f'The points returned to me by one other participant, depending on how much I send in the first place, '
-                f'as well as how much I keep from what yet another participant sent to me'],
+                f'as well as how much I keep from what yet another participant sent to me.'],
         ],
         verbose_name='What determines the number of bonus points you will be paid from stage 2?',
         widget=widgets.RadioSelect,
@@ -170,7 +170,7 @@ class Player(BasePlayer):
     q2_rating = models.IntegerField(
         initial=0,
         choices=[
-            [1, f'There is no bonus in this stage'],
+            [1, f'There is no bonus in this stage.'],
             [2, f'If my rating is the same as the most common answer for each of the {C.NUM_ROUNDS} participants, '
                 f'I will receive a {C.bonus} bonus.'],
             [3, f'If my rating is the same as the most common answer for a randomly selected participant, '
@@ -184,10 +184,10 @@ class Player(BasePlayer):
     q3 = models.IntegerField(
         initial=0,
         choices=[
-            [1, f'The points sent the participant in another study'],
-            [2, f'The points sent the participant in another study, doubled'],
-            [3, f'The points sent the participant in another study, tripled'],
-            [4, f'The points I decide to keep from those sent by another participant and tripled by us'],
+            [1, f'The points sent the participant in another study.'],
+            [2, f'The points sent the participant in another study, doubled.'],
+            [3, f'The points sent the participant in another study, tripled.'],
+            [4, f'The points I decide to keep from those sent by another participant and tripled by the computer.'],
         ],
         verbose_name='What determines the number of bonus points you will be paid from stage 3?',
         widget=widgets.RadioSelect,
