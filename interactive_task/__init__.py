@@ -10,7 +10,7 @@ Your app description
 
 class C(BaseConstants):
     NAME_IN_URL = 'interactive_task'
-    PLAYERS_PER_GROUP = 3
+    PLAYERS_PER_GROUP = None
     NUM_ROUNDS = 6
 
     # number_of_trials = NUM_ROUNDS # from the actor task
