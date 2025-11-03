@@ -299,7 +299,7 @@
 <div class="card-body">
 
         <p>
-            Here is the number of times over the {{ number_of_trials }} rounds,
+            Here is the number of times over the {{ num_dice_rounds }} rounds,
             that <b>Participant {{ player.round_number }}</b> chose to report the correct die:
         </p>
         <div class="container my-5">
@@ -307,7 +307,7 @@
                 <div class="fraction-square">
                     <div class="diagonal-line"></div>
                     <div class="k-value">{{ k_value }}</div>
-                    <div class="denominator">{{ number_of_trials }}</div>
+                    <div class="denominator">{{ num_dice_rounds }}</div>
                 </div>
             </div>
         </div>

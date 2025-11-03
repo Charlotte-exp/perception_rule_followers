@@ -17,7 +17,7 @@ class C(BaseConstants):
     participant_fee = 1
     time = 10
 
-    number_of_trials = NUM_ROUNDS # from the actor task
+    num_dice_rounds = NUM_ROUNDS # from the actor task
     percent_accurate = 10
     bonus = cu(2)
 
@@ -40,7 +40,7 @@ def creating_session(subsession):
     Because creating_session calls the function every round
     we force it not to do that by setting a value based on round number instead.
     """
-    subsession.session.number_of_trials = C.NUM_ROUNDS
+    subsession.session.num_dice_rounds = C.NUM_ROUNDS
 
     treatments = itertools.cycle(['TG', 'DG', 'rating', 'control'])
     for p in subsession.get_players():
@@ -160,7 +160,7 @@ def random_payment(player: Player):
     This function selects one round among all with equal probability.
     It records the value of each variable on this round as new random_variable fields
     """
-    # number_of_rounds = player.session.number_of_trials
+    # number_of_rounds = player.session.num_dice_rounds
     number_of_rounds = C.NUM_ROUNDS
     randomly_selected_round = random.randint(1, number_of_rounds)
     me = player.in_round(randomly_selected_round)

@@ -33,7 +33,7 @@ SESSION_CONFIG_DEFAULTS = dict(
 
 PARTICIPANT_FIELDS = ['original_dice', 'reported_dice', 'treatment', 'k_list',
                       'randomly_selected_round', 'randomly_selected_reported_dice']
-SESSION_FIELDS = ['number_of_trials']
+SESSION_FIELDS = ['num_dice_rounds']
 
 # ISO-639 code
 # for example: de, fr, ja, ko, zh-hans

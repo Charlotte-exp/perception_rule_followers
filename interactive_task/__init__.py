@@ -13,7 +13,8 @@ class C(BaseConstants):
     PLAYERS_PER_GROUP = None
     NUM_ROUNDS = 6
 
-    # number_of_trials = NUM_ROUNDS # from the actor task
+    num_dice_rounds = 12 # same as dice task!!
+
     percent_accurate = 10
     bonus = cu(2)
     conversion = '34p'
@@ -61,9 +62,10 @@ def creating_session(subsession):
     Because creating_session calls the function every round
     we force it not to do that by setting a value based on round number instead.
     """
+
     if subsession.round_number == 1:
         for p in subsession.get_players():
-            sequence = generate_k_sequence()
+            sequence = generate_k_sequence(p)
             p.participant.vars['sequence'] = sequence
             # set first round value directly
             p.k_value = sequence[0]
@@ -273,15 +275,16 @@ def group_by_arrival_time_method(subsession, waiting_players):
 #     return list_of_correct
 
 
-def generate_k_sequence():
+def generate_k_sequence(player: Player):
     """
     Generate a random sequence of 10 numbers.
     One different sequence is assigned to a player at creating_session
     4 values are always included, 6 are random.
     each sequence is shuffled before being returned as the values are assigned to each round in order.
     """
-    optional_values = list(range(2, 9))  # 2 to 8
-    necessary_values = [0, 1, 9, 10]
+    # player.session.num_dice_rounds -> when finish testing
+    optional_values = list(range(2, (C.num_dice_rounds-1)))  # 2 to 10
+    necessary_values = [0, 1, (C.num_dice_rounds-1), C.num_dice_rounds]
     sequence = necessary_values + random.sample(optional_values, 2)
     random.shuffle(sequence)
     return sequence
@@ -361,7 +364,7 @@ class InstruStage2(Page):
         # next_pp = others["next"]
         return dict(
             treatment=player.participant.treatment,
-            number_of_trials = player.session.number_of_trials,
+            num_dice_rounds = player.session.num_dice_rounds,
             DG_points = int(C.DG_points),
             half_points = int(C.DG_points/2),
         )
@@ -382,7 +385,7 @@ class TrustGameSender(Page):
         return dict(
             # k_value = sum(next_pp.participant.k_list), ## for live interaction
             k_value=player.k_value,
-            number_of_trials = player.session.number_of_trials,
+            num_dice_rounds = player.session.num_dice_rounds,
         )
 
 
@@ -404,7 +407,7 @@ class DictGame(Page):
             DG_points = int(C.DG_points),
             # k_value = sum(next_pp.participant.k_list), ## for live interaction
             k_value=player.k_value,
-            number_of_trials = player.session.number_of_trials,
+            num_dice_rounds = player.session.num_dice_rounds,
             points_kept = player.points_kept,
         )
 
@@ -426,7 +429,7 @@ class Rating(Page):
         return dict(
             # k_value = sum(next_pp.participant.k_list), ## for live interaction
             k_value=player.k_value,
-            number_of_trials = player.session.number_of_trials,
+            num_dice_rounds = player.session.num_dice_rounds,
         )
 
 ## only if live interaction
@@ -522,7 +525,7 @@ class InstruStage3(Page):
     def vars_for_template(player: Player):
         return dict(
             treatment=player.participant.treatment,
-            number_of_trials = player.session.number_of_trials,
+            num_dice_rounds = player.session.num_dice_rounds,
             DG_points = int(C.DG_points),
             half_points = int(C.DG_points/2),
         )

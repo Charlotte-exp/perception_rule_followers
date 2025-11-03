@@ -20,10 +20,10 @@
         <div class="card-body" style="font-size: 14px">
         Example:
         <ul>
-            <li>10/10 rolls means that the participant reported the exact number they saw on the screen every time.
-            <li>6/10 rolls means that the participant reported the exact number they saw on the screen 6 times,<br>
+            <li>{{ num_dice_rounds }}/{{ num_dice_rounds }} rolls means that the participant reported the exact number they saw on the screen every time.
+            <li>6/{{ num_dice_rounds }} rolls means that the participant reported the exact number they saw on the screen 6 times,<br>
             and that they did not report the correct number 4 times.
-            <li>0/10 rolls means that the participant <u>never</u> reported the exact number they saw on the screen.
+            <li>0/{{ num_dice_rounds }} rolls means that the participant <u>never</u> reported the exact number they saw on the screen.
         </ul>
         </div>
     </div>
