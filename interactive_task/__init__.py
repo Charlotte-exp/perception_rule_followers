@@ -208,25 +208,25 @@ def group_by_arrival_time_method(subsession, waiting_players):
     return None
 
 ## if live interaction
-def other_players(player: Player):
-    """
-    Get_others_in_group returns a list in ascending order so need to use player ID in group.
-    """
-    number_of_players = C.PLAYERS_PER_GROUP
-    id_in_group = player.id_in_group  # 1, 2, or 3
-
-    # modulo to avoid negative values
-    prev_id = (id_in_group - 2) % number_of_players + 1   # previous player
-    next_id = id_in_group % number_of_players + 1    # next player
-
-    previous_pp = player.group.get_player_by_id(prev_id)
-    next_pp = player.group.get_player_by_id(next_id)
-
-    print(f"Player {id_in_group}: prev={previous_pp.id_in_group}, next={next_pp.id_in_group}")
-    return {
-        "previous": player.group.get_player_by_id(prev_id),
-        "next": player.group.get_player_by_id(next_id),
-    }
+# def other_players(player: Player):
+#     """
+#     Get_others_in_group returns a list in ascending order so need to use player ID in group.
+#     """
+#     number_of_players = C.PLAYERS_PER_GROUP
+#     id_in_group = player.id_in_group  # 1, 2, or 3
+#
+#     # modulo to avoid negative values
+#     prev_id = (id_in_group - 2) % number_of_players + 1   # previous player
+#     next_id = id_in_group % number_of_players + 1    # next player
+#
+#     previous_pp = player.group.get_player_by_id(prev_id)
+#     next_pp = player.group.get_player_by_id(next_id)
+#
+#     print(f"Player {id_in_group}: prev={previous_pp.id_in_group}, next={next_pp.id_in_group}")
+#     return {
+#         "previous": player.group.get_player_by_id(prev_id),
+#         "next": player.group.get_player_by_id(next_id),
+#     }
 
 ## if live interaction
 # def calculate_k(player: Player):
@@ -328,8 +328,8 @@ class InstruStage2(Page):
         return None
 
     def vars_for_template(player: Player):
-        others = other_players(player)
-        next_pp = others["next"]
+        # others = other_players(player)
+        # next_pp = others["next"]
         return dict(
             treatment=player.participant.treatment,
             number_of_trials = player.session.number_of_trials,
@@ -348,8 +348,8 @@ class TrustGameSender(Page):
         return None
 
     def vars_for_template(player: Player):
-        others = other_players(player)
-        next_pp = others["next"]
+        # others = other_players(player)
+        # next_pp = others["next"]
         return dict(
             # k_value = sum(next_pp.participant.k_list), ## for live interaction
             k_value=player.k_value,
@@ -369,8 +369,8 @@ class DictGame(Page):
 
     @staticmethod
     def vars_for_template(player: Player):
-        others = other_players(player)
-        next_pp = others["next"]
+        # others = other_players(player)
+        # next_pp = others["next"]
         return dict(
             DG_points = int(C.DG_points),
             # k_value = sum(next_pp.participant.k_list), ## for live interaction
@@ -392,8 +392,8 @@ class Rating(Page):
 
     @staticmethod
     def vars_for_template(player: Player):
-        others = other_players(player)
-        next_pp = others["next"]
+        # others = other_players(player)
+        # next_pp = others["next"]
         return dict(
             # k_value = sum(next_pp.participant.k_list), ## for live interaction
             k_value=player.k_value,
@@ -430,8 +430,8 @@ class TrustGameBack(Page):
 
     @staticmethod
     def vars_for_template(player: Player):
-        others = other_players(player)
-        previous_pp = others["previous"]
+        # others = other_players(player)
+        # previous_pp = others["previous"]
         return dict(
             # sent_points = previous_pp.trust_points*3, # multiplied!!!  ## only live interaction
             zero_points_tripled = C.zero_points*3,
@@ -575,7 +575,7 @@ page_sequence = [
                  DictGame,
                  Rating,
                  # ResultsWaitPage,
-                 TrustGameBack,
+                 # TrustGameBack,
                  # EndWaitPage,
                  InstruStage3,
                  TrustGameForCCP,

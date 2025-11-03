@@ -1,0 +1,88 @@
+{{ block title }}
+
+    Interaction
+
+{{ endblock }}
+
+{{ block style }}
+
+<style>
+
+    body {
+        margin: 0;
+    }
+
+    .button-container {
+        display: flex;
+        justify-content: flex-end;
+    }
+
+    .submit-button {
+        color: #fff;
+        background-color: #007bff;
+        border: 1px solid #007bff;
+        font-size: 1rem;
+        border-radius: 0.25rem;
+        padding: 4px 12px;
+        cursor: pointer;
+        font-family: Arial, Helvetica, sans-serif;
+        transition: background-color 0.2s ease, border-color 0.2s ease;
+    }
+
+    .submit-button:hover {
+        background-color: #0056b3;
+        border-color: #0056b3;
+    }
+
+    .submit-button:active {
+        background-color: #004a99;
+        border-color: #004a99;
+    }
+
+    .question-container {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+        padding: 0.5rem 0;
+    }
+
+    .text-center {
+        text-align: center;
+        vertical-align: middle;
+    }
+
+
+</style>
+
+{{ endblock }}
+
+{{ block content }}
+
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <script>
+
+    </script>
+
+</head>
+
+<body>
+
+    <p>
+        Now the other participant will see your sequence of decision and decide how much to share with you.
+        Since no action is required from you, you can continue to Part 2.
+    </p>
+
+    <div style="display: flex; justify-content: flex-end">
+        {{ next_button }}
+    </div>
+
+</body>
+</html>
+
+{{ endblock }}

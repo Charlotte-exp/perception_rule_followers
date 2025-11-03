@@ -3,6 +3,8 @@ from otree.api import *
 import random
 import itertools
 
+from interactive_task import TrustGameBack
+
 doc = """
 Your app description
 """
@@ -112,6 +114,21 @@ class Player(BasePlayer):
     randomly_selected_round = models.IntegerField(initial=0)
     randomly_selected_reported_dice = models.IntegerField(initial=0)
 
+    send_back_1 = models.FloatField(
+        verbose_name='You received X points from the other participant: <br>'
+                     'How many points to do you send back?',
+        min=0, max=9)
+
+    send_back_2 = models.FloatField(
+        verbose_name='You received X points from the other participant: <br>'
+                     'How many points to do you send back?',
+        min=0, max=9)
+
+    send_back_3 = models.FloatField(
+        verbose_name='You received X points from the other participant: <br>'
+                     'How many points to do you send back?',
+        min=0, max=9)
+
 
 ######## FUNCTIONS #########
 
@@ -166,11 +183,22 @@ class Consent(Page):
     def is_displayed(player: Player):
         return player.round_number == 1
 
+
 class Introduction(Page):
     form_model = "player"
     # form_fields = ["q1"]
 
-    def get_form_fields(player:Player):
+    @staticmethod
+    def is_displayed(player: Player):
+        if player.round_number == 1:
+            return True
+        return None
+
+
+class InstruPart1(Page):
+    form_model = "player"
+
+    def get_form_fields(player: Player):
         if player.treatment == 'control':
             return ['q1']
         else:
@@ -244,7 +272,52 @@ class Dice(Page):
             random_payment(player),
 
 
+class TrustGameBack(Page):
+    form_model = "player"
+    form_fields = ["send_back_1", "send_back_2", "send_back_3"]
+
+    @staticmethod
+    def is_displayed(player: Player):
+        if player.round_number == C.NUM_ROUNDS and player.participant.treatment == 'TG':
+            return True
+        return None
+
+    @staticmethod
+    def vars_for_template(player: Player):
+        return dict(
+            zero_points_tripled = C.zero_points*3,
+            one_points_tripled = C.one_points*3,
+            two_points_tripled = C.two_points*3,
+            three_points_tripled = C.three_points*3,
+            bounds={
+                # 'send_back_1': {'min': 0, 'max': previous_pp.trust_points*3}, ## only live interaction
+                'send_back_1': {'min': 0, 'max': C.one_points*3},
+                'send_back_2': {'min': 0, 'max': C.two_points*3},
+                'send_back_3': {'min': 0, 'max': C.three_points*3},
+            }
+        )
+
+
+class FeedbackPart1(Page):
+    form_model = "player"
+
+    @staticmethod
+    def is_displayed(player: Player):
+        if player.round_number == C.NUM_ROUNDS and player.participant.treatment != 'TG':
+            return True
+        return None
+
+    @staticmethod
+    def vars_for_template(player: Player):
+        return dict(
+
+        )
+
 page_sequence = [Consent,
                  Introduction,
+                 InstruPart1,
                  Roll,
-                 Dice]
+                 Dice,
+                 TrustGameBack,
+                 FeedbackPart1,
+                 ]

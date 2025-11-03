@@ -1,17 +1,18 @@
 {{ block title }}
 
-    Stage 2 instructions
+    Part 2 instructions
 
 {{ endblock }}
 {{ block content }}
 
 <div>
 
-    <p style="font-size: 18px; font-weight: bold">Interaction with another participant in the study</p>
+    <p style="font-size: 18px; font-weight: bold">Interaction with a new participant in the study</p>
 
     <p>
-        While other participants sees how many times <u>you</u> reported the correct die outcome,
-        you will see that same information about several other participants.
+        In the previous part, another participants saw how many times <u>you</u> reported the correct die outcome
+        and made a decision based on that information.
+        Now, you will be the one observing others, and see that same information about several other participants.
         We will call these participants <b>"Participant 1-{{ C.NUM_ROUNDS }}"</b>
     </p>
 
@@ -31,7 +32,7 @@
 
     {{ if treatment == 'TG' }}
     <p>
-        In this stage, you are given 3 points by the computer.
+        Just like in Part 1 but as the other role, you are given 3 points by the computer.
         For each of these participants, after learning how many times they reported the correct number,
         you will have <b>the opportunity to send them up to 3 points</b>
         These are new points given to you by the computer in stage 2.
@@ -53,26 +54,20 @@
         </ul>
         </div>
     </div>
-    <div style="margin-top: 20px; margin-bottom: 20px">
 
-    <p>
-        One of the {{ C.NUM_ROUNDS }} participants you observe will be selected at random to be matched with you for the bonus.
-        Your bonus will be the points this selected participant returns to you,
-        and the bonus of that participant will be the points they keep.
-    </p>
-    <p>
-        In addition, you will also decide how much to return to a participant who sees <b>your stage 1 outcome</b>
-        and has the same opportunity to send points to you based on that information.
-        This participant is referred to as "Participant B".
-        This will also be paid as a bonus.
-    </p>
+    <div style="margin-top: 20px; margin-bottom: 20px">
+        <p>
+            One of the {{ C.NUM_ROUNDS }} participants you observe will be selected at random to be matched with you for the bonus.
+            Your bonus will be the points this selected participant returns to you,
+            and the bonus of that participant will be the points they keep.
+        </p>
     </div>
     {{ endif }}
 
     {{ if treatment == 'DG' }}
 
     <p>
-        In this stage, you are given {{ DG_points }} by the computer.
+        Just like in Part 1 but as the other role, you are given {{ DG_points }} by the computer.
         For each of these participants,
         after learning how many times they reported the correct number,
         you will have <b>the opportunity to share these points</b> with them.
@@ -91,25 +86,25 @@
     </div>
 
     <div style="margin-top: 20px; margin-bottom: 20px">
-    <p>
-        In addition, you will also be the recipient of one other participant who sees <b>your stage 1 outcome</b>
-        and has the same opportunity to share points with you based on that information.
-        This will also be paid as a bonus.
-    </p>
+        <p>
+            One of the {{ C.NUM_ROUNDS }} participants you observe will be selected at random to be matched with you for the bonus.
+            Your bonus will be the points you decided to keep, if any,
+            and the bonus of that participant will be the points you decided to share with them, if any.
+        </p>
     </div>
     {{ endif }}
 
     {{ if treatment == 'rating' }}
     <p>
-        Based on this information, you will rate how <b>trustworthy</b> you find them.
+        Just like in Part 1 but as the other role, you will rate how <b>trustworthy</b> you find them.
         You will be paid a {{ C.bonus }} bonus if your rating is the same as the most common answer for that participant.
     </p>
 
     <p>
-        In addition, you will also be the recipient of one other participant who sees <b>your stage 1 outcome</b>
-        and has the same opportunity to rate you based on that information.
-        This will also be paid as a bonus.
+        Only of the {{ C.NUM_ROUNDS }} participants you observe
+        will be selected at random to be matched with you for the bonus calculation.
     </p>
+
     {{ endif }}
 
 </div>
