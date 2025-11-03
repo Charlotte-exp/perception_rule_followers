@@ -299,21 +299,21 @@
 <div class="card-body">
 
         <p>
-            Here is the number of times over the {{ number_of_trials }} rounds,
-            that <b>Participant {{ player.round_number }}</b> chose to report the correct die:
+            Here is the number of times out of {{ num_dice_rounds }},
+            that <b>Participant {{ player.round_number }}</b> chose to report the die correctly:
         </p>
         <div class="container my-5">
             <div class="mx-auto p-4 bg-light text-center shadow" style="max-width: 250px; border-radius: 10px;">
                 <div class="fraction-square">
                     <div class="diagonal-line"></div>
                     <div class="k-value">{{ k_value }}</div>
-                    <div class="denominator">{{ number_of_trials }}</div>
+                    <div class="denominator">{{ num_dice_rounds }}</div>
                 </div>
             </div>
         </div>
 
     <p style="text-align: center;">
-        <strong>How many points do you send to Participant {{ player.round_number }}?</strong>
+        <strong>How many points do you share with Participant {{ player.round_number }}?</strong>
     </p>
 
     <div class="slider-container">
@@ -363,9 +363,10 @@
         <div class="card-body" style="font-size: 14px">
             <u>Remember</u>:
                 <ul>
-                    <li> You start with 6 points.
-                    <li> You then choose how many points, if any, to send to the next participant.
-                    <li> The next participant has no say in this interaction.
+                    <li> You receive 6 points.
+                    <li> You then choose how many points, if any, to share with the other participant.
+                    <li> You can share nothing, any intermediate amount, or everything.
+                    <li> The other participant has no say in this interaction.
                 </ul>
          </div>
     </div>

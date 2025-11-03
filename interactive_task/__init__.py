@@ -13,7 +13,8 @@ class C(BaseConstants):
     PLAYERS_PER_GROUP = None
     NUM_ROUNDS = 6
 
-    # number_of_trials = NUM_ROUNDS # from the actor task
+    num_dice_rounds = 12 # same as dice task!!
+
     percent_accurate = 10
     bonus = cu(2)
     conversion = '34p'
@@ -61,9 +62,10 @@ def creating_session(subsession):
     Because creating_session calls the function every round
     we force it not to do that by setting a value based on round number instead.
     """
+
     if subsession.round_number == 1:
         for p in subsession.get_players():
-            sequence = generate_k_sequence()
+            sequence = generate_k_sequence(p)
             p.participant.vars['sequence'] = sequence
             # set first round value directly
             p.k_value = sequence[0]
@@ -144,12 +146,14 @@ class Player(BasePlayer):
     q2_TG = models.IntegerField(
         initial=0,
         choices=[
-            [1, f'The points returned to me by one other participant, independent of how much I send in the first place.'],
-            [2, f'The points returned to me by one other participant, depending on how much I send in the first place.'],
-            [3, f'The points returned to me by one other participant, depending on how much I send in the first place, '
-                f'as well as how much I keep from what yet another participant sent to me.'],
+            [1, f'The points returned to me by all {C.NUM_ROUNDS} other participants, '
+                f'independent of how much I sent in the first place.'],
+            [2, f'The points returned to me by all {C.NUM_ROUNDS} other participants, '
+                f'depending on how much I sent in the first place.'],
+            [3, f'The points returned to me by one other participant, depending on how much I sent in the first place.'],
+            [4, f'The points returned to me by one other participant, independent of how much I sent in the first place.'],
         ],
-        verbose_name='What determines the number of bonus points you will be paid from stage 2?',
+        verbose_name='What determines the number of bonus points you will be paid from Part 2?',
         widget=widgets.RadioSelect,
         # error_messages={'required': 'You must select an option before continuing.'}, # does not display
     )
@@ -162,7 +166,7 @@ class Player(BasePlayer):
             [3, f'The points I do not share with another participant, selected at random from {C.NUM_ROUNDS} participants, '
                 f'as well as however much yet another participant shared with me.'],
         ],
-        verbose_name='What determines the number of bonus points you will be paid from stage 2?',
+        verbose_name='What determines the number of bonus points you will be paid from Part 2?',
         widget=widgets.RadioSelect,
         # error_messages={'required': 'You must select an option before continuing.'}, # does not display
     )
@@ -176,7 +180,7 @@ class Player(BasePlayer):
             [3, f'If my rating is the same as the most common answer for a randomly selected participant, '
                 f'I will receive a {C.bonus} bonus.'],
         ],
-        verbose_name='What determines the number of bonus points you will be paid from stage 2?',
+        verbose_name='What determines the number of bonus points you will be paid from Part 2?',
         widget=widgets.RadioSelect,
         # error_messages={'required': 'You must select an option before continuing.'}, # does not display
     )
@@ -184,14 +188,43 @@ class Player(BasePlayer):
     q3 = models.IntegerField(
         initial=0,
         choices=[
-            [1, f'The points sent the participant in another study.'],
-            [2, f'The points sent the participant in another study, doubled.'],
-            [3, f'The points sent the participant in another study, tripled.'],
+            [1, f'The points sent by the participant from another study and doubled by the computer.'],
+            [2, f'The points I decide to keep from those sent by another participant and doubled by the computer.'],
+            [3, f'The points sent by the participant from another study and tripled by the computer.'],
             [4, f'The points I decide to keep from those sent by another participant and tripled by the computer.'],
         ],
-        verbose_name='What determines the number of bonus points you will be paid from stage 3?',
+        verbose_name='What determines the number of bonus points you will be paid from Part 3?',
         widget=widgets.RadioSelect,
         # error_messages={'required': 'You must select an option before continuing.'}, # does not display
+    )
+
+    age = models.IntegerField(
+        min=10, max=100,
+        verbose_name = 'What is your age?',
+    )
+
+    gender = models.StringField(
+        choices=[
+            [1, f'Female'],
+            [2, f'Male'],
+            [3, f'Non-binary'],
+            [4, f'Prefer not to say'],
+        ],
+        verbose_name='What is your gender?',
+    )
+
+    education = models.StringField(
+        choices=[
+            [1, f'No formal education/Early childhood education'],
+            [2, f'Primary education (ages 5–12)'],
+            [3, f'Lower secondary education (ages ~12–15)'],
+            [4, f'Upper secondary education (ages ~15–18)'],
+            [5, f'Post-secondary non-tertiary education (e.g., vocational training, certificates)'],
+            [6, f'Short-cycle tertiary education (e.g., associate degree, advanced diploma)'],
+            [7, f'Bachelor’s degree or equivalent'],
+            [8, f'Master’s degree or equivalent'],
+            [9, f'Doctoral degree (PhD) or equivalent'],
+        ]
     )
 
 
@@ -208,25 +241,25 @@ def group_by_arrival_time_method(subsession, waiting_players):
     return None
 
 ## if live interaction
-def other_players(player: Player):
-    """
-    Get_others_in_group returns a list in ascending order so need to use player ID in group.
-    """
-    number_of_players = C.PLAYERS_PER_GROUP
-    id_in_group = player.id_in_group  # 1, 2, or 3
-
-    # modulo to avoid negative values
-    prev_id = (id_in_group - 2) % number_of_players + 1   # previous player
-    next_id = id_in_group % number_of_players + 1    # next player
-
-    previous_pp = player.group.get_player_by_id(prev_id)
-    next_pp = player.group.get_player_by_id(next_id)
-
-    print(f"Player {id_in_group}: prev={previous_pp.id_in_group}, next={next_pp.id_in_group}")
-    return {
-        "previous": player.group.get_player_by_id(prev_id),
-        "next": player.group.get_player_by_id(next_id),
-    }
+# def other_players(player: Player):
+#     """
+#     Get_others_in_group returns a list in ascending order so need to use player ID in group.
+#     """
+#     number_of_players = C.PLAYERS_PER_GROUP
+#     id_in_group = player.id_in_group  # 1, 2, or 3
+#
+#     # modulo to avoid negative values
+#     prev_id = (id_in_group - 2) % number_of_players + 1   # previous player
+#     next_id = id_in_group % number_of_players + 1    # next player
+#
+#     previous_pp = player.group.get_player_by_id(prev_id)
+#     next_pp = player.group.get_player_by_id(next_id)
+#
+#     print(f"Player {id_in_group}: prev={previous_pp.id_in_group}, next={next_pp.id_in_group}")
+#     return {
+#         "previous": player.group.get_player_by_id(prev_id),
+#         "next": player.group.get_player_by_id(next_id),
+#     }
 
 ## if live interaction
 # def calculate_k(player: Player):
@@ -244,15 +277,16 @@ def other_players(player: Player):
 #     return list_of_correct
 
 
-def generate_k_sequence():
+def generate_k_sequence(player: Player):
     """
     Generate a random sequence of 10 numbers.
     One different sequence is assigned to a player at creating_session
     4 values are always included, 6 are random.
     each sequence is shuffled before being returned as the values are assigned to each round in order.
     """
-    optional_values = list(range(2, 9))  # 2 to 8
-    necessary_values = [0, 1, 9, 10]
+    # player.session.num_dice_rounds -> when finish testing
+    optional_values = list(range(2, (C.num_dice_rounds-1)))  # 2 to 10
+    necessary_values = [0, 1, (C.num_dice_rounds-1), C.num_dice_rounds]
     sequence = necessary_values + random.sample(optional_values, 2)
     random.shuffle(sequence)
     return sequence
@@ -328,11 +362,11 @@ class InstruStage2(Page):
         return None
 
     def vars_for_template(player: Player):
-        others = other_players(player)
-        next_pp = others["next"]
+        # others = other_players(player)
+        # next_pp = others["next"]
         return dict(
             treatment=player.participant.treatment,
-            number_of_trials = player.session.number_of_trials,
+            num_dice_rounds = player.session.num_dice_rounds,
             DG_points = int(C.DG_points),
             half_points = int(C.DG_points/2),
         )
@@ -348,12 +382,12 @@ class TrustGameSender(Page):
         return None
 
     def vars_for_template(player: Player):
-        others = other_players(player)
-        next_pp = others["next"]
+        # others = other_players(player)
+        # next_pp = others["next"]
         return dict(
             # k_value = sum(next_pp.participant.k_list), ## for live interaction
             k_value=player.k_value,
-            number_of_trials = player.session.number_of_trials,
+            num_dice_rounds = player.session.num_dice_rounds,
         )
 
 
@@ -369,13 +403,13 @@ class DictGame(Page):
 
     @staticmethod
     def vars_for_template(player: Player):
-        others = other_players(player)
-        next_pp = others["next"]
+        # others = other_players(player)
+        # next_pp = others["next"]
         return dict(
             DG_points = int(C.DG_points),
             # k_value = sum(next_pp.participant.k_list), ## for live interaction
             k_value=player.k_value,
-            number_of_trials = player.session.number_of_trials,
+            num_dice_rounds = player.session.num_dice_rounds,
             points_kept = player.points_kept,
         )
 
@@ -392,12 +426,12 @@ class Rating(Page):
 
     @staticmethod
     def vars_for_template(player: Player):
-        others = other_players(player)
-        next_pp = others["next"]
+        # others = other_players(player)
+        # next_pp = others["next"]
         return dict(
             # k_value = sum(next_pp.participant.k_list), ## for live interaction
             k_value=player.k_value,
-            number_of_trials = player.session.number_of_trials,
+            num_dice_rounds = player.session.num_dice_rounds,
         )
 
 ## only if live interaction
@@ -430,8 +464,8 @@ class TrustGameBack(Page):
 
     @staticmethod
     def vars_for_template(player: Player):
-        others = other_players(player)
-        previous_pp = others["previous"]
+        # others = other_players(player)
+        # previous_pp = others["previous"]
         return dict(
             # sent_points = previous_pp.trust_points*3, # multiplied!!!  ## only live interaction
             zero_points_tripled = C.zero_points*3,
@@ -493,7 +527,7 @@ class InstruStage3(Page):
     def vars_for_template(player: Player):
         return dict(
             treatment=player.participant.treatment,
-            number_of_trials = player.session.number_of_trials,
+            num_dice_rounds = player.session.num_dice_rounds,
             DG_points = int(C.DG_points),
             half_points = int(C.DG_points/2),
         )
@@ -520,6 +554,15 @@ class TrustGameForCCP(Page):
                 'send_back_CCP_3': {'min': 0, 'max': C.three_points*3},
             },
         )
+
+
+class Demographics(Page):
+    form_model = "player"
+    form_fields = ["age", "gender", "education"]
+
+    @staticmethod
+    def is_displayed(player: Player):
+        return player.round_number == C.NUM_ROUNDS
 
 
 class Payment(Page):
@@ -575,10 +618,11 @@ page_sequence = [
                  DictGame,
                  Rating,
                  # ResultsWaitPage,
-                 TrustGameBack,
+                 # TrustGameBack,
                  # EndWaitPage,
                  InstruStage3,
                  TrustGameForCCP,
+                 Demographics,
                  Payment,
                  ProlificLink]
 

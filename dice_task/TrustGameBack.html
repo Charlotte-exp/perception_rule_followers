@@ -1,6 +1,6 @@
 {{ block title }}
 
-    Part 3
+    Interaction
 
 {{ endblock }}
 
@@ -72,7 +72,7 @@
     }
 
     .slider-labels span {
-        font-size: 14px;
+        font-size: 16px;
         white-space: nowrap;
     }
 
@@ -186,6 +186,7 @@
 
 
     <script>
+
         document.addEventListener("DOMContentLoaded", function () {
             // Slider setup
             const sliders = [
@@ -232,6 +233,7 @@
                 document.getElementById("error-message").style.display = "none";
             }
         });
+
     </script>
 
 </head>
@@ -239,14 +241,14 @@
 <body>
 
     <p>
-        Now, you decide how much of the amount sent by <u>the other participant</u> you wish to send back.
+        Now, you decide how much of the amount sent by <u>the other participant</u> in this study you wish to send back.
     </p>
     <p>
         Below, tell us how much you want to return,
         depending on how much you receive from the other participant.
     </p>
 
-<div  class="card-body">
+    <div  class="card-body">
     <div class="question-container">
         <table class="table">
             <thead>
@@ -264,7 +266,7 @@
                         <div class="slider-container">
                             <span style="flex-grow: 1;">
                                 <input type="hidden" name="slider1_moved" value="0" id="check_slider1" />
-                                <input type="range" name="send_back_CCP_1" id="slider1" min="0" max="3" step="0.5" value="" class="hidden-thumb">
+                                <input type="range" name="send_back_1" id="slider1" min="0" max="3" step="0.5" value="" class="hidden-thumb">
                             </span>
                             <div class="slider-labels">
                                 <span>0</span>
@@ -286,7 +288,7 @@
                         <div class="slider-container">
                             <span style="flex-grow: 1;">
                                 <input type="hidden" name="slider2_moved" value="0" id="check_slider2" />
-                                <input type="range" name="send_back_CCP_2" id="slider2" min="0" max="6" step="0.5" value="" class="hidden-thumb">
+                                <input type="range" name="send_back_2" id="slider2" min="0" max="6" step="0.5" value="" class="hidden-thumb">
                             </span>
 
                             <div class="slider-labels">
@@ -309,7 +311,7 @@
                         <div class="slider-container">
                             <span style="flex-grow: 1;">
                                 <input type="hidden" name="slider3_moved" value="0" id="check_slider3" />
-                                <input type="range" name="send_back_CCP_3" id="slider3" min="0" max="9" step="0.5" value="" class="hidden-thumb">
+                                <input type="range" name="send_back_3" id="slider3" min="0" max="9" step="0.5" value="" class="hidden-thumb">
                             </span>
 
                             <div class="slider-labels">
@@ -334,23 +336,21 @@
         Please make all decisions to continue.
     </div>
 
-</div>
-
-
     <div class="button-container">
         <button type="button" id="submit-button" class="submit-button">
             NEXT
         </button>
     </div>
+    <br>
 
-<br>
+
 <div class="card bg-light instructions">
     <div class="card-body" style="font-size: 14px">
 
-        <u>Keep in mind</u>:
+        <u>Remember</u>:
         <ul>
             <li> The other participant starts with 3 points.
-            <li> They saw one randomly selected die roll and the number you reported from that roll.
+            <li> They saw how many times you reported the correct die.
             <li> Based on this, they chose how many points, if any, to send to you.
             <li> Any point sent to you is tripled: 1 point sent becomes 3 points received.
             <li> Now you choose how many points, if any, to return to the other participant.
@@ -358,6 +358,7 @@
         </ul>
     </div>
 </div>
+
 
 </body>
 </html>
