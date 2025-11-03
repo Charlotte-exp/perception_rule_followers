@@ -1,0 +1,25 @@
+{{ block title }}
+
+    <p style="text-align: center; font-size: 26px; "> {{ additional_questions|safe }} </p>
+
+{{ endblock }}
+
+{{ block content }}
+
+
+<div>
+
+  <p>
+      Please fill this short questionnaire.
+  </p>
+  {{ formfields }}
+
+</div>
+
+    <div style="display: flex; justify-content: flex-end">
+        {{ next_button }}
+    </div>
+
+
+
+{{ endblock }}

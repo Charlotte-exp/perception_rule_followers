@@ -194,6 +194,35 @@ class Player(BasePlayer):
         # error_messages={'required': 'You must select an option before continuing.'}, # does not display
     )
 
+    age = models.IntegerField(
+        min=10, max=100,
+        verbose_name = 'What is your age?',
+    )
+
+    gender = models.StringField(
+        choices=[
+            [1, f'Female'],
+            [2, f'Male'],
+            [3, f'Non-binary'],
+            [4, f'Prefer not to say'],
+        ],
+        verbose_name='What is your gender?',
+    )
+
+    education = models.StringField(
+        choices=[
+            [1, f'No formal education/Early childhood education'],
+            [2, f'Primary education (ages 5–12)'],
+            [3, f'Lower secondary education (ages ~12–15)'],
+            [4, f'Upper secondary education (ages ~15–18)'],
+            [5, f'Post-secondary non-tertiary education (e.g., vocational training, certificates)'],
+            [6, f'Short-cycle tertiary education (e.g., associate degree, advanced diploma)'],
+            [7, f'Bachelor’s degree or equivalent'],
+            [8, f'Master’s degree or equivalent'],
+            [9, f'Doctoral degree (PhD) or equivalent'],
+        ]
+    )
+
 
 ######## FUNCTIONS #########
 
@@ -522,6 +551,15 @@ class TrustGameForCCP(Page):
         )
 
 
+class Demographics(Page):
+    form_model = "player"
+    form_fields = ["age", "gender", "education"]
+
+    @staticmethod
+    def is_displayed(player: Player):
+        return player.round_number == C.NUM_ROUNDS
+
+
 class Payment(Page):
 
     @staticmethod
@@ -579,6 +617,7 @@ page_sequence = [
                  # EndWaitPage,
                  InstruStage3,
                  TrustGameForCCP,
+                 Demographics,
                  Payment,
                  ProlificLink]
 
