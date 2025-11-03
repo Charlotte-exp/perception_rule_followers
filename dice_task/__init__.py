@@ -81,10 +81,10 @@ class Player(BasePlayer):
     q1 = models.IntegerField(
         initial=0,
         choices=[
-            [1, f'I will be paid the number I roll from one randomly selected die roll'],
-            [2, f'I will be paid the number I report from one randomly selected die roll'],
-            [3, f'I will be paid the number I roll from all {C.NUM_ROUNDS} die rolls summed up'],
-            [4, f'I will be paid the number I report from all {C.NUM_ROUNDS} die rolls summed up'],
+            [1, f'I will be paid the number I roll from one randomly selected die roll.'],
+            [2, f'I will be paid the number I report from one randomly selected die roll.'],
+            [3, f'I will be paid the number I roll from all {C.NUM_ROUNDS} die rolls summed up.'],
+            [4, f'I will be paid the number I report from all {C.NUM_ROUNDS} die rolls summed up.'],
         ],
         verbose_name='What determines the number of bonus points you will be paid from stage 1?',
         widget=widgets.RadioSelect,
@@ -96,8 +96,8 @@ class Player(BasePlayer):
         choices=[
             [1, f'They can send you points, which are then tripled by the computer, and you can choose to send some back to them.'],
             [2, f'They can take away your points, which are then tripled by the computer.'],
-            [3, f'They can share points with you'],
-            [4, f'They must rate how trustworthy they find you'],
+            [3, f'They can share points with you.'],
+            [4, f'They must rate how trustworthy they find you.'],
         ],
         verbose_name='What can the other participant do in stage 2 after learning how many times you reported the correct number in stage 1?',
         widget=widgets.RadioSelect,

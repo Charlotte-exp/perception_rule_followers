@@ -16,7 +16,7 @@
         display: flex;
         justify-content: center;
         width: 100%;
-        padding: 2rem 0;
+        padding: 3rem 0;
     }
 
     .dice {
@@ -108,6 +108,17 @@
 
 {{ block content }}
 
+    <p style="display: flex; justify-content: center; margin-top: 30px;">
+        Click to roll the dice:
+    </p>
+
+<div class="roll-container">
+    <p>
+        <button name="random_roll" value="draw" class="btn btn-primary btn-large">Roll</button>
+    </p>
+</div>
+
+
 <div class="card bg-light instructions">
     <div class="card-body" style="font-size: 14px">
         Keep in mind:
@@ -120,19 +131,6 @@
         </ul>
     </div>
 </div>
-
-
-    <p style="display: flex; justify-content: center; margin-top: 50px;">
-        Click to roll the dice:
-    </p>
-<div class="roll-container">
-    <p>
-        <button name="random_roll" value="draw" class="btn btn-primary btn-large">Roll</button>
-    </p>
-</div>
-
-
-
 
 
 {{ endblock }}
