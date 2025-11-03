@@ -88,20 +88,21 @@ class Player(BasePlayer):
             [3, f'I will be paid the number I roll from all {C.NUM_ROUNDS} die rolls summed up.'],
             [4, f'I will be paid the number I report from all {C.NUM_ROUNDS} die rolls summed up.'],
         ],
-        verbose_name='What determines the number of bonus points you will be paid from stage 1?',
+        verbose_name='What determines the number of bonus points you will be paid from the dice roll?',
         widget=widgets.RadioSelect,
         # error_messages={'required': 'You must select an option before continuing.'}, # does not display
     )
 
+
     q_treatment = models.IntegerField(
         initial=0,
         choices=[
-            [1, f'They can send you points, which are then tripled by the computer, and you can choose to send some back to them.'],
-            [2, f'They can take away your points, which are then tripled by the computer.'],
-            [3, f'They can share points with you.'],
-            [4, f'They must rate how trustworthy they find you.'],
+            [1, f'They can share points with you.'],
+            [2, f'They are asked to rate how trustworthy they find you.'],
+            [3, f'They can take away your points, which are then tripled by the computer.'],
+            [4, f'They can send you points, which are then tripled by the computer, and you can choose to send some back to them.'],
         ],
-        verbose_name='What can the other participant do in stage 2 after learning how many times you reported the correct number in stage 1?',
+        verbose_name='What can the other participant do after learning how many times you reported the correct number?',
         widget=widgets.RadioSelect,
         # error_messages={'required': 'You must select an option before continuing.'}, # does not display
     )
@@ -217,11 +218,11 @@ class InstruPart1(Page):
         """
         # solutions = dict(q1=2, q_treatment=1)
         if player.treatment == 'TG':
-            solutions = dict(q1=2, q_treatment=1)
-        elif player.treatment == 'DG':
-            solutions = dict(q1=2, q_treatment=3)
-        elif player.treatment == 'rating':
             solutions = dict(q1=2, q_treatment=4)
+        elif player.treatment == 'DG':
+            solutions = dict(q1=2, q_treatment=1)
+        elif player.treatment == 'rating':
+            solutions = dict(q1=2, q_treatment=2)
         else:
             solutions = dict(q1=2)
 

@@ -146,12 +146,14 @@ class Player(BasePlayer):
     q2_TG = models.IntegerField(
         initial=0,
         choices=[
-            [1, f'The points returned to me by one other participant, independent of how much I send in the first place.'],
-            [2, f'The points returned to me by one other participant, depending on how much I send in the first place.'],
-            [3, f'The points returned to me by one other participant, depending on how much I send in the first place, '
-                f'as well as how much I keep from what yet another participant sent to me.'],
+            [1, f'The points returned to me by all {C.NUM_ROUNDS} other participants, '
+                f'independent of how much I sent in the first place.'],
+            [2, f'The points returned to me by all {C.NUM_ROUNDS} other participants, '
+                f'depending on how much I sent in the first place.'],
+            [3, f'The points returned to me by one other participant, depending on how much I sent in the first place.'],
+            [4, f'The points returned to me by one other participant, independent of how much I sent in the first place.'],
         ],
-        verbose_name='What determines the number of bonus points you will be paid from stage 2?',
+        verbose_name='What determines the number of bonus points you will be paid from Part 2?',
         widget=widgets.RadioSelect,
         # error_messages={'required': 'You must select an option before continuing.'}, # does not display
     )
@@ -164,7 +166,7 @@ class Player(BasePlayer):
             [3, f'The points I do not share with another participant, selected at random from {C.NUM_ROUNDS} participants, '
                 f'as well as however much yet another participant shared with me.'],
         ],
-        verbose_name='What determines the number of bonus points you will be paid from stage 2?',
+        verbose_name='What determines the number of bonus points you will be paid from Part 2?',
         widget=widgets.RadioSelect,
         # error_messages={'required': 'You must select an option before continuing.'}, # does not display
     )
@@ -178,7 +180,7 @@ class Player(BasePlayer):
             [3, f'If my rating is the same as the most common answer for a randomly selected participant, '
                 f'I will receive a {C.bonus} bonus.'],
         ],
-        verbose_name='What determines the number of bonus points you will be paid from stage 2?',
+        verbose_name='What determines the number of bonus points you will be paid from Part 2?',
         widget=widgets.RadioSelect,
         # error_messages={'required': 'You must select an option before continuing.'}, # does not display
     )
@@ -186,12 +188,12 @@ class Player(BasePlayer):
     q3 = models.IntegerField(
         initial=0,
         choices=[
-            [1, f'The points sent the participant in another study.'],
-            [2, f'The points sent the participant in another study, doubled.'],
-            [3, f'The points sent the participant in another study, tripled.'],
+            [1, f'The points sent by the participant from another study and doubled by the computer.'],
+            [2, f'The points I decide to keep from those sent by another participant and doubled by the computer.'],
+            [3, f'The points sent by the participant from another study and tripled by the computer.'],
             [4, f'The points I decide to keep from those sent by another participant and tripled by the computer.'],
         ],
-        verbose_name='What determines the number of bonus points you will be paid from stage 3?',
+        verbose_name='What determines the number of bonus points you will be paid from Part 3?',
         widget=widgets.RadioSelect,
         # error_messages={'required': 'You must select an option before continuing.'}, # does not display
     )

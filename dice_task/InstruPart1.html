@@ -11,9 +11,9 @@
         In the first part, you will take part in a die rolling task.
     </p>
     <ul>
-        <li>You will roll a die live in the task {{ C.NUM_ROUNDS }} times.
-        <li>After each roll, you must report the number you rolled.
-        <li>The number you report is the number of points you will be paid for that roll.
+        <li>You will roll a virtual, fair die {{ C.NUM_ROUNDS }} times on the computer.
+        <li>After each roll, you are asked to report the number you rolled.
+        <li>The number you report correspond to the number of points you will be paid for that roll.
         <li><b>1 point is worth {{ C.conversion }}</b>.
         <li>Only one of the {{ C.NUM_ROUNDS }} dice will be randomly selected for payment</li>
     </ul>
@@ -21,22 +21,23 @@
     <p>
         After the {{ C.NUM_ROUNDS }} die rolls,
         you are <b>matched with another participant</b> from this same study.
-        This participant will see the number of times you reported the correct number from stage 1,
-        and you will interact together in stage 2.
     </p>
 
     {{ if player.treatment == 'TG' }}
 
     <ul>
-        <li>First, the other participant will choose how many points to send to you
-        after having seen how many times you reported the correct die.
-        <li>Then, these points are tripled by the computer so that you get 3x as much as they sent you.
+        <li>First, The other participant learns how many times you reported the die corectly.
+        <li>Next, this participant will choose how many points to send to you.
+        <li>Then, these points are tripled by the computer so that you get 3x as many points as they sent you.
         <li>Finally, you have to decide how many of those tripled points you wish to keep to yourself
-        and how many you want to send back, if any.
-        <li>The points you kept will be paid to you as the stage 2 bonus.
-        <li><b>Important:</b> to decide how many points to send to you in the first place,
-        the other participant will only know how many times you reported the correct die.
+        and how many you want to send back to the other participant, if any.
     </ul>
+
+    <p>
+        The points you kept will be paid to you as a bonus.
+        <b>Important:</b> to decide how many points to send to you in the first place,
+        the other participant will know how many times you reported the die correctly.
+    </p>
 
     <div class="card bg-light instructions">
         <div class="card-body" style="font-size: 14px">
@@ -60,12 +61,15 @@
     {{ endif }}
     {{ if player.treatment == 'DG' }}
     <ul>
-        <li>In stage 2, the other participant is given {{ C.DG_points }} and must choose how many of these points to share with you
-        after having seen how many times you reported the correct die.
-        <li>The points you receive from the other participant will be paid to you as the stage 2 bonus.
-        <li><b>Important:</b> to decide how many points to share with you in the first place,
-        the other participant will only know how many times you reported the correct die.
+        <li>First, The other participant learns how many times you reported the die correctly.
+        <li>Next, this participant is given {{ C.DG_points }}.
+        <li>Finally, they are asked to choose how many of these points to share with you.
     </ul>
+    <p>
+        The points you receive from the other participant will be paid to you as a bonus.
+        <b>Important:</b> to decide how many points to share with you in the first place,
+        the other participant will know how many times you reported the die correctly.
+    </p>
 
      <div class="card bg-light instructions">
         <div class="card-body" style="font-size: 14px">
@@ -73,7 +77,7 @@
         <ul>
             <li>If they share half the points, you will receive 3 points.
             <li>If they share none of the points, you will receive 0 points.
-            <li>If they share all of the points, you will receive 6 points.
+            <li>If they share all the points, you will receive 6 points.
         </ul>
         </div>
     </div>
@@ -89,11 +93,13 @@
     {{ if player.treatment == 'rating' }}
 
     <ul>
-        <li>In stage 2, the other participant must rate how trustworthy you seem
-        after having seen how many times you reported the correct die.
-        <li><b>Important:</b> to decide how many points to send to you in the first place,
-        the other participant will only know how many times you reported the correct die.
+        <li>First, The other participant learns how many times you reported the die correctly.
+        <li>Next, this participant must rate how trustworthy you seem.
     </ul>
+    <p>
+        <b>Important:</b> to decide on your trustworthiness rating in the first place,
+        the other participant will only know how many times you reported the die correctly.
+    </p>
 
     {{ endif }}
 
@@ -102,7 +108,7 @@
 
 <div class="card bg-light instructions">
     <div  class="card-body">
-        <h5>Please answer this question before continuing:</h5>
+        <h5>Please answer these question before continuing:</h5>
             {{ formfields }}
     </div>
 </div>

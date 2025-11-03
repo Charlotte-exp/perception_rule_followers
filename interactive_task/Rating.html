@@ -264,23 +264,24 @@
 
 <body>
 
+<div class="card-body">
     <p>
-        Here is the number of times over the {{ number_of_trials }} rounds,
-        that <b>Participant {{ player.round_number }}</b> chose to report the correct die:
+        Here is the number of times out of {{ num_dice_rounds }},
+        that <b>Participant {{ player.round_number }}</b> chose to report the die correctly:
     </p>
     <div class="container my-5">
         <div class="mx-auto p-4 bg-light text-center shadow" style="max-width: 250px; border-radius: 10px;">
             <div class="fraction-square">
                 <div class="diagonal-line"></div>
                 <div class="k-value">{{ k_value }}</div>
-                <div class="denominator">{{ number_of_trials }}</div>
+                <div class="denominator">{{ num_dice_rounds }}</div>
             </div>
         </div>
     </div>
 
     <br>
     <p style="text-align: center;">
-        <strong>How trustworthy is Participant {{ player.round_number }} based on their sequence of decisions?</strong>
+        <strong>How trustworthy is Participant {{ player.round_number }}?</strong>
     </p>
 
     <div class="slider-container">
@@ -311,6 +312,7 @@
         </button>
     </div>
 
+</div>
 
 </body>
 </html>
