@@ -306,7 +306,7 @@ class FeedbackPart1(Page):
 
     @staticmethod
     def is_displayed(player: Player):
-        if player.round_number == C.NUM_ROUNDS and player.participant.treatment != 'TG':
+        if player.round_number == C.NUM_ROUNDS and player.participant.treatment not in ('TG', 'control'):
             return True
         return None
 
