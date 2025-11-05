@@ -3,8 +3,6 @@ from otree.api import *
 import random
 import itertools
 
-from interactive_task import TrustGameBack
-
 doc = """
 Your app description
 """
@@ -76,6 +74,8 @@ class Player(BasePlayer):
         ],
         widget=widgets.RadioSelect,
     )
+
+    correct_num_dice = models.IntegerField(blank=True)
 
     q1_failed_attempts = models.IntegerField(initial=0)
     q_treatment_failed_attempts = models.IntegerField(initial=0)
@@ -285,7 +285,10 @@ class TrustGameBack(Page):
 
     @staticmethod
     def vars_for_template(player: Player):
+        correct_num_dice = sum(player.participant.k_list)
+        player.correct_num_dice = correct_num_dice
         return dict(
+            correct_num_dice = correct_num_dice,
             zero_points_tripled = C.zero_points*3,
             one_points_tripled = C.one_points*3,
             two_points_tripled = C.two_points*3,
@@ -311,7 +314,7 @@ class FeedbackPart1(Page):
     @staticmethod
     def vars_for_template(player: Player):
         return dict(
-
+            treatment = player.treatment,
         )
 
 page_sequence = [Consent,
