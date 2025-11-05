@@ -31,10 +31,12 @@
     </div>
     <div style="margin-top: 20px; margin-bottom: 20px">
 
+    {{ if player.treatment != 'control' }}
     <p>
         After the {{ C.NUM_ROUNDS }} die rolls,
         you are <b>matched with another participant</b> from this same study.
     </p>
+    {{ endif }}
 
     {{ if player.treatment == 'TG' }}
 
@@ -119,12 +121,11 @@
 
 </div>
 
-<div class="card bg-light instructions">
-    <div  class="card-body">
-        <h5>Please answer these question before continuing:</h5>
+    <hr size="6" width="50%" align="center" color="black">
+    <div>
+        <h5>Please answer this question before continuing:</h5>
             {{ formfields }}
     </div>
-</div>
 
     <div style="display: flex; justify-content: flex-end;margin-top: 20px; margin-bottom: 10px;">
         Click next to start Part 1.

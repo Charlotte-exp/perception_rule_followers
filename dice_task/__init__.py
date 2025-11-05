@@ -102,7 +102,7 @@ class Player(BasePlayer):
             [3, f'They can take away your points, which are then tripled by the computer.'],
             [4, f'They can send you points, which are then tripled by the computer, and you can choose to send some back to them.'],
         ],
-        verbose_name='What can the other participant do after learning how many times you reported the correct number?',
+        verbose_name='What can the other participant do after learning how many times you reported the die correctly?',
         widget=widgets.RadioSelect,
         # error_messages={'required': 'You must select an option before continuing.'}, # does not display
     )
@@ -173,7 +173,6 @@ def random_payment(player: Player):
         value = getattr(me, attr)
         setattr(player, f'randomly_selected_{attr}', value)
         setattr(player.participant, f'randomly_selected_{attr}', value)
-
 
 
 ######### PAGES #########
