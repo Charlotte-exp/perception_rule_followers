@@ -38,9 +38,9 @@ class Subsession(BaseSubsession):
 #     Because creating_session calls the function every round
 #     we force it not to do that by setting a value based on round number instead.
 #     """
-#     subsession.session.number_of_trials = C.NUM_ROUNDS
+#     subsession.session.num_dice_rounds = C.NUM_ROUNDS
 #
-#     treatments = itertools.cycle(['TG', 'TG'])
+#     treatments = itertools.cycle(['TG', 'DG', 'rating', 'control'])
 #     for p in subsession.get_players():
 #         p.treatment = next(treatments)
 #         p.participant.treatment = p.treatment
@@ -48,7 +48,7 @@ class Subsession(BaseSubsession):
 #         p.participant.reported_dice = random.randint(1, 6)
 #         p.participant.original_dice = random.randint(1, 6)
 #
-#         k_value = sum(calculate_k(p))
+#         k_value = sum(generate_k_sequence(p))
 #         p.participant.k_value = k_value
 #
 #         p.participant.randomly_selected_round = random.randint(1, 3)
@@ -111,19 +111,19 @@ class Player(BasePlayer):
     send_back_1 = models.FloatField(
         verbose_name='You received X points from the other participant: <br>'
                      'How many points to do you send back?',
-        min=0, max=9)
+        min=0, max=3)
 
     send_back_2 = models.FloatField(
         verbose_name='You received X points from the other participant: <br>'
                      'How many points to do you send back?',
-        min=0, max=9)
+        min=0, max=6)
 
     send_back_3 = models.FloatField(
         verbose_name='You received X points from the other participant: <br>'
                      'How many points to do you send back?',
         min=0, max=9)
 
-    points_kept = models.IntegerField(initial=0)
+    points_kept = models.FloatField(initial=0)
 
     trustworthiness = models.IntegerField(initial=0)
     likeable = models.IntegerField(initial=0)
@@ -408,7 +408,8 @@ class DictGame(Page):
         # others = other_players(player)
         # next_pp = others["next"]
         return dict(
-            DG_points = int(C.DG_points),
+            DG_points = float(C.DG_points),
+            int_DG_points=int(C.DG_points),
             # k_value = sum(next_pp.participant.k_list), ## for live interaction
             k_value=player.k_value,
             num_dice_rounds = player.session.num_dice_rounds,
@@ -470,16 +471,10 @@ class TrustGameBack(Page):
         # previous_pp = others["previous"]
         return dict(
             # sent_points = previous_pp.trust_points*3, # multiplied!!!  ## only live interaction
-            zero_points_tripled = C.zero_points*3,
-            one_points_tripled = C.one_points*3,
-            two_points_tripled = C.two_points*3,
-            three_points_tripled = C.three_points*3,
-            bounds={
-                # 'send_back_1': {'min': 0, 'max': previous_pp.trust_points*3}, ## only live interaction
-                'send_back_1': {'min': 0, 'max': C.one_points*3},
-                'send_back_2': {'min': 0, 'max': C.two_points*3},
-                'send_back_3': {'min': 0, 'max': C.three_points*3},
-            }
+            zero_points_tripled = int(C.zero_points*3),
+            one_points_tripled = int(C.one_points*3),
+            two_points_tripled = int(C.two_points*3),
+            three_points_tripled = int(C.three_points*3),
         )
 
 ## only if live interaction
@@ -547,15 +542,10 @@ class TrustGameForCCP(Page):
     def vars_for_template(player: Player):
         return dict(
             num_dice_rounds = player.session.num_dice_rounds,
-            zero_points_tripled = C.zero_points*3,
-            one_points_tripled = C.one_points*3,
-            two_points_tripled = C.two_points*3,
-            three_points_tripled = C.three_points*3,
-            bounds={
-                'send_back_CCP_1': {'min': 0, 'max': C.one_points*3},
-                'send_back_CCP_2': {'min': 0, 'max': C.two_points*3},
-                'send_back_CCP_3': {'min': 0, 'max': C.three_points*3},
-            },
+            zero_points_tripled = int(C.zero_points*3),
+            one_points_tripled = int(C.one_points*3),
+            two_points_tripled = int(C.two_points*3),
+            three_points_tripled = int(C.three_points*3),
         )
 
 

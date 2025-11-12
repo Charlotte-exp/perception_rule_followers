@@ -270,16 +270,16 @@
             <tbody>
                 <tr>
                     <td class="text-center">1</td>
-                    <td class="text-center">3</td>
+                    <td class="text-center">{{ one_points_tripled }}</td>
                     <td class="text-center">
                         <div class="slider-container">
                             <span style="flex-grow: 1;">
                                 <input type="hidden" name="slider1_moved" value="0" id="check_slider1" />
-                                <input type="range" name="send_back_1" id="slider1" min="0" max="3" step="0.5" value="" class="hidden-thumb">
+                                <input type="range" name="send_back_1" id="slider1" min="0" max="{{ one_points_tripled }}" step="0.5" value="" class="hidden-thumb">
                             </span>
                             <div class="slider-labels">
                                 <span>0</span>
-                                <span>3</span>
+                                <span>{{ one_points_tripled }}</span>
                             </div>
                         </div>
                         <div style="text-align: center; margin-top: -20px">
@@ -292,17 +292,17 @@
                 </tr>
                 <tr>
                     <td class="text-center">2</td>
-                    <td class="text-center">6</td>
+                    <td class="text-center">{{ two_points_tripled }}</td>
                     <td class="text-center">
                         <div class="slider-container">
                             <span style="flex-grow: 1;">
                                 <input type="hidden" name="slider2_moved" value="0" id="check_slider2" />
-                                <input type="range" name="send_back_2" id="slider2" min="0" max="6" step="0.5" value="" class="hidden-thumb">
+                                <input type="range" name="send_back_2" id="slider2" min="0" max="{{ two_points_tripled }}" step="0.5" value="" class="hidden-thumb">
                             </span>
 
                             <div class="slider-labels">
                                 <span>0</span>
-                                <span>6</span>
+                                <span>{{ two_points_tripled }}</span>
                             </div>
                         </div>
                         <div style="text-align: center; margin-top: -20px">
@@ -315,17 +315,17 @@
                 </tr>
                 <tr>
                     <td class="text-center">3</td>
-                    <td class="text-center">9</td>
+                    <td class="text-center">{{ three_points_tripled }}</td>
                     <td class="text-center">
                         <div class="slider-container">
                             <span style="flex-grow: 1;">
                                 <input type="hidden" name="slider3_moved" value="0" id="check_slider3" />
-                                <input type="range" name="send_back_3" id="slider3" min="0" max="9" step="0.5" value="" class="hidden-thumb">
+                                <input type="range" name="send_back_3" id="slider3" min="0" max="{{ three_points_tripled }}" step="0.5" value="" class="hidden-thumb">
                             </span>
 
                             <div class="slider-labels">
                                 <span>0</span>
-                                <span>9</span>
+                                <span>{{ three_points_tripled }}</span>
                             </div>
                         </div>
                         <div style="text-align: center; margin-top: -20px">

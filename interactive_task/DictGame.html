@@ -254,9 +254,9 @@
                 labelsend.textContent = 0;
 
                 slider.addEventListener("input", function () {
-                    const DG_points = {{ DG_points }}; // punishment points
+                    const DG_points = {{ DG_points }};
                     // const keepValue = parseInt(this.value, 10);
-                    const sendValue = parseInt(this.value);
+                    const sendValue = parseFloat(this.value);
                     const keepValue = DG_points - sendValue;
 
                     labelkeep.textContent = keepValue;
@@ -323,7 +323,7 @@
         </span>
         <div class="slider-labels">
             <span>0</span>
-            <span>{{ DG_points }}</span>
+            <span>{{ int_DG_points }}</span>
         </div>
         <div style="text-align: center; margin-top: -15px">
             <span style="color: #FFFFFF">

@@ -119,12 +119,12 @@ class Player(BasePlayer):
     send_back_1 = models.FloatField(
         verbose_name='You received X points from the other participant: <br>'
                      'How many points to do you return?',
-        min=0, max=9)
+        min=0, max=3)
 
     send_back_2 = models.FloatField(
         verbose_name='You received X points from the other participant: <br>'
                      'How many points to do you return?',
-        min=0, max=9)
+        min=0, max=6)
 
     send_back_3 = models.FloatField(
         verbose_name='You received X points from the other participant: <br>'
@@ -296,16 +296,10 @@ class TrustGameBack(Page):
         player.correct_num_dice = correct_num_dice
         return dict(
             correct_num_dice = correct_num_dice,
-            zero_points_tripled = C.zero_points*3,
-            one_points_tripled = C.one_points*3,
-            two_points_tripled = C.two_points*3,
-            three_points_tripled = C.three_points*3,
-            bounds={
-                # 'send_back_1': {'min': 0, 'max': previous_pp.trust_points*3}, ## only live interaction
-                'send_back_1': {'min': 0, 'max': C.one_points*3},
-                'send_back_2': {'min': 0, 'max': C.two_points*3},
-                'send_back_3': {'min': 0, 'max': C.three_points*3},
-            }
+            zero_points_tripled = int(C.zero_points*3),
+            one_points_tripled = int(C.one_points*3),
+            two_points_tripled = int(C.two_points*3),
+            three_points_tripled = int(C.three_points*3),
         )
 
 
