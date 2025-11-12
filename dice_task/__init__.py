@@ -11,7 +11,7 @@ Your app description
 class C(BaseConstants):
     NAME_IN_URL = 'dice_task'
     PLAYERS_PER_GROUP = None
-    NUM_ROUNDS = 3
+    NUM_ROUNDS = 12
     participant_fee = 1
     time = 10
 
@@ -25,7 +25,7 @@ class C(BaseConstants):
     two_points = cu(2)
     three_points = cu(3)
 
-    DG_points = cu(6)
+    DG_points = cu(9)
 
 
 class Subsession(BaseSubsession):
@@ -100,7 +100,8 @@ class Player(BasePlayer):
             [1, f'They can share points with you.'],
             [2, f'They are asked to rate how trustworthy they find you.'],
             [3, f'They can take away your points, which are then tripled by the computer.'],
-            [4, f'They can send you points, which are then tripled by the computer, and you can choose to send some back to them.'],
+            [4, f'They can send you points, which are then tripled by the computer, '
+                f'and you can choose to return some to them.'],
         ],
         verbose_name='What can the other participant do after learning how many times you reported the die correctly?',
         widget=widgets.RadioSelect,
@@ -117,17 +118,17 @@ class Player(BasePlayer):
 
     send_back_1 = models.FloatField(
         verbose_name='You received X points from the other participant: <br>'
-                     'How many points to do you send back?',
+                     'How many points to do you return?',
         min=0, max=9)
 
     send_back_2 = models.FloatField(
         verbose_name='You received X points from the other participant: <br>'
-                     'How many points to do you send back?',
+                     'How many points to do you return?',
         min=0, max=9)
 
     send_back_3 = models.FloatField(
         verbose_name='You received X points from the other participant: <br>'
-                     'How many points to do you send back?',
+                     'How many points to do you return?',
         min=0, max=9)
 
 
@@ -211,6 +212,12 @@ class InstruPart1(Page):
         return None
 
     @staticmethod
+    def vars_for_template(player: Player):
+        return dict(
+            half_points=int(C.DG_points) / 2,
+        )
+
+    @staticmethod
     def error_message(player: Player, values):
         """
         records the number of time the page was submitted with an error. which specific error is not recorded.
@@ -251,6 +258,7 @@ class Roll(Page):
             original_dice = player.original_dice,
             reported_dice = player.reported_dice,
             treatment = player.treatment,
+            half_points = int(C.DG_points)/2,
         )
 
 

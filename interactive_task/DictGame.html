@@ -319,7 +319,7 @@
     <div class="slider-container">
         <span style="flex-grow: 1;">
             <input type="hidden" name="slider1_moved" value="0" id="check_slider1" />
-            <input type="range" name="points_kept" id="slider1" min="0" max="{{ DG_points }}" value="0" class="hidden-thumb">
+            <input type="range" name="points_kept" id="slider1" min="0" max="{{ DG_points }}" step="0.5" value="0" class="hidden-thumb">
         </span>
         <div class="slider-labels">
             <span>0</span>
@@ -363,7 +363,7 @@
         <div class="card-body" style="font-size: 14px">
             <u>Remember</u>:
                 <ul>
-                    <li> You receive 6 points.
+                    <li> You receive {{ C.DG_points }}.
                     <li> You then choose how many points, if any, to share with the other participant.
                     <li> You can share nothing, any intermediate amount, or everything.
                     <li> The other participant has no say in this interaction.

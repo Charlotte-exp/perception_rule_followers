@@ -11,7 +11,7 @@ Your app description
 class C(BaseConstants):
     NAME_IN_URL = 'interactive_task'
     PLAYERS_PER_GROUP = None
-    NUM_ROUNDS = 6
+    NUM_ROUNDS = 8
 
     num_dice_rounds = 12 # same as dice task!!
 
@@ -24,7 +24,7 @@ class C(BaseConstants):
     two_points = cu(2)
     three_points = cu(3)
 
-    DG_points = cu(6)
+    DG_points = cu(9)
 
 
 class Subsession(BaseSubsession):
@@ -159,12 +159,13 @@ class Player(BasePlayer):
     )
 
     q2_DG = models.IntegerField(
-        initial=9,
+        initial=0,
         choices=[
-            [1, f'The points I do not share with all {C.NUM_ROUNDS} participants.'],
-            [2, f'The points I do not share with another participant, selected at random from {C.NUM_ROUNDS} participants.'],
-            [3, f'The points I do not share with another participant, selected at random from {C.NUM_ROUNDS} participants, '
-                f'as well as however much yet another participant shared with me.'],
+            [1, f'The sum of the points I choose to keep and not share with all {C.NUM_ROUNDS} participants.'],
+            [2, f'Only the points I choose to keep and not share with one other participant, '
+                f'the most correct one from {C.NUM_ROUNDS} participants.'],
+            [3, f'Only the points I choose to keep and not share with one other participant, '
+                f'selected at random from {C.NUM_ROUNDS} participants.'],
         ],
         verbose_name='What determines the number of bonus points you will be paid from Part 2?',
         widget=widgets.RadioSelect,
@@ -287,7 +288,7 @@ def generate_k_sequence(player: Player):
     # player.session.num_dice_rounds -> when finish testing
     optional_values = list(range(2, (C.num_dice_rounds-1)))  # 2 to 10
     necessary_values = [0, 1, (C.num_dice_rounds-1), C.num_dice_rounds]
-    sequence = necessary_values + random.sample(optional_values, 2)
+    sequence = necessary_values + random.sample(optional_values, 4)   # adjust number if change NUM_ROUNDS
     random.shuffle(sequence)
     return sequence
 
@@ -367,8 +368,9 @@ class InstruStage2(Page):
         return dict(
             treatment=player.participant.treatment,
             num_dice_rounds = player.session.num_dice_rounds,
-            DG_points = int(C.DG_points),
-            half_points = int(C.DG_points/2),
+            half_k = int(player.session.num_dice_rounds/2),
+            DG_points = C.DG_points,
+            half_points = C.DG_points/2,
         )
 
 
@@ -544,6 +546,7 @@ class TrustGameForCCP(Page):
     @staticmethod
     def vars_for_template(player: Player):
         return dict(
+            num_dice_rounds = player.session.num_dice_rounds,
             zero_points_tripled = C.zero_points*3,
             one_points_tripled = C.one_points*3,
             two_points_tripled = C.two_points*3,
