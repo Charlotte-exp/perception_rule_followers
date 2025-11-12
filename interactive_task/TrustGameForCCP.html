@@ -239,7 +239,10 @@
 <body>
 
     <p>
-        Now, you decide how much of the amount sent by <u>the other participant</u> you wish to send back.
+        The other participant will see one of your {{ num_dice_rounds }} dice report.
+        Based on this information, they can decide how many points to send you.
+        Now, you decide how many of these points you wish to return to this participant.
+        We need you to decide how much to send back for all possible amount of points sent by this participant.
     </p>
     <p>
         Below, tell us how much you want to return,
@@ -259,19 +262,19 @@
             <tbody>
                 <tr>
                     <td class="text-center">1</td>
-                    <td class="text-center">3</td>
+                    <td class="text-center">{{ one_points_tripled }}</td>
                     <td class="text-center">
                         <div class="slider-container">
                             <span style="flex-grow: 1;">
                                 <input type="hidden" name="slider1_moved" value="0" id="check_slider1" />
-                                <input type="range" name="send_back_CCP_1" id="slider1" min="0" max="3" step="0.5" value="" class="hidden-thumb">
+                                <input type="range" name="send_back_CCP_1" id="slider1" min="0" max="{{ one_points_tripled }}" step="0.5" value="" class="hidden-thumb">
                             </span>
                             <div class="slider-labels">
                                 <span>0</span>
                                 <span>3</span>
                             </div>
                         </div>
-                        <div style="text-align: center; margin-top: -15px">
+                        <div style="text-align: center; margin-top: -20px">
                             You send back:
                             <span style="color: #0d6efd">
                                 <output id="output1"></output>
@@ -281,12 +284,12 @@
                 </tr>
                 <tr>
                     <td class="text-center">2</td>
-                    <td class="text-center">6</td>
+                    <td class="text-center">{{ two_points_tripled }}</td>
                     <td class="text-center">
                         <div class="slider-container">
                             <span style="flex-grow: 1;">
                                 <input type="hidden" name="slider2_moved" value="0" id="check_slider2" />
-                                <input type="range" name="send_back_CCP_2" id="slider2" min="0" max="6" step="0.5" value="" class="hidden-thumb">
+                                <input type="range" name="send_back_CCP_2" id="slider2" min="0" max="{{ two_points_tripled }}" step="0.5" value="" class="hidden-thumb">
                             </span>
 
                             <div class="slider-labels">
@@ -294,7 +297,7 @@
                                 <span>6</span>
                             </div>
                         </div>
-                        <div style="text-align: center; margin-top: -15px">
+                        <div style="text-align: center; margin-top: -20px">
                             You send back:
                             <span style="color: #0d6efd">
                                 <output id="output2"></output>
@@ -304,12 +307,12 @@
                 </tr>
                 <tr>
                     <td class="text-center">3</td>
-                    <td class="text-center">9</td>
+                    <td class="text-center">{{ three_points_tripled }}</td>
                     <td class="text-center">
                         <div class="slider-container">
                             <span style="flex-grow: 1;">
                                 <input type="hidden" name="slider3_moved" value="0" id="check_slider3" />
-                                <input type="range" name="send_back_CCP_3" id="slider3" min="0" max="9" step="0.5" value="" class="hidden-thumb">
+                                <input type="range" name="send_back_CCP_3" id="slider3" min="0" max="{{ three_points_tripled }}" step="0.5" value="" class="hidden-thumb">
                             </span>
 
                             <div class="slider-labels">
@@ -317,7 +320,7 @@
                                 <span>9</span>
                             </div>
                         </div>
-                        <div style="text-align: center; margin-top: -15px">
+                        <div style="text-align: center; margin-top: -20px">
                             You send back:
                             <span style="color: #0d6efd">
                                 <output id="output3"></output>

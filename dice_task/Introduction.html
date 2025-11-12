@@ -12,38 +12,39 @@
     {{ if player.treatment == 'control' }}
 
     <p>
-        This study is made of one simple task repeated over {{ C.NUM_ROUNDS }} rounds:
+        This study is made of one simple task repeated {{ C.NUM_ROUNDS }} times.
     </p>
-    <ul>
-        <li>You will roll a die in the game {{ C.NUM_ROUNDS }} times.
-        <li>After each roll, you must report the number you rolled.
-        <li>The number you report is the number of points you will be paid for that roll.
-        <li><b>1 point is worth {{ C.conversion }}</b>.
-        <li>Only one of the {{ C.NUM_ROUNDS }} dice will be randomly selected for payment</li>
-    </ul>
-
-
-    <hr size="6" width="50%" align="center" color="black">
-    <div>
-        <h5>Please answer this question before continuing:</h5>
-            {{ formfields }}
-    </div>
+    <p>
+        In each iteration of the task,
+        you have the opportunity to earn bonus points based on your decision.
+        <b>1 point in the study is worth {{ C.conversion }}</b>.
+        Please read the instructions, as <b>your decisions affect your final payment</b>.
+        The bonus will be paid once the whole study is over,
+        and the data has been compiled.
+    </p>
 
     <div style="display: flex; justify-content: flex-end;margin-top: 20px; margin-bottom: 10px;">
-        Click next to start with the first round.
+        Click next to read the instructions.
     </div>
 
     {{ else }}
 
     <p>
-        This study is made of three separate tasks.
-        In part 1, you take part in a die rolling task and interact with another participant who sees the outcome of that task.
-        In part 2, you interact with a new participant in a new task.
-        In part 3, you make a decision based on what someone who saw some of your dice task results did.
+        This study is made of <b>three separate tasks</b>.
     </p>
+    <ul>
+        <li>In Part 1, you take part in a die rolling task and interact with another participant who sees the outcome of that task.
+        <li>In Part 2, you interact with a new participant in a new task.
+        <li>In Part 3, you make a decision based on what someone who saw some of your dice task results did.
+    </ul>
+
     <p>
-        The bonuses from each stage will be paid once the whole study is over,
-        and participants have been matched.
+        In each part, you have a chance to earn bonus points depending on your own decisions
+        and that of other participants who you are matched with.
+        <b>1 point in the study is worth {{ C.conversion }}</b>.
+        Please read the instructions, as <b>your decisions affect your final payment</b>.
+        The bonuses from each part will be paid once the whole study is over,
+        and the data has been compiled.
     </p>
 
 </div>

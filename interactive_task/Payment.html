@@ -18,48 +18,34 @@
             On that round you reported die of {{ random_reported_dice }}
             which will be paid to you as a bonus of <u>{{ random_reported_dice}} points</u>.
         </p>
+        <p>
+            Once all participants are done with the study, you will receive your bonus through Prolific.
+            This can take a couple of weeks.
+        </p>
 
         {{ else }}
 
         <p>
-            <b>In stage 1</b>, the die on round {{ random_round }} was selected for your bonus.
+            <b>In Part 1</b>, the die on round {{ random_round }} was selected for your bonus.
             <br>
             On that round you reported the number {{ random_reported_dice }}
             which will be paid to you as a bonus of <u>{{ random_reported_dice}} points</u>.
         </p>
-        {{ if treatment == "TG" }}
         <p>
-            <b>For stage 2</b>, you will be matched with two participants from the study with whom your choices and what you observed matches.
-            You will thus get one bonus for your interaction with Participant A and one with Participant B.
-        </p>
-        {{ endif }}
-        {{ if treatment == "DG" }}
-        <p>
-            <b>For stage 2</b>, you will be matched with two participants from the study.
-            You will thus get a bonus for your interaction with Participant A and one with Participant B.
-        </p>
-        {{ endif }}
-        {{ if treatment == "rating" }}
-        <p>
-            <b>For stage 2</b>, you will receive your bonus of {{ C.bonus }}
-            once the data for the whole study has been compiled and the most common answer calculated.
-        </p>
-        {{ endif }}
-        <p>
-            <b>For stage 3</b>, you will also be matched with one participant from another study.
-            You will thus get another bonus for your interaction with Participant C.
-        </p>
-        {{ endif }}
-
-        <br>
-        <p>
-            Once all participants are done with the study, you will receive your bonus as one amount through Prolific.
-            This can take a couple of weeks.
+            This bonus, along with the ones from Part 2 and Part 3, will be paid to you as one amount through Prolific.
+            This payment can take a few weeks, as bonuses can only be calculated
+            once the study is completed by all participants and the data has been compiled.
+            In addition, the other participant from Part 3 comes from a different study
+            which will be run in 42 different countries around the world.
+            We thank you for your patience.
         </p>
 
         <p> </p>
         <hr size="6" width="50%" align="center" color="black">
+
+        {{ endif }}
     </div>
+
     <p></p>
         <p>
             Click on the <b>next button</b> to be redirected to Prolific.

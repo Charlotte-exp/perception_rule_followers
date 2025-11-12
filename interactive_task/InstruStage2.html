@@ -1,6 +1,6 @@
 {{ block title }}
 
-    Part 2 instructions
+    Instructions for Part 2
 
 {{ endblock }}
 {{ block content }}
@@ -18,11 +18,12 @@
 
     <div class="card bg-light instructions">
         <div class="card-body" style="font-size: 14px">
-        Example:
+        For each participant, you will see, for example:
         <ul>
             <li>{{ num_dice_rounds }}/{{ num_dice_rounds }} rolls means that the participant reported the exact number they saw on the screen every time.
-            <li>{{ half_points }}/{{ num_dice_rounds }} rolls means that the participant reported the exact number they saw on the screen 6 times,<br>
-            and that they did not report the die correctly {{ half_points }} times.
+            <li>{{ half_k }}/{{ num_dice_rounds }} rolls means that the participant reported the exact number
+            they saw on the screen {{ half_k }} times,
+            and that they did not report the die correctly {{ half_k }} times.
             <li>0/{{ num_dice_rounds }} rolls means that the participant <u>never</u> reported the exact number they saw on the screen.
         </ul>
         </div>
@@ -32,12 +33,12 @@
 
     {{ if treatment == 'TG' }}
     <p>
-        Just like in Part 1 but as the other role, you now receive 3 points by the computer
-        for each of these participants.
+        You now receive 3 points by the computer for each of these participants.
+        1 point in the study is worth {{ C.conversion }}.
         After learning how many times each reported the die number correctly,
         you will have <b>the opportunity to send them up to 3 points</b>
         Every point you send is <u>tripled</u> by the computer: <b>1 point sent becomes 3 points received</b>.
-        Then, each participant then decides how many points from those, if any, to return to you.
+        Then, each participant decides how many points from those, if any, to return to you.
         <u>They can return nothing, any intermediate amount, or everything</u>.
     </p>
 
@@ -46,7 +47,7 @@
         Example:
         <ul>
             <li>If you send all 3 points, the other participant will receive 9 points.
-            <li>If they return half of the 9 points, you and the Participant A will both earn 4.5 points,
+            <li>If they return half of the 9 points, you and them will both earn 4.5 points,
             and will both have more than you started with.
             <li>If they return nothing, they will earn 9 points, while you will earn nothing.
             <li>So, you can gain points or lose points by sending points to the other participant,
@@ -67,8 +68,9 @@
     {{ if treatment == 'DG' }}
 
     <p>
-        Just like in Part 1 but as the other role, you now receive {{ DG_points }} points by the computer
+        You now receive {{ DG_points }} points by the computer
         for each of these participants.
+        1 point in the study is worth {{ C.conversion }}.
         After learning how many times each reported the die number correctly,
         you will have <b>the opportunity to share points</b> with them.
         <u>You can share nothing, any intermediate amount, or everything</u>.
@@ -78,9 +80,9 @@
         <div class="card-body" style="font-size: 14px">
         Example:
         <ul>
-            <li>If you share all {{ DG_points }} points,
-                the other participant will receive {{ DG_points }} points and you will receive nothing.
-            <li>If you send {{ half_points }} points, both the other participant and yourself will earn {{ half_points }}.
+            <li>If you share all {{ DG_points }},
+                the other participant will earn {{ DG_points }} and you will earn nothing.
+            <li>If you send {{ half_points }}, both the other participant and yourself will earn {{ half_points }}.
         </ul>
         </div>
     </div>
@@ -96,8 +98,7 @@
 
     {{ if treatment == 'rating' }}
     <p>
-        Just like in Part 1 but as the other role,
-        you will rate how <b>trustworthy</b> you find each participant 1-{{C.NUM_ROUNDS}}.
+        You will rate how <b>trustworthy</b> you find each participant 1-{{C.NUM_ROUNDS}}.
         You will be paid a {{ C.bonus }} bonus if your rating is the same as the most common answer for that participant.
     </p>
 

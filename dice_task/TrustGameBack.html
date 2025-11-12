@@ -241,7 +241,16 @@
 <body>
 
     <p>
-        Now, you decide how much of the amount sent by <u>the other participant</u> in this study you wish to send back.
+        The die rollings are now complete.
+        You reported the die correctly {{ correct_num_dice }} times.
+    </p>
+    <p>
+        This is now the interaction stage,
+        where another participant in this study knows
+        that you reported the die correctly {{ correct_num_dice }}/{{ C.NUM_ROUNDS }} times.
+        Based on this information, they can decide how many points to send you.
+        Now, you decide how many of these points you wish to return to the other participant.
+        We need you to decide how much to send back for all possible amount of points sent by this participant.
     </p>
     <p>
         Below, tell us how much you want to return,
@@ -255,25 +264,25 @@
                 <tr>
                     <th class="text-center">Points sent to you</th>
                     <th class="text-center">Points you received (tripled)</th>
-                    <th class="text-center">How many points do you wish to send back?</th>
+                    <th class="text-center">How many points do you wish to return?</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
                     <td class="text-center">1</td>
-                    <td class="text-center">3</td>
+                    <td class="text-center">{{ one_points_tripled }}</td>
                     <td class="text-center">
                         <div class="slider-container">
                             <span style="flex-grow: 1;">
                                 <input type="hidden" name="slider1_moved" value="0" id="check_slider1" />
-                                <input type="range" name="send_back_1" id="slider1" min="0" max="3" step="0.5" value="" class="hidden-thumb">
+                                <input type="range" name="send_back_1" id="slider1" min="0" max="{{ one_points_tripled }}" step="0.5" value="" class="hidden-thumb">
                             </span>
                             <div class="slider-labels">
                                 <span>0</span>
-                                <span>3</span>
+                                <span>{{ one_points_tripled }}</span>
                             </div>
                         </div>
-                        <div style="text-align: center; margin-top: -15px">
+                        <div style="text-align: center; margin-top: -20px">
                             You send back:
                             <span style="color: #0d6efd">
                                 <output id="output1"></output>
@@ -283,20 +292,20 @@
                 </tr>
                 <tr>
                     <td class="text-center">2</td>
-                    <td class="text-center">6</td>
+                    <td class="text-center">{{ two_points_tripled }}</td>
                     <td class="text-center">
                         <div class="slider-container">
                             <span style="flex-grow: 1;">
                                 <input type="hidden" name="slider2_moved" value="0" id="check_slider2" />
-                                <input type="range" name="send_back_2" id="slider2" min="0" max="6" step="0.5" value="" class="hidden-thumb">
+                                <input type="range" name="send_back_2" id="slider2" min="0" max="{{ two_points_tripled }}" step="0.5" value="" class="hidden-thumb">
                             </span>
 
                             <div class="slider-labels">
                                 <span>0</span>
-                                <span>6</span>
+                                <span>{{ two_points_tripled }}</span>
                             </div>
                         </div>
-                        <div style="text-align: center; margin-top: -15px">
+                        <div style="text-align: center; margin-top: -20px">
                             You send back:
                             <span style="color: #0d6efd">
                                 <output id="output2"></output>
@@ -306,20 +315,20 @@
                 </tr>
                 <tr>
                     <td class="text-center">3</td>
-                    <td class="text-center">9</td>
+                    <td class="text-center">{{ three_points_tripled }}</td>
                     <td class="text-center">
                         <div class="slider-container">
                             <span style="flex-grow: 1;">
                                 <input type="hidden" name="slider3_moved" value="0" id="check_slider3" />
-                                <input type="range" name="send_back_3" id="slider3" min="0" max="9" step="0.5" value="" class="hidden-thumb">
+                                <input type="range" name="send_back_3" id="slider3" min="0" max="{{ three_points_tripled }}" step="0.5" value="" class="hidden-thumb">
                             </span>
 
                             <div class="slider-labels">
                                 <span>0</span>
-                                <span>9</span>
+                                <span>{{ three_points_tripled }}</span>
                             </div>
                         </div>
-                        <div style="text-align: center; margin-top: -15px">
+                        <div style="text-align: center; margin-top: -20px">
                             You send back:
                             <span style="color: #0d6efd">
                                 <output id="output3"></output>

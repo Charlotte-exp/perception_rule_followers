@@ -3,8 +3,6 @@ from otree.api import *
 import random
 import itertools
 
-from interactive_task import TrustGameBack
-
 doc = """
 Your app description
 """
@@ -13,7 +11,7 @@ Your app description
 class C(BaseConstants):
     NAME_IN_URL = 'dice_task'
     PLAYERS_PER_GROUP = None
-    NUM_ROUNDS = 3
+    NUM_ROUNDS = 12
     participant_fee = 1
     time = 10
 
@@ -27,7 +25,7 @@ class C(BaseConstants):
     two_points = cu(2)
     three_points = cu(3)
 
-    DG_points = cu(6)
+    DG_points = cu(9)
 
 
 class Subsession(BaseSubsession):
@@ -77,6 +75,8 @@ class Player(BasePlayer):
         widget=widgets.RadioSelect,
     )
 
+    correct_num_dice = models.IntegerField(blank=True)
+
     q1_failed_attempts = models.IntegerField(initial=0)
     q_treatment_failed_attempts = models.IntegerField(initial=0)
 
@@ -100,9 +100,10 @@ class Player(BasePlayer):
             [1, f'They can share points with you.'],
             [2, f'They are asked to rate how trustworthy they find you.'],
             [3, f'They can take away your points, which are then tripled by the computer.'],
-            [4, f'They can send you points, which are then tripled by the computer, and you can choose to send some back to them.'],
+            [4, f'They can send you points, which are then tripled by the computer, '
+                f'and you can choose to return some to them.'],
         ],
-        verbose_name='What can the other participant do after learning how many times you reported the correct number?',
+        verbose_name='What can the other participant do after learning how many times you reported the die correctly?',
         widget=widgets.RadioSelect,
         # error_messages={'required': 'You must select an option before continuing.'}, # does not display
     )
@@ -117,17 +118,17 @@ class Player(BasePlayer):
 
     send_back_1 = models.FloatField(
         verbose_name='You received X points from the other participant: <br>'
-                     'How many points to do you send back?',
-        min=0, max=9)
+                     'How many points to do you return?',
+        min=0, max=3)
 
     send_back_2 = models.FloatField(
         verbose_name='You received X points from the other participant: <br>'
-                     'How many points to do you send back?',
-        min=0, max=9)
+                     'How many points to do you return?',
+        min=0, max=6)
 
     send_back_3 = models.FloatField(
         verbose_name='You received X points from the other participant: <br>'
-                     'How many points to do you send back?',
+                     'How many points to do you return?',
         min=0, max=9)
 
 
@@ -175,7 +176,6 @@ def random_payment(player: Player):
         setattr(player.participant, f'randomly_selected_{attr}', value)
 
 
-
 ######### PAGES #########
 
 class Consent(Page):
@@ -210,6 +210,12 @@ class InstruPart1(Page):
         if player.round_number == 1:
             return True
         return None
+
+    @staticmethod
+    def vars_for_template(player: Player):
+        return dict(
+            half_points=int(C.DG_points) / 2,
+        )
 
     @staticmethod
     def error_message(player: Player, values):
@@ -252,6 +258,7 @@ class Roll(Page):
             original_dice = player.original_dice,
             reported_dice = player.reported_dice,
             treatment = player.treatment,
+            half_points = int(C.DG_points)/2,
         )
 
 
@@ -285,17 +292,14 @@ class TrustGameBack(Page):
 
     @staticmethod
     def vars_for_template(player: Player):
+        correct_num_dice = sum(player.participant.k_list)
+        player.correct_num_dice = correct_num_dice
         return dict(
-            zero_points_tripled = C.zero_points*3,
-            one_points_tripled = C.one_points*3,
-            two_points_tripled = C.two_points*3,
-            three_points_tripled = C.three_points*3,
-            bounds={
-                # 'send_back_1': {'min': 0, 'max': previous_pp.trust_points*3}, ## only live interaction
-                'send_back_1': {'min': 0, 'max': C.one_points*3},
-                'send_back_2': {'min': 0, 'max': C.two_points*3},
-                'send_back_3': {'min': 0, 'max': C.three_points*3},
-            }
+            correct_num_dice = correct_num_dice,
+            zero_points_tripled = int(C.zero_points*3),
+            one_points_tripled = int(C.one_points*3),
+            two_points_tripled = int(C.two_points*3),
+            three_points_tripled = int(C.three_points*3),
         )
 
 
@@ -304,14 +308,14 @@ class FeedbackPart1(Page):
 
     @staticmethod
     def is_displayed(player: Player):
-        if player.round_number == C.NUM_ROUNDS and player.participant.treatment != 'TG':
+        if player.round_number == C.NUM_ROUNDS and player.participant.treatment not in ('TG', 'control'):
             return True
         return None
 
     @staticmethod
     def vars_for_template(player: Player):
         return dict(
-
+            treatment = player.treatment,
         )
 
 page_sequence = [Consent,

@@ -73,10 +73,21 @@
 
 <body>
 
+    {{ if treatment == 'DG' }}
     <p>
-        Now the other participant will see your sequence of decision and decide how much to share with you.
+        Now, the other participant will see how many times die rolls were reported correctly
+        and decide how much to share with you.
         Since no action is required from you, you can continue to Part 2.
     </p>
+    {{ endif }}
+
+    {{ if treatment == 'rating' }}
+    <p>
+        Now, the other participant will see how many times die rolls were reported correctly
+        and rate how trustworthy they find you.
+        Since no action is required from you, you can continue to Part 2.
+    </p>
+    {{ endif }}
 
     <div style="display: flex; justify-content: flex-end">
         {{ next_button }}
