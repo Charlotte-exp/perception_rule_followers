@@ -7,7 +7,7 @@ SESSION_CONFIGS = [
         display_name="Dice and trust game",
         app_sequence=['dice_task', 'interactive_task'],
         num_demo_participants=9,
-        use_browser_bots=True,
+        use_browser_bots=False,
         oTree_version_used=popen('otree --version').read().strip()
     ),
     dict(
@@ -19,7 +19,7 @@ SESSION_CONFIGS = [
         oTree_version_used=popen('otree --version').read().strip()
     ),
     dict(
-        name='perception',
+        name='perception_bots',
         display_name="Full study - Bots",
         app_sequence=['dice_task', 'interactive_task'],
         num_demo_participants=9,
