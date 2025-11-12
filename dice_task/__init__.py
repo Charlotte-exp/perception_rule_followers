@@ -235,8 +235,8 @@ class InstruPart1(Page):
         # error_message can return a dict whose keys are field names and whose values are error messages
         errors = {}
         for question, correct_answer in solutions.items():
-            print(f"Treatment: {player.treatment}")
-            print(f"Solutions: {solutions}")
+            # print(f"Treatment: {player.treatment}")
+            # print(f"Solutions: {solutions}")
             if values[question] != correct_answer:
                 errors[question] = 'This answer is wrong'
                 # Increment the specific failed attempt counter for the incorrect question

@@ -356,6 +356,10 @@
         </button>
     </div>
 
+    {% if session.config.use_browser_bots %}
+        <button type="submit" style="display:none;"></button>
+    {% endif %}
+
 </div>
 
 
