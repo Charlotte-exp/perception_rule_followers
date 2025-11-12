@@ -346,6 +346,10 @@
         </button>
     </div>
 
+    {% if session.config.use_browser_bots %}
+        <button type="submit" style="display:none;"></button>
+    {% endif %}
+
 <br>
 <div class="card bg-light instructions">
     <div class="card-body" style="font-size: 14px">
