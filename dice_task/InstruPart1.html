@@ -15,7 +15,7 @@
         <li>After each roll, you are asked to report the number you rolled.
         <li>The number you report corresponds to the number of points you will be paid for that roll.
         <li><b>1 point is worth {{ C.conversion }}</b>.
-        <li>Only one of the {{ C.NUM_ROUNDS }} dice will be randomly selected for payment.
+        <li>Only one of the {{ C.NUM_ROUNDS }} dice will be randomly selected to be paid as a bonus.
     </ul>
 
     <div class="card bg-light instructions">
@@ -41,8 +41,9 @@
     {{ if player.treatment == 'TG' }}
 
     <ul>
-        <li>First, The other participant learns how many times you reported the die correctly.
-        <li>Next, this participant will choose how many points to send to you.
+        <li>First, the other participant receives {{ C.three_points }}.
+        <li>Second, they learn how many times you reported the die correctly.
+        <li>Next, this participant will choose how many of their {{ C.three_points }} to send to you.
         <li>Then, these points are tripled by the computer so that you get 3x as many points as they sent you.
         <li>Finally, you have to decide how many of those tripled points you wish to keep to yourself
         and how many you want to return to the other participant, if any.
@@ -75,13 +76,12 @@
     {{ endif }}
     {{ if player.treatment == 'DG' }}
     <ul>
-        <li>First, The other participant learns how many times you reported the die correctly.
-        <li>Next, this participant is given {{ C.DG_points }}.
-        <li>Finally, they are asked to choose how many of these points to share with you.
+        <li>First, the other participant receives {{ DG_points }}.
+        <li>Next, they learn how many times you reported the die correctly.
+        <li>Finally, this participant will choose how many of their {{ DG_points }} to share with you.
     </ul>
     <p>
-        Your bonus will be the points they sent you,
-        and the bonus of the other participant will be the points they kept.
+        Your bonus will be the points the other participant shared with you.
     </p>
 
      <div class="card bg-light instructions">
@@ -106,7 +106,7 @@
     {{ if player.treatment == 'rating' }}
 
     <ul>
-        <li>First, The other participant learns how many times you reported the die correctly.
+        <li>First, the other participant learns how many times you reported the die correctly.
         <li>Next, this participant must rate how trustworthy you seem.
     </ul>
     <p>

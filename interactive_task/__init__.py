@@ -146,12 +146,12 @@ class Player(BasePlayer):
     q2_TG = models.IntegerField(
         initial=0,
         choices=[
-            [1, f'The points returned to me by all {C.NUM_ROUNDS} other participants, '
-                f'independent of how much I sent in the first place.'],
-            [2, f'The points returned to me by all {C.NUM_ROUNDS} other participants, '
-                f'depending on how much I sent in the first place.'],
-            [3, f'The points returned to me by one other participant, depending on how much I sent in the first place.'],
-            [4, f'The points returned to me by one other participant, independent of how much I sent in the first place.'],
+            [1, f'Only the points I kept, the points I sent cannot be returned to me.'],
+            [4, f'Only the points returned to me, the points I kept do not count.'],
+            [3, f'The points returned to me by another participant, depending on how much I sent, '
+                f'and/or any points I kept.'],
+            [2, f'The points returned to me by {C.NUM_ROUNDS} participants, depending on how much I sent to each, '
+                f'and/or any points I kept.'],
         ],
         verbose_name='What determines the number of bonus points you will be paid from Part 2?',
         widget=widgets.RadioSelect,
@@ -175,13 +175,11 @@ class Player(BasePlayer):
     q2_rating = models.IntegerField(
         initial=0,
         choices=[
-            [1, f'There is no bonus in this stage.'],
-            [2, f'If my rating is the same as the most common answer for each of the {C.NUM_ROUNDS} participants, '
-                f'I will receive a {C.bonus} bonus.'],
-            [3, f'If my rating is the same as the most common answer for a randomly selected participant, '
-                f'I will receive a {C.bonus} bonus.'],
+            [1, f'Another participant will observe how many times I report the die correctly.'],
+            [2, f'I will observe how many times 1 participant reported the die correctly.'],
+            [3, f'I will observe how many times {C.NUM_ROUNDS} participants reported the die correctly.'],
         ],
-        verbose_name='What determines the number of bonus points you will be paid from Part 2?',
+        verbose_name='What will you observe in Part 2?',
         widget=widgets.RadioSelect,
         # error_messages={'required': 'You must select an option before continuing.'}, # does not display
     )
@@ -370,7 +368,7 @@ class InstruStage2(Page):
             num_dice_rounds = player.session.num_dice_rounds,
             half_k = int(player.session.num_dice_rounds/2),
             DG_points = C.DG_points,
-            half_points = C.DG_points/2,
+            half_points = float(C.DG_points)/2,
         )
 
 
