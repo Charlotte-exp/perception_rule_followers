@@ -19,6 +19,7 @@ class C(BaseConstants):
     bonus = cu(2)
     conversion = '34p'
 
+    TG_points = cu(3)
     zero_points = cu(0)
     one_points = cu(1)
     two_points = cu(2)
@@ -100,13 +101,9 @@ class Player(BasePlayer):
 
     k_value = models.IntegerField(initial=99)
 
-    trust_points = models.IntegerField(
-        choices=[
-            [0, '0 point'], [1, '1 point'], [2, '2 points'], [3, '3 points'],
-        ],
+    TG_points_sent = models.IntegerField(
         verbose_name='',
-        widget=widgets.RadioSelectHorizontal
-    )
+        min=0, max=3)
 
     send_back_1 = models.FloatField(
         verbose_name='You received X points from the other participant: <br>'
@@ -123,7 +120,7 @@ class Player(BasePlayer):
                      'How many points to do you send back?',
         min=0, max=9)
 
-    points_kept = models.FloatField(initial=0)
+    DG_points_kept = models.FloatField(initial=0)
 
     trustworthiness = models.IntegerField(initial=0)
     likeable = models.IntegerField(initial=0)
@@ -142,6 +139,11 @@ class Player(BasePlayer):
         verbose_name='You received X points from the other participant: <br>'
                      'How many points to do you send back?',
         min=0, max=C.three_points*3)
+
+    q2_TG_failed_attempts = models.IntegerField(initial=0)
+    q2_DG_failed_attempts = models.IntegerField(initial=0)
+    q2_rating_failed_attempts = models.IntegerField(initial=0)
+    q3_failed_attempts = models.IntegerField(initial=0)
 
     q2_TG = models.IntegerField(
         initial=0,
@@ -187,10 +189,9 @@ class Player(BasePlayer):
     q3 = models.IntegerField(
         initial=0,
         choices=[
-            [1, f'The points sent by the participant from another study and doubled by the computer.'],
-            [2, f'The points I decide to keep from those sent by another participant and doubled by the computer.'],
-            [3, f'The points sent by the participant from another study and tripled by the computer.'],
-            [4, f'The points I decide to keep from those sent by another participant and tripled by the computer.'],
+            [1, f'All the points sent by a participant from another study, without any action from me.'],
+            [2, f'The points I decide to keep from those sent by a participant from another study.'],
+            [3, f'The points a participant from another study returns to me if I send them some of my points.'],
         ],
         verbose_name='What determines the number of bonus points you will be paid from Part 3?',
         widget=widgets.RadioSelect,
@@ -349,6 +350,7 @@ class InstruStage2(Page):
         # error_message can return a dict whose keys are field names and whose values are error messages
         errors = {}
         for question, correct_answer in solutions.items():
+            print(f"Solutions: {solutions}")
             if values[question] != correct_answer:
                 errors[question] = 'This answer is wrong'
                 # Increment the specific failed attempt counter for the incorrect question
@@ -374,7 +376,7 @@ class InstruStage2(Page):
 
 class TrustGameSender(Page):
     form_model = "player"
-    form_fields = ["trust_points"]
+    form_fields = ["TG_points_sent"]
 
     def is_displayed(player: Player):
         if player.round_number <= C.NUM_ROUNDS and player.participant.treatment == 'TG':
@@ -388,12 +390,14 @@ class TrustGameSender(Page):
             # k_value = sum(next_pp.participant.k_list), ## for live interaction
             k_value=player.k_value,
             num_dice_rounds = player.session.num_dice_rounds,
+            TG_points = float(C.TG_points),
+            int_TG_points = int(C.TG_points),
         )
 
 
 class DictGame(Page):
     form_model = "player"
-    form_fields = ["points_kept"]
+    form_fields = ["DG_points_kept"]
 
     @staticmethod
     def is_displayed(player: Player):
@@ -411,7 +415,7 @@ class DictGame(Page):
             # k_value = sum(next_pp.participant.k_list), ## for live interaction
             k_value=player.k_value,
             num_dice_rounds = player.session.num_dice_rounds,
-            points_kept = player.points_kept,
+            DG_points_kept = player.DG_points_kept,
         )
 
 
@@ -468,7 +472,7 @@ class TrustGameBack(Page):
         # others = other_players(player)
         # previous_pp = others["previous"]
         return dict(
-            # sent_points = previous_pp.trust_points*3, # multiplied!!!  ## only live interaction
+            # sent_points = previous_pp.TG_points_sent*3, # multiplied!!!  ## only live interaction
             zero_points_tripled = int(C.zero_points*3),
             one_points_tripled = int(C.one_points*3),
             two_points_tripled = int(C.two_points*3),
@@ -503,11 +507,12 @@ class InstruStage3(Page):
         """
         records the number of time the page was submitted with an error. which specific error is not recorded.
         """
-        solutions = dict(q3=4)
+        solutions = dict(q3=2)
 
         # error_message can return a dict whose keys are field names and whose values are error messages
         errors = {}
         for question, correct_answer in solutions.items():
+            print(f"Solutions: {solutions}")
             if values[question] != correct_answer:
                 errors[question] = 'This answer is wrong'
                 # Increment the specific failed attempt counter for the incorrect question
@@ -574,15 +579,15 @@ class Payment(Page):
     #     )
     #     if player.participant.treatment == 'TG':
     #         base_data.update(
-    #             points_i_sent=player.trust_points,
+    #             points_i_sent=player.TG_points_sent,
     #             points_returned_to_me=next_pp.send_back_1,
-    #             points_sent_to_me=previous_pp.trust_points*3, #  multiplied !!!
-    #             points_i_kept=round(previous_pp.trust_points*3 - player.send_back_1, 1),
+    #             points_sent_to_me=previous_pp.TG_points_sent*3, #  multiplied !!!
+    #             points_i_kept=round(previous_pp.TG_points_sent*3 - player.send_back_1, 1),
     #         )
     #     elif player.participant.treatment == 'DG':
     #         base_data.update(
-    #             previous_pp_points_sent=10 - previous_pp.points_kept,
-    #             points_sent=10 - player.points_kept,
+    #             previous_pp_points_sent=10 - previous_pp.DG_points_kept,
+    #             points_sent=10 - player.DG_points_kept,
     #         )
     #     return base_data
 

@@ -69,6 +69,7 @@
         margin-top: 0px; /* optional: pulls labels closer to slider */
         padding: 0;
         text-align: center;
+        font-weight: bold;
     }
 
     .slider-labels span {
@@ -200,7 +201,7 @@
                 const output = document.getElementById(outputId);
                 const checkSlider = document.getElementById(checkId);
 
-                slider.value = "";
+                slider.value = "9";
                 output.textContent = "";
                 checkSlider.value = "0"; // Not moved yet
                 slider.classList.add("hidden-thumb");
