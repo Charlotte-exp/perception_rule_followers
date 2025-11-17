@@ -13,13 +13,14 @@ class C(BaseConstants):
     PLAYERS_PER_GROUP = None
     NUM_ROUNDS = 12
     participant_fee = 1
+    conversion = '34p'
     time = 10
 
     num_dice_rounds = NUM_ROUNDS # from the actor task
     percent_accurate = 10
     bonus = cu(2)
 
-    conversion = '34p'
+    TG_points = cu(3)
     zero_points = cu(0)
     one_points = cu(1)
     two_points = cu(2)
@@ -93,7 +94,6 @@ class Player(BasePlayer):
         # error_messages={'required': 'You must select an option before continuing.'}, # does not display
     )
 
-
     q_treatment = models.IntegerField(
         initial=0,
         choices=[
@@ -147,14 +147,13 @@ def generate_dice_sequence():
 def calculate_k(player: Player):
     list_of_correct = []
     for p in player.in_all_rounds():
-        if p.reported_dice - p.original_dice <= 0: # if value 0 or neg, it's an honest answer
+        if p.reported_dice == p.original_dice: # only correct report
             value = 1 # 1 for honest
         else:
             value = 0 # 0 for lies
         list_of_correct.append(value)
         p.participant.k_list = list_of_correct
-        # k_value = sum(list_of_correct)
-        # p.participant.k_value = k_value
+        p.correct_num_dice = sum(list_of_correct)
 
 
 def random_payment(player: Player):
@@ -292,10 +291,8 @@ class TrustGameBack(Page):
 
     @staticmethod
     def vars_for_template(player: Player):
-        correct_num_dice = sum(player.participant.k_list)
-        player.correct_num_dice = correct_num_dice
         return dict(
-            correct_num_dice = correct_num_dice,
+            correct_num_dice = player.correct_num_dice,
             zero_points_tripled = int(C.zero_points*3),
             one_points_tripled = int(C.one_points*3),
             two_points_tripled = int(C.two_points*3),
@@ -316,6 +313,7 @@ class FeedbackPart1(Page):
     def vars_for_template(player: Player):
         return dict(
             treatment = player.treatment,
+            correct_num_dice = player.correct_num_dice,
         )
 
 page_sequence = [Consent,

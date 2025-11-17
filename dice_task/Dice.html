@@ -100,8 +100,23 @@
     }
 
     document.addEventListener("DOMContentLoaded", function () {
-        const original = parseInt("{{ original_dice }}", 10) || 1;
-        showDice('dice1', original);
+        const finalNumber = parseInt("{{ original_dice }}", 10) || 1;
+
+        let scrambleInterval;
+        let scrambleDuration = 1000; // 1 second
+        let scrambleSpeed = 50;      // Change face every 50ms (~20 FPS)
+
+        // Start scrambling
+        scrambleInterval = setInterval(() => {
+            const randomNum = Math.floor(Math.random() * 6) + 1;
+            showDice('dice1', randomNum);
+        }, scrambleSpeed);
+
+        // Stop after 1 second and show real number
+        setTimeout(() => {
+            clearInterval(scrambleInterval);
+            showDice('dice1', finalNumber);
+        }, scrambleDuration);
     });
 
 </script>
@@ -147,7 +162,7 @@
             <li>Please report the number that you rolled. Your bonus will depend on your reported number.
             <li>The higher the number you report, the more money you earn.
             {{ if treatment != 'control' }}
-            <li>What you do will be observed by other participants.
+            <li>What you do will be observed by another participant.
             {{ endif }}
         </ul>
     </div>

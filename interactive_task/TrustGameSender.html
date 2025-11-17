@@ -18,6 +18,33 @@
             font-size: 16px
         }
 
+        .button-container {
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .submit-button {
+            color: #fff;
+            background-color: #007bff;
+            border: 1px solid #007bff;
+            font-size: 1rem;
+            border-radius: 0.25rem;
+            padding: 4px 12px;
+            cursor: pointer;
+            font-family: Arial, Helvetica, sans-serif;
+            transition: background-color 0.2s ease, border-color 0.2s ease;
+        }
+
+        .submit-button:hover {
+            background-color: #0056b3;
+            border-color: #0056b3;
+        }
+
+        .submit-button:active {
+            background-color: #004a99;
+            border-color: #004a99;
+        }
+
         .fraction-square {
             position: relative;
             width: 80px;
@@ -57,111 +84,192 @@
           font-weight: bold;
         }
 
-        .points-row {
-            justify-content: center;
-            display: flex;
-            margin-top:1vw;
-            margin-bottom:25px;
-            left:calc(50% - 10vw);
-            /*gap: 1vw; PREVIOUS GAP WITH 30 ENDOWMENT !* Space between numbers scales with viewport width *!*/
-            gap: 1.5vw; /* Space between numbers scales with viewport width */
-            flex-wrap: wrap; /* Optional: allows wrapping if buttons exceed container width */
-            align-items: center; /* Ensures proper vertical alignment */
+        .slider {
+            width: 100%;
+            margin: 20px 0;
         }
-            
-        .points {
-            width: 65px; /* should not scale */
-            height: 35px; /* should not scale */
-            flex-direction: column;
-            text-align: center; /* Center-aligns the text */
+
+        .slider-container {
+            width: 50%;
+            max-width: 600px;
+            margin: auto;
+            border:0px solid black;
+        }
+
+        .slider-labels {
             display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 14px; /* should not scale */
-            background-color: #e0e0e0;
-            padding: 1.5px;
-            border: 1.5px solid #000000;
-            border-radius: 6px; /* Slightly rounded corners */
+            justify-content: space-between;
+            margin-top: 0px; /* optional: pulls labels closer to slider */
+            padding: 0;
+            text-align: center;
+        }
+
+        .slider-labels span {
+            font-size: 16px;
+            white-space: nowrap;
+        }
+
+        /* Webkit-based browsers (Chrome, Safari) */
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 8.4px;
             cursor: pointer;
-            font-family: Arial, Helvetica, sans-serif;
-            transition: background-color 0.3s ease;
-        }
-    
-        .points:hover {
-            background-color: #ffcc00; /* Change background color on hover */
-        }
-    
-        .points:active {
-            background-color: #ffa500; /* Change background color on click */
-        }
-    
-        .points.selected {
-                 background-color: #ffa500; /* Permanent color when clicked */
-        }
-    
-        .points.disabled {
-            background-color: #F3F3F3; /* Grey color for disabled buttons */
-            border: 1px solid #d3d3d3;
-            color:#d3d3d3;
-            cursor: not-allowed;
-            pointer-events: none; /* Disable interactions */
+            background: white;
+            border-radius: 1px;
+            border: 1px solid lightgrey;
         }
 
-        .button-container {
-            display: flex;
-            justify-content: flex-end;
-        }
-
-        .submit-button {
-            color: #fff;
-            background-color: #007bff;
-            border: 1px solid #007bff;
-            font-size: 1rem;
-            border-radius: 0.25rem;
-            padding: 4px 12px;
+        /* Firefox */
+        input[type=range]::-moz-range-track {
+            width: 100%;
+            height: 8.4px;
             cursor: pointer;
-            font-family: Arial, Helvetica, sans-serif;
-            transition: background-color 0.2s ease, border-color 0.2s ease;
+            background: white;
+            border-radius: 1px;
+            border: 1px solid lightgrey;
         }
 
-        .submit-button:hover {
-            background-color: #0056b3;
-            border-color: #0056b3;
+        /* Internet Explorer and Edge */
+        input[type=range]::-ms-track {
+            width: 100%;
+            height: 8.4px;
+            cursor: pointer;
+            background: white;
+            border-radius: 1px;
+            border: 1px solid lightgrey;
+            /* Remove default styling for MS track */
+            border-color: transparent;
+            color: transparent;
+            background-color: transparent;
         }
 
-        .submit-button:active {
-            background-color: #004a99;
-            border-color: #004a99;
+        /* Style the range input element itself to reset default styling across browsers */
+        input[type=range] {
+            -webkit-appearance: none; /* For Webkit browsers */
+            appearance: none; /* For Firefox and other browsers */
+            width: 100%;
+            height: 8px; /* Adjust the input height */
+            background: transparent; /* Make sure the input background is transparent */
+            border: none; /* Remove default border */
+            margin-top: 5px;
         }
 
+        /* Hide the thumb initially for Safari/Chrome */
+        .hidden-thumb::-webkit-slider-thumb {
+            opacity: 0;  /* Instead of visibility: hidden */
+            pointer-events: none;  /* Prevent user from interacting */
+        }
+
+        /* Hide the thumb initially for Firefox */
+        .hidden-thumb::-moz-range-thumb {
+            opacity: 0;  /* Instead of visibility: hidden */
+            pointer-events: none;  /* Prevent user from interacting */
+        }
+
+        /* Hide the thumb initially for IE/Edge */
+        .hidden-thumb::-ms-thumb {
+            opacity: 0;  /* Instead of visibility: hidden */
+            pointer-events: none;  /* Prevent user from interacting */
+        }
+
+        /* Style the slider thumb for Safari/Chrome */
+        input[type=range]::-webkit-slider-thumb {
+            border: 0px solid #000000;
+            height: 21px;
+            width: 10px;
+            background: #0d6efd;
+            cursor: pointer;
+            -webkit-appearance: none;
+            margin-top: -7px;
+        }
+
+        /* Style the slider thumb for Firefox */
+        input[type=range]::-moz-range-thumb {
+            border: 0px solid #000000;
+            height: 21px;
+            width: 10px;
+            background: #0d6efd;
+            cursor: pointer;
+            -moz-appearance: none;  /* Firefox-specific appearance reset */
+            margin-top: -7px;
+        }
+
+        /* Style the slider thumb for IE/Edge */
+        input[type=range]::-ms-thumb {
+            border: 0px solid #000000;
+            height: 21px;
+            width: 10px;
+            background: #0d6efd;
+            cursor: pointer;
+            -ms-appearance: none;  /* Edge/IE-specific appearance reset */
+            margin-top: -7px;
+        }
+
+        .results-display {
+            display: flex;
+            justify-content: center;
+            gap: 100px;       /* space between the two blocks */
+            margin: 20px 0;  /* space above/below */
+            text-align: center;
+        }
+
+        .results-label {
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+
+        .results-number {
+            font-size: 32px;
+            font-weight: bold;
+        }
 
     </style>
 
 
     <script>
 
-        // Button selection setup
         document.addEventListener("DOMContentLoaded", function () {
-            const rows = document.querySelectorAll(".points-row");
-            rows.forEach(row => {
-                const buttons = row.querySelectorAll(".points");
+            const sliders = [
+                { sliderId: "slider1", outputId: "output1", checkId: "check_slider1", keepLabel: "label-keep", sendLabel: "label-send" },
+            ];
 
-                buttons.forEach(button => {
-                    button.addEventListener("click", function () {
-                        buttons.forEach(btn => btn.classList.remove("selected"));
-                        this.classList.add("selected");
-                        const value = $(this).data('value');
-                        $("#selected-points").val(value);
-                        hideError();
-                    });
+            sliders.forEach(({ sliderId, outputId, checkId, keepLabel, sendLabel }) => {
+                const slider = document.getElementById(sliderId);
+                const output = document.getElementById(outputId);
+                const checkSlider = document.getElementById(checkId);
+                const labelkeep = document.getElementById(keepLabel);
+                const labelsend = document.getElementById(sendLabel);
+
+                // Initial state
+                slider.value = 0;
+                output.textContent = "";
+                checkSlider.value = "0";
+                slider.classList.add("hidden-thumb");
+                labelkeep.textContent = 0;
+                labelsend.textContent = 0;
+
+                slider.addEventListener("input", function () {
+                    const TG_points = {{ TG_points }};
+                    // const keepValue = parseInt(this.value, 10);
+                    const sendValue = parseFloat(this.value);
+                    const receivedValue = sendValue*3;
+                    const keepValue = TG_points - sendValue;
+
+                    labelkeep.textContent = keepValue;
+                    labelsend.textContent = receivedValue;
+
+                    output.textContent = this.value;
+                    checkSlider.value = "1";
+                    this.classList.remove("hidden-thumb");
+                    hideError();
                 });
             });
 
             // Combined form validation
             $('#submit-button').on('click', function (e) {
-                const points = $("#selected-points").val();
+                const allSlidersMoved = sliders.every(({ checkId }) => document.getElementById(checkId).value === "1");
 
-                if (!points) {
+                if (!allSlidersMoved) {
                     e.preventDefault();
                     showError();
                 } else {
@@ -204,17 +312,37 @@
 
 
     <p style="text-align: center;">
-        <strong>How many points do you send to Participant {{ player.round_number }}?</strong>
+        <strong>How many of your {{ C.three_points }} do you send to Participant {{ player.round_number }}?</strong>
     </p>
 
-    <div class="points-row" data-input="selected-points">
-        <input type="hidden" name="trust_points" id="selected-points" value="">
-            <div class="points" data-value="0">0 points</div>
-            <div class="points" data-value="1">1 point</div>
-            <div class="points" data-value="2">2 points</div>
-            <div class="points" data-value="3">3 points</div>
+    <div class="slider-container">
+        <span style="flex-grow: 1;">
+            <input type="hidden" name="slider1_moved" value="0" id="check_slider1" />
+            <input type="range" name="TG_points_sent" id="slider1" min="0" max="{{ TG_points }}" step="1" value="0" class="hidden-thumb">
+        </span>
+        <div class="slider-labels">
+            <span>0</span>
+            <span>1</span>
+            <span>2</span>
+            <span>{{ int_TG_points }}</span>
+        </div>
+        <div style="text-align: center; margin-top: -15px">
+            <span style="color: #FFFFFF">
+                <output id="output1"></output>
+            </span>
+        </div>
     </div>
 
+    <div class="results-display">
+        <div>
+            <div class="results-label">You keep:</div>
+            <div class="results-number" id="label-keep"></div>
+        </div>
+        <div>
+            <div class="results-label">They receive:</div>
+            <div class="results-number" id="label-send"></div>
+        </div>
+    </div>
 
 
     <!-- Error message -->

@@ -10,7 +10,7 @@
     <p style="font-size: 18px; font-weight: bold">Interaction with a new participant in the study</p>
 
     <p>
-        In the previous part, another participants saw how many times <u>you</u> reported the die correctly
+        In the previous part, another participant saw how many times <u>you</u> reported the die correctly
         and made a decision based on that information.
         Now, you will be the one observing others, and see that same information <u>about several other participants</u>.
         We will call these participants <b>"Participant 1-{{ C.NUM_ROUNDS }}"</b>
@@ -50,7 +50,7 @@
             <li>If they return half of the 9 points, you and them will both earn 4.5 points,
             and will both have more than you started with.
             <li>If they return nothing, they will earn 9 points, while you will earn nothing.
-            <li>So, you can gain points or lose points by sending points to the other participant,
+            <li>Therefore, you can gain points or lose points by sending points to the other participant,
             depending on how much they return to you.
         </ul>
         </div>
@@ -82,7 +82,9 @@
         <ul>
             <li>If you share all {{ DG_points }},
                 the other participant will earn {{ DG_points }} and you will earn nothing.
-            <li>If you send {{ half_points }}, both the other participant and yourself will earn {{ half_points }}.
+            <li>If you share {{ half_points }}, both the other participant and yourself will earn {{ half_points }}.
+            <li>If you share none of the {{ DG_points }},
+                the other participant will earn nothing and you will earn {{ DG_points }}.
         </ul>
         </div>
     </div>
@@ -98,13 +100,7 @@
 
     {{ if treatment == 'rating' }}
     <p>
-        You will rate how <b>trustworthy</b> you find each participant 1-{{C.NUM_ROUNDS}}.
-        You will be paid a {{ C.bonus }} bonus if your rating is the same as the most common answer for that participant.
-    </p>
-
-    <p>
-        Only of the {{ C.NUM_ROUNDS }} participants you observe
-        will be selected at random to be matched with you for the bonus calculation.
+        You will now rate how <b>trustworthy</b> you find each participant 1-{{C.NUM_ROUNDS}}.
     </p>
 
     {{ endif }}
