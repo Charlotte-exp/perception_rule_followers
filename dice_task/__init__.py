@@ -11,7 +11,7 @@ Your app description
 class C(BaseConstants):
     NAME_IN_URL = 'dice_task'
     PLAYERS_PER_GROUP = None
-    NUM_ROUNDS = 2
+    NUM_ROUNDS = 12
     participant_fee = 1
     conversion = '34p'
     time = 10
