@@ -227,6 +227,14 @@ class Player(BasePlayer):
         ]
     )
 
+    comment_box = models.LongStringField(
+        verbose_name=''
+    )
+
+    strategy_box = models.LongStringField(
+        verbose_name=''
+    )
+
 
 ######## FUNCTIONS #########
 
@@ -561,6 +569,17 @@ class Demographics(Page):
         return player.round_number == C.NUM_ROUNDS
 
 
+class CommentBox(Page):
+    form_model = 'player'
+    form_fields = ['comment_box', 'strategy_box']
+
+    @staticmethod
+    def is_displayed(player: Player):
+        if player.round_number == C.NUM_ROUNDS:
+            return True
+        return None
+
+
 class Payment(Page):
 
     @staticmethod
@@ -619,6 +638,7 @@ page_sequence = [
                  InstruStage3,
                  TrustGameForCCP,
                  Demographics,
+                 CommentBox,
                  Payment,
                  ProlificLink]
 

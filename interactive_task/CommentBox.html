@@ -1,0 +1,24 @@
+{% block title %}
+    Quick Survey
+{% endblock %}
+
+{% block content %}
+<div class="card-body">
+    This experiment is a new study, and we are still piloting it. As such, we really appreciate feedback.
+    If you have any comments on the implementation of the study, the clarity of the task, or on the user interface, please write it down below.
+
+    {% formfield player.comment_box label='' %}
+</div>
+
+<div class="card-body">
+    We are also curious about your decision process: what were you thinking about when making your choice?
+
+    {% formfield player.strategy_box label='' %}
+</div>
+    <p>
+        <div style="display: flex; justify-content: flex-end">
+        {% next_button %}
+        </div>
+    </p>
+
+{% endblock %}
