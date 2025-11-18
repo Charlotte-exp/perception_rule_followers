@@ -3,6 +3,7 @@ from . import *
 
 import random
 
+import time
 
 class PlayerBot(Bot):
     def play_round(self):
@@ -27,6 +28,8 @@ class PlayerBot(Bot):
                                         send_back_CCP_3=random.choice([1, 9]))
         if self.round_number == C.NUM_ROUNDS:
             yield Demographics, dict(age='12', gender='1', education='1')
+            yield CommentBox, dict(strategy_box='strategy', comment_box='comment')
+            #time.sleep(10)
             yield Payment
             yield ProlificLink
 
