@@ -15,13 +15,13 @@ class PlayerBot(Bot):
                 yield InstruStage2, dict(q2_rating=3)
         if self.round_number <= C.NUM_ROUNDS:
             if self.participant.treatment == 'TG':
-                yield TrustGameSender, dict(trust_points=random.choice([0, 3]))
+                yield TrustGameSender, dict(TG_points_sent=random.choice([0, 3]))
             elif self.participant.treatment == 'DG':
-                yield DictGame, dict(points_kept=random.choice([0, 9]))
+                yield DictGame, dict(DG_points_kept=random.choice([0, 9]))
             elif self.participant.treatment == 'rating':
                 yield Rating, dict(trustworthiness=random.choice([0, 100]))
         if self.round_number == C.NUM_ROUNDS and self.participant.treatment != 'control':
-            yield InstruStage3, dict(q3=4)
+            yield InstruStage3, dict(q3=2)
             yield TrustGameForCCP, dict(send_back_CCP_1=random.choice([1, 3]),
                                         send_back_CCP_2=random.choice([1, 6]),
                                         send_back_CCP_3=random.choice([1, 9]))

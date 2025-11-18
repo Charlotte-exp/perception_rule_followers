@@ -16,7 +16,15 @@
         display: flex;
         justify-content: center;
         width: 100%;
-        padding: 3rem 0;
+        padding: 2rem 0;
+    }
+
+    .dice-container {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+        padding: 1.2rem 0;
+        margin-bottom: -1rem;
     }
 
     .dice {
@@ -98,8 +106,34 @@
     }
 
     document.addEventListener("DOMContentLoaded", function () {
-        const original = parseInt("{{ original_dice }}", 10) || 1;
-        showDice('dice1', original);
+
+        const rollBtn = document.getElementById("roll-btn");
+        const scrambleSpeed = 50;     // update every 50ms
+        const scrambleDuration = 1000; // 1 minute = 60000 ms
+        let scrambleInterval;
+
+        rollBtn.addEventListener("click", function (event) {
+            // Prevent the form from submitting immediately
+            event.preventDefault();
+
+            // Disable the button so it can't be clicked twice
+            rollBtn.disabled = true;
+
+            // Start scrambling
+            scrambleInterval = setInterval(() => {
+                const randomNum = Math.floor(Math.random() * 6) + 1;
+                showDice('dice1', randomNum);
+            }, scrambleSpeed);
+
+            // After 1 second: stop scrambling and submit form
+            setTimeout(() => {
+                clearInterval(scrambleInterval);
+
+                // Submit the form programmatically
+                rollBtn.closest("form").submit();
+
+            }, scrambleDuration);
+        });
     });
 
 </script>
@@ -108,13 +142,27 @@
 
 {{ block content }}
 
-    <p style="display: flex; justify-content: center; margin-top: 30px;">
+<div class="dice-container">
+    <div class="dice" id="dice1">
+        <div class="dot" id="dice1-1"></div>
+        <div class="dot" id="dice1-2"></div>
+        <div class="dot" id="dice1-3"></div>
+        <div class="dot" id="dice1-4"></div>
+        <div class="dot" id="dice1-5"></div>
+        <div class="dot" id="dice1-6"></div>
+        <div class="dot" id="dice1-7"></div>
+        <div class="dot" id="dice1-8"></div>
+        <div class="dot" id="dice1-9"></div>
+    </div>
+</div>
+
+    <p style="display: flex; justify-content: center; margin-top: 20px;">
         Click to roll the dice:
     </p>
 
 <div class="roll-container">
     <p>
-        <button name="random_roll" value="draw" class="btn btn-primary btn-large">Roll</button>
+        <button id="roll-btn" name="random_roll" value="draw" class="btn btn-primary btn-large">Roll</button>
     </p>
 </div>
 
