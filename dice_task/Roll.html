@@ -80,7 +80,7 @@
             6: [1, 3, 4, 6, 7, 9]
         };
 
-        console.log(`showDice called for ${diceId} with number ${number}`);
+        // console.log(`showDice called for ${diceId} with number ${number}`);
 
         // Ensure number is valid
         if (!dotPositions[number]) {
@@ -98,9 +98,9 @@
 
             if (dotElement) {
                 dotElement.classList.add('show');
-                console.log(`✅ Showing dot: ${dotId}`);
+                // console.log(`✅ Showing dot: ${dotId}`);
             } else {
-                console.warn(`⚠️ Missing dot element: ${dotId}`);
+                // console.warn(`⚠️ Missing dot element: ${dotId}`);
             }
         });
     }
@@ -108,15 +108,17 @@
     document.addEventListener("DOMContentLoaded", function () {
 
         const rollBtn = document.getElementById("roll-btn");
-        const scrambleSpeed = 50;     // update every 50ms
-        const scrambleDuration = 1000; // 1 minute = 60000 ms
+        const scrambleSpeed = 200;      // update every 50ms (~20 FPS)
+        const scrambleDuration = 1000; // 1 second
+        const finalNumber = parseInt("{{ original_dice }}", 10) || 1;
+
         let scrambleInterval;
 
         rollBtn.addEventListener("click", function (event) {
-            // Prevent the form from submitting immediately
+            // Prevent form from submitting immediately
             event.preventDefault();
 
-            // Disable the button so it can't be clicked twice
+            // Disable button to prevent double clicks
             rollBtn.disabled = true;
 
             // Start scrambling
@@ -125,11 +127,15 @@
                 showDice('dice1', randomNum);
             }, scrambleSpeed);
 
-            // After 1 second: stop scrambling and submit form
+            // After 1 second: stop scrambling, show final number, then submit
             setTimeout(() => {
                 clearInterval(scrambleInterval);
 
-                // Submit the form programmatically
+                // Show the final intended dice value
+                // console.log("Final number should be:", finalNumber);
+                showDice('dice1', finalNumber);
+
+                // Submit the form
                 rollBtn.closest("form").submit();
 
             }, scrambleDuration);
