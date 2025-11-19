@@ -51,7 +51,7 @@
         display: flex;
         flex-direction: row
         margin-top:1vw;
-        margin-bottom:30px;
+        margin-bottom:45px;
         /*gap: 1vw; !* Space between numbers scales with viewport width *!*/
         gap: 0.5vw; /* Space between numbers scales with viewport width */
         flex-wrap: wrap; /* Optional: allows wrapping if buttons exceed container width */
@@ -128,7 +128,7 @@
     </p>
 
 
-<div  class="card-body">
+
     <h5 style="text-align: center">
         What number do you wish to report?
     </h5>
@@ -140,20 +140,20 @@
     {% endfor %}
     </div>
 
-<div class="card bg-light instructions">
-    <div class="card-body" style="font-size: 14px">
-        Keep in mind:
-        <ul>
-            <li>Please report the number that you rolled. Your bonus will depend on your reported number.
-            <li>The higher the number you report, the more money you earn.
-            {{ if treatment != 'control' }}
-            <li>What you do will be observed by another participant.
-            {{ endif }}
-        </ul>
+    <div class="card bg-light instructions">
+        <div class="card-body" style="font-size: 14px">
+            Keep in mind:
+            <ul>
+                <li>Please report the number that you rolled. Your bonus will depend on your reported number.
+                <li>The higher the number you report, the more money you earn.
+                {{ if treatment != 'control' }}
+                <li>What you do will be observed by another participant.
+                {{ endif }}
+            </ul>
+        </div>
     </div>
-</div>
 
-</div>
+
 
 
 
