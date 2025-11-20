@@ -214,6 +214,9 @@ class InstruPart1(Page):
     def vars_for_template(player: Player):
         return dict(
             half_points=int(C.DG_points) / 2,
+            one_point=cu(1).to_real_world_currency(player.session),
+            three_point=cu(3).to_real_world_currency(player.session),
+            six_point=cu(6).to_real_world_currency(player.session),
         )
 
     @staticmethod
