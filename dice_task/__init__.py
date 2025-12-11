@@ -14,7 +14,7 @@ class C(BaseConstants):
     NUM_ROUNDS = 12
     participant_fee = 1
     conversion = '34p'
-    time = 10
+    time = 12
 
     num_dice_rounds = NUM_ROUNDS # from the actor task
     percent_accurate = 10
