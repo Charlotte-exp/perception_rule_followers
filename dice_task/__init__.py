@@ -13,7 +13,7 @@ class C(BaseConstants):
     PLAYERS_PER_GROUP = None
     NUM_ROUNDS = 12
     participant_fee = 1
-    conversion = '34p'
+    conversion = 34
     time = 12
 
     num_dice_rounds = NUM_ROUNDS # from the actor task
@@ -269,6 +269,7 @@ class Dice(Page):
     def vars_for_template(player: Player):
         return dict(
             original_dice = player.original_dice,
+            gbp_value = player.original_dice * C.conversion/100,
             reported_dice = player.reported_dice,
             treatment = player.treatment,
         )

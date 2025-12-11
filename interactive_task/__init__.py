@@ -638,7 +638,7 @@ page_sequence = [
                  InstruStage3,
                  TrustGameForCCP,
                  Demographics,
-                 CommentBox,
+                 #CommentBox,
                  Payment,
                  ProlificLink]
 
