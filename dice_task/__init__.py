@@ -12,7 +12,7 @@ class C(BaseConstants):
     NAME_IN_URL = 'dice_task'
     PLAYERS_PER_GROUP = None
     NUM_ROUNDS = 12
-    participant_fee = 1
+    participant_fee = 1.2
     conversion = 34
     time = 12
 
